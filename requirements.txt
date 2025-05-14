@@ -1,0 +1,16 @@
+langchain==0.2.9
+langchainhub==0.1.20
+langchain-community==0.2.6
+langchain_core==0.2.21
+langchain_openai==0.1.17
+langchain_text_splitters==0.2.2
+openai==1.41.0
+SQLAlchemy==2.0.31
+streamlit==1.37.1
+duckduckgo-search==6.2.1
+pypdf==4.3.0
+fastembed
+docarray==0.40.0
+validators==0.33.0
+streamlit-mic-recorder
+st-gsheets-connection
