@@ -9,10 +9,10 @@ st.set_page_config(
 
 st.header("🧱 BrickSmart")
 st.write("""
-欢迎来到 BrickSmart！
+Welcome to BrickSmart!
 """)
 configure_user_session()
 configure_llm()
 
 
-st.page_link('./pages/step1.py', label='点击这里开始!', icon="🔥", use_container_width=True)
+st.page_link('./pages/step1.py', label='Click here to start!', icon="🔥", use_container_width=True)

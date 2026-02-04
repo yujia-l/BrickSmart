@@ -13,28 +13,28 @@ from structured_query.step2 import spatial_selection
 import requests
 
 st.set_page_config(page_title="BrickSmart", page_icon="🧱")
-st.header('BrickSmart - 积木搭建')
+st.header('BrickSmart - Block building')
 with st.sidebar:
-    st.page_link("home.py", label='主页', icon="🏠", use_container_width=True)
-    st.page_link("./pages/step1.py", label='场景描述', icon="💬", use_container_width=True)
+    st.page_link("home.py", label='Homepage', icon="🏠", use_container_width=True)
+    st.page_link("./pages/step1.py", label='Scene Description', icon="💬", use_container_width=True)
     # st.page_link("./pages/step3.py", label='xxx', use_container_width=True) # to be deleted after debugging
     st.divider()
 
-stages = ["名词解释，解释词汇的意义", "情景运用，在当前积木搭建活动中使用该词汇", "提问检验，通过提问正在做的事情来检验和深化孩子对词汇的理解和应用能力"]
+stages = ["Noun explanation, explaining the meaning of vocabulary", "Contextual application, using the vocabulary in the current LEGO building activity", "Questioning and testing, examining and deepening the child's understanding and application of vocabulary through questioning"]
 
 prompts ={
     "spatial_selection": '''
-    你是一个家庭引导师，你的职责是帮助家长引导孩子并提升空间语言能力。你需要根据目前乐高搭建教程的步骤，实时为家长生成引导提示。
-    当前需要学习的空间词汇和对应的阶段包括：
-    1. 词汇：{word_1}，学习阶段：{stage_1}；
-    2. 词汇：{word_2}，学习阶段：{stage_2}；
-    3. 词汇：{word_3}，学习阶段：{stage_3}；
-    当前乐高搭建的教程为：{instruction}，图片中包含俯视图（top view）-为当前步骤要搭建的积木块，和整体视图（whole view）-包含当前任务和之前已搭建好的所有。
-    请理解当前的搭建任务，在引导搭建孩子的过程中学习以上三个词汇，分别符合对应的学习阶段，为家长生成提示和举例。
-    示例格式输出：
-    1. 词汇：圆形，学习阶段：名词解释
-    提示：可以告诉孩子，圆形是一种没有角的形状，边上的每一点到中心点的距离都是一样的。
-    示例：在搭建过程中可以找到圆形的积木块，或者积木块上的圆形图案，帮助他们理解。
+    You are a family guide, and your responsibility is to help parents guide their children and enhance their spatial language skills. You need to generate guiding prompts for parents in real-time based on the steps of the current LEGO building tutorial.
+    The spatial vocabulary that needs to be learned and the corresponding stages include：
+    1. Vocabulary: {word_1}, Learning Stage: {stage_1};
+    2. Vocabulary: {word_2}, Learning Stage: {stage_2};
+    3. Vocabulary: {word_3}, Learning Stage: {stage_3};
+    The current LEGO building tutorial is: {instruction}. The image includes a top view - the LEGO bricks to be built in the current step, and a whole view - containing the current task and all previously built parts.
+    Please understand the current building task, and generate prompts and examples for parents to help children learn the above three vocabulary words, each corresponding to its learning stage.
+    Example output format:
+    1. Vocabulary: Circle, Learning Stage: Noun explanation
+    Prompt: You can tell the child that a circle is a shape with no corners, and the distance from every point on the edge to the center is the same.
+    Example: During the building process, you can find circular LEGO pieces or circular patterns on the pieces to help them understand.
     '''
 }
 
@@ -114,10 +114,10 @@ class ChatBotForTutorial:
                         st.session_state["learning_status"].proceed(idx)
                     st.session_state["tutorial_list"].proceed()
                     if st.session_state["tutorial_list"].current().finished:
-                        st.session_state[st.session_state["current_page"]]["messages"].append({"role": "assistant", "content": "你已经完成了当前积木的搭建，点击侧栏按钮，让我们继续下一个吧！"})
+                        st.session_state[st.session_state["current_page"]]["messages"].append({"role": "assistant", "content": "You have completed the current LEGO building task. Click the sidebar button to continue to the next one!"})
             # Jump to the next page if the tutorial is finished
             if st.session_state["tutorial_list"].finished:
-                st.session_state[st.session_state["current_page"]]["messages"].append({"role": "assistant", "content": "🎉 恭喜你完成了积木搭建，点击侧栏按钮开始互动！"})
+                st.session_state[st.session_state["current_page"]]["messages"].append({"role": "assistant", "content": "🎉 Congratulations on completing the LEGO building! Click the sidebar button to start interacting!"})
             st.rerun()  # Rerun the app to update the chat
 
 if __name__ == "__main__":

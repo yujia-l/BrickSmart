@@ -4,19 +4,19 @@ from structured_query import query_llm, process_chat_history
 
 prompts = {
     "scene_description": '''
-    你的任务是孩子讲述的故事和场景分解成几个可描述的3D对象，并依次输出到结构化的字符串列表 object_list[] 中。
-    例如，孩子说“大眼睛的猴子在爬树”，则输出字符串列表 object_list=["猴子，大眼睛，动作是正在爬树", "树"]。
-    请你仅按照孩子的描述来分解和输出，不要添加额外的信息或者自己的想法。如果孩子描述的内容不够详细，则输出空白字符串列表 object_list=[]。
-    之前的对话历史如下： 
+    Your task is to decompose the story and scene described by the child into several describable 3D objects, and output them sequentially into a structured string list object_list[].
+    For example, if the child says "The big-eyed monkey is climbing the tree", the output string list should be object_list=["Monkey, big-eyed, action is climbing", "Tree"].
+    Please only decompose and output according to the child's description, without adding extra information or your own ideas. If the child's description is not detailed enough, output an empty string list object_list=[].
+    The previous conversation history is as follows: 
     {chat_history}
     ''',
     "scene_optimization": '''
-    你的任务是孩子讲述的故事和场景分解成几个可描述的3D对象，并依次输出到结构化的字符串列表 object_list[] 中。
-    例如，孩子说“大眼睛的猴子在爬树”，则输出字符串列表 object_list=["猴子，大眼睛，动作是正在爬树", "树"]。
-    请你仅按照孩子的描述来分解和输出，不要添加额外的信息或者自己的想法。如果孩子描述的内容不够详细，则输出空白字符串列表 object_list=[]。
-    现在已经有了初步的列表信息：{object_list}。
-    你需要根据新的描述或者已有内容，完善和补充列表中的条目。
-    之前的对话历史如下： 
+    Your task is to decompose the story and scene described by the child into several describable 3D objects, and output them sequentially into a structured string list object_list[].
+    For example, if the child says "The big-eyed monkey is climbing the tree", the output string list should be object_list=["Monkey, big-eyed, action is climbing", "Tree"].
+    Please only decompose and output according to the child's description, without adding extra information or your own ideas. If the child's description is not detailed enough, output an empty string list object_list=[].
+    Now we already have the preliminary list information: {object_list}.
+    You need to improve and supplement the entries in the list based on the new description or existing content.
+    The previous conversation history is as follows:
     {chat_history}
     '''
 }

@@ -1,35 +1,35 @@
 {
     "0": {
-      "name": "空间维度",
-      "description": ["大/小", "长/短", "高/低", "宽/窄", "厚/薄", "粗/细", "深/浅", "尺寸", "长度", "高度", "宽度", "深度", "体积", "容积", "面积"]
+      "name": "Spatial Dimension",
+      "description": ["Big/Small", "Long/Short", "High/Low", "Wide/Narrow", "Thick/Thin", "Coarse/Fine", "Deep/Shallow", "Size", "Length", "Height", "Width", "Depth", "Volume", "Capacity", "Area"]
     },
     "1": {
-      "name": "形状",
-      "description": ["圆形", "正方形", "长方形", "三角形", "球形", "圆柱", "立方体", "锥形", "多边形"]
+      "name": "Shape",
+      "description": ["Circle", "Square", "Rectangle", "Triangle", "Sphere", "Cylinder", "Cube", "Cone", "Polygon"]
     },
     "2": {
-      "name": "位置和方向",
-      "description": ["在","从/到", "上/下", "前/后", "左/右", "里/外", "中间/旁边", "对称", "相对", "位置", "方向", "距离", "路径"]
+      "name": "Position and Direction",
+      "description": ["In", "From/To", "Up/Down", "Front/Back", "Left/Right", "Inside/Outside", "Middle/Side", "Symmetry", "Relative", "Position", "Direction", "Distance", "Path"]
     },
     "3": {
-      "name": "方向和变换",
-      "description": ["向前/后", "向左/右", "向上/下", "翻转", "旋转", "滑动", "顺时针", "逆时针"]
+      "name": "Direction and Transformation",
+      "description": ["Forward/Backward", "Left/Right", "Up/Down", "Flip", "Rotate", "Slide", "Clockwise", "Counterclockwise"]
     },
     "4": {
-      "name": "连续量",
-      "description": ["整体/部分", "全部/一半/几分之一", "多数/少数", "更多/少", "相等"]
+      "name": "Continuous Quantity",
+      "description": ["Whole/Part", "All/Half/One Third", "Majority/Minority", "More/Less", "Equal"]
     },
     "5": {
-      "name": "指示词",
-      "description": ["这里", "那里", "哪里", "这个", "那个", "哪个"]
+      "name": "Demonstratives",
+      "description": ["Here", "There", "Where", "This", "That", "Which"]
     },
     "6": {
-      "name": "空间特征和属性",
-      "description": ["直线", "曲线", "边缘", "平面", "曲面", "点", "锐角", "钝角", "直角", "垂直", "平行"]
+      "name": "Spatial Features and Attributes",
+      "description": ["Straight Line", "Curve", "Edge", "Plane", "Surface", "Point", "Acute Angle", "Obtuse Angle", "Right Angle", "Vertical", "Horizontal"]
     },
     "7": {
-      "name": "模式",
-      "description": ["增加、减少", "之前、之后", "下一个/上一个", "第一个/最后一个", "重复", "顺序"]
+      "name": "Patterns",
+      "description": ["Increase/Decrease", "Before/After", "Next/Previous", "First/Last", "Repeat", "Order"]
     }
   }
   

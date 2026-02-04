@@ -14,7 +14,7 @@ def get_history_step_1(session_id: str):
 
 def configure_objects():
     st.sidebar.divider()
-    st.sidebar.markdown("### 积木信息")
+    st.sidebar.markdown("### Block Info")
     if "object_list" in st.session_state:
         object_list = st.session_state["object_list"]
         if object_list:
@@ -23,15 +23,15 @@ def configure_objects():
                 if obj in object_db.keys():
                     st.sidebar.image(object_db[obj]['rendered_image_url'])
                 else:
-                    with st.status(f"🧩 积木正在生成中...（{idx+1}/{len(object_list)}）"):
+                    with st.status(f"🧩 Generating blocks...（{idx+1}/{len(object_list)}）"):
                         obj_json = requests.post('http://47.251.27.187/model/', json={'prompt': obj}).json()
                         st.sidebar.image(obj_json['rendered_image_url'])
                     object_db[obj] = obj_json
                     
-            next_page = st.sidebar.button("💪 开始搭建", use_container_width=True)
+            next_page = st.sidebar.button("💪 Start building", use_container_width=True)
             if next_page:
                 for idx, obj in enumerate(object_list):
-                    with st.status(f"🧩 积木正在体素化...（{idx+1}/{len(object_list)}）"):
+                    with st.status(f"🧩 Voxelizing blocks...（{idx+1}/{len(object_list)}）"):
                         if obj in object_db.keys():
                             obj_id = object_db[obj]['task_id']
                         else:
@@ -42,11 +42,11 @@ def configure_objects():
                             initialize_tutorial_list(tutorials)
                         except Exception as e:
                             print(e)
-                            st.sidebar.error(f"无法体素化积木模型：“{obj}”，请稍后再试")
+                            st.sidebar.error(f"Failed to voxelize block model: “{obj}”, please try again later")
                 st.switch_page("./pages/step2.py")
 
         else:
             st.session_state["object_picture_list"] = None
-            st.sidebar.write("🧩 请继续对话，完善积木信息")
+            st.sidebar.write("🧩 Please continue the conversation to improve block information")
     else:
-        st.sidebar.write("🧩 请继续对话，完善积木信息")
+        st.sidebar.write("🧩 Please continue the conversation to improve block information")

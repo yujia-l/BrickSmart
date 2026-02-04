@@ -4,27 +4,27 @@ import streamlit as st
 from structured_query import simple_query
 
 st.set_page_config(page_title="BrickSmart", page_icon="🧱")
-st.header('BrickSmart - 积木组合')
+st.header('BrickSmart - Block Interaction')
 with st.sidebar:
-    st.page_link("home.py", label='主页', icon="🏠", use_container_width=True)
-    st.page_link("./pages/step1.py", label='场景描述', icon="💬", use_container_width=True)
-    st.page_link("./pages/step2.py", label='积木搭建', icon="🧩", use_container_width=True)
+    st.page_link("home.py", label='Homepage', icon="🏠", use_container_width=True)
+    st.page_link("./pages/step1.py", label='Scene Description', icon="💬", use_container_width=True)
+    st.page_link("./pages/step2.py", label='Block Building', icon="🧩", use_container_width=True)
     st.divider()
 
 prompts = '''
-你是一个帮助家长与孩子互动的助手，目标是提升孩子的空间语言表达能力。孩子和家长当前使用乐高积木搭建了几个乐高模型，包括：{objects}。
-你的任务是引导家长和孩子，通过让这些乐高模型“动起来”来描述它们的状态，从而增强孩子对空间概念的理解。家长可以移动搭建好的上述乐高模型，或乐高积木，并让孩子描述这些动作。
-请按照以下格式输出互动建议：
-词汇：要学习的空间语言词汇\n
-动态指令例子：给出移动物体的具体方法\n
-家长引导语示例：提供家长可以使用的引导语
+You are a helper for parents to interact with their children, aiming to enhance children's spatial language skills. The child and parent are currently using LEGO bricks to build several LEGO models, including: {objects}.
+Your task is to guide parents and children to describe the state of these LEGO models by making them "move", thereby enhancing the child's understanding of spatial concepts. Parents can move the built LEGO models or LEGO bricks and ask the child to describe these actions.
+Please output interactive suggestions in the following format:
+Vocabulary: The spatial language vocabulary to be learned\n
+Dynamic instruction example: Give specific methods for moving objects\n
+Parental guidance example: Provide guiding language that parents can use
 
-示例格式输出：
-1. 词汇：向左/向右\n
-动态指令例子：让小人向前走，然后向左转\n
-家长引导语示例：你看这个可爱的小人，他往前走，然后向左转啦。你能让小人向右转吗？
+Example output format:
+1. Vocabulary: Left/Right\n
+Dynamic instruction example: Move the little person forward, then turn left\n
+Parental guidance example: Look at this cute little person, he moves forward and then turns left. Can you make the little person turn right?
 
-针对下列 {num_words} 个关键词：{keywords}，逐个输出互动建议。
+For the following {num_words} keywords: {keywords}, please output interactive suggestions one by one.
 '''
 
 def get_prompt():

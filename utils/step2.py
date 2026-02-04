@@ -104,25 +104,25 @@ def configure_learning_status():
         if "tutorial_list" in st.session_state:
             if st.session_state["tutorial_list"].finished:
                 st.balloons()
-                next_page = st.button("💪 开始互动", use_container_width=True)
+                next_page = st.button("💪 Start interacting", use_container_width=True)
                 if next_page:
                     st.switch_page("./pages/step3.py")
             elif st.session_state["tutorial_list"].current().finished:
-                next_tutorial = st.button("👉 下一个积木", use_container_width=True)
+                next_tutorial = st.button("👉 Next block", use_container_width=True)
                 if next_tutorial:
                     st.session_state["tutorial_list"].next()
-        st.markdown("### 当前进度")
+        st.markdown("### Current Progress")
         for idx, status in st.session_state["learning_status"].learning_status.items():
             col_1, col_2 = st.columns([2, 2])
             with col_1:
-                st.markdown(f"**维度 {idx+1}: {status['name']}**")
+                st.markdown(f"**Dimension {idx+1}: {status['name']}**")
             with col_2:
                 st.progress((status["word_idx"]+1)/status["word_length"])
             col_3, col_4 = st.columns([3, 2])
             with col_3:
-                st.write(f"词汇: *{st.session_state['learning_status'].db[str(idx)]['description'][status['word_idx']]}*")
+                st.write(f"Vocabulary: *{st.session_state['learning_status'].db[str(idx)]['description'][status['word_idx']]}*")
             with col_4:
-                st.button("✅ 已学会", key=random.randint(100000,999999), on_click=proceed_status, args=(idx,), use_container_width=True)
+                st.button("✅ Learned", key=random.randint(100000,999999), on_click=proceed_status, args=(idx,), use_container_width=True)
             st.write("\n")
         st.divider()
 

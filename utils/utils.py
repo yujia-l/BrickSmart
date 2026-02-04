@@ -20,11 +20,11 @@ else:
 
 def welcome_message(page):
     if page == "ChatBotForSceneDescription":
-        return "你好！我是BrickSmart，我会帮助你引导孩子描述出自己喜欢的情景。"
+        return "Hello! I'm BrickSmart, and I will help you guide your child to describe their favorite scenes."
     elif page == "ChatBotForTutorial":
-        return "你好！我是BrickSmart，我会帮助你引导孩子搭建自己的乐高积木。"
+        return "Hello! I'm BrickSmart, and I will help you guide your child to build their own LEGO bricks."
     elif page == "ChatBotForInteraction":
-        return "你好！我是BrickSmart，我会帮助你引导孩子用搭建好的乐高积木互动。"
+        return "Hello! I'm BrickSmart, and I will help you guide your child to interact with the built LEGO bricks."
 
 def write_google_sheet(session_id: str):
     conn = st.connection("gsheets", type=GSheetsConnection)
@@ -145,7 +145,7 @@ def configure_user_session():
             st.session_state["session_id"]  = session_id
     else:
         session_id = st.session_state["session_id"]
-    st.sidebar.markdown("### 对话信息")
+    st.sidebar.markdown("### Conversation info")
     st.sidebar.write(f"Session ID: {session_id}")
     return session_id
 

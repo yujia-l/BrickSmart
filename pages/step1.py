@@ -10,22 +10,22 @@ from utils.step1 import get_history_step_1, configure_objects
 from structured_query.step1 import process_object_list, scene_description
 
 st.set_page_config(page_title="BrickSmart", page_icon="🧱")
-st.header('BrickSmart - 场景描述')
+st.header('BrickSmart - Scenario Description')
 with st.sidebar:
-    st.page_link("home.py", label='主页', icon="🏠", use_container_width=True)
+    st.page_link("home.py", label='Homepage', icon="🏠", use_container_width=True)
     st.divider()
 
 prompts ={
     "scene_description": '''
-    作为专门帮助家长与孩子进行互动的智能助手，你的任务是引导孩子详细描述他们心中喜欢的场景，为乐高搭建提供清晰的视觉基础（尽管你不直接参与搭建过程）。
-    在对话中，你需要积极鼓励孩子探索并详细描述场景中的每一个细节，包括环境布局、场景中的角色，以及使用的道具。
-    你应持续提出具体的引导问题和建议，帮助家长使孩子的描述更加清晰和具体。
+    As a specialized intelligent assistant to help parents interact with their children, your task is to guide children to describe in detail the scenes they like in their minds, providing a clear visual basis for LEGO building (even though you do not directly participate in the building process).
+    In the conversation, you need to actively encourage children to explore and describe every detail of the scene, including the layout of the environment, the characters in the scene, and the props used.
+    You should continuously ask specific guiding questions and suggestions to help parents make children's descriptions clearer and more specific.
     ''',
     "scene_optimization": '''
-    作为专门帮助家长与孩子进行互动的智能助手，你的任务是引导孩子详细描述他们心中喜欢的场景，为乐高搭建提供清晰的视觉基础（尽管你不直接参与搭建过程）。
-    在对话中，你需要积极鼓励孩子探索并详细描述场景中的每一个细节，包括环境布局、场景中的角色，以及使用的道具。
-    利用已经从之前的对话中整理出的对象列表{object_list}，你应持续提出具体的引导问题和建议，帮助家长使孩子的描述更加清晰和具体。
-    例如，询问关于某个物体的具体颜色和材料，或者角色的动作表情，以此来激发孩子的想象力，并且更精细地构想他们的乐高作品。
+    As a specialized intelligent assistant to help parents interact with their children, your task is to guide children to describe in detail the scenes they like in their minds, providing a clear visual basis for LEGO building (even though you do not directly participate in the building process).
+    In the conversation, you need to actively encourage children to explore and describe every detail of the scene, including the layout of the environment, the characters in the scene, and the props used.
+    You should continuously ask specific guiding questions and suggestions to help parents make children's descriptions clearer and more specific.
+    For example, ask about the specific colors and materials of an object, or the actions and expressions of a character, to stimulate the child's imagination and help them refine their LEGO creations.
     '''
 }
 
@@ -75,8 +75,8 @@ class ChatBotForSceneDescription:
     def main(self):
         audio_input = speech_to_text(
             language='zh-CN',
-            start_prompt="🎙️ 语音输入",
-            stop_prompt="🎙️ 输入完毕",
+            start_prompt="🎙️ Voice input",
+            stop_prompt="🎙️ Input finished",
             just_once=True,
             use_container_width=True,
             callback=utils.stt_callback,
@@ -84,7 +84,7 @@ class ChatBotForSceneDescription:
             kwargs={},
             key=None
         )
-        user_query = st.chat_input("你可以点击上方按钮语音输入，或者在此处输入文字")
+        user_query = st.chat_input("You can click the button above for voice input or enter text here")
 
         # Insert the audio input into the chat input box
         js = f"""
