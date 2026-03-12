@@ -1,8 +1,11 @@
+import os
 import base64
 import streamlit as st
 from openai import OpenAI
 
-client = OpenAI(api_key=st.secrets['OPENAI_KEY'].strip())
+# Support both environment variable (Cloud Run) and Streamlit secrets (local)
+_api_key = os.environ.get('OPENAI_KEY') or st.secrets.get('OPENAI_KEY', '')
+client = OpenAI(api_key=_api_key.strip())
 
 def process_chat_history(chat_history):
     output = ''''''

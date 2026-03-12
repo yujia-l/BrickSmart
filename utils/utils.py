@@ -13,8 +13,11 @@ from utils.step2 import LearningStatus
 logger = get_logger('Langchain-Chatbot')
 
 # set the openai api key as the environment variable
+# Supports: local file, environment variable (Cloud Run), or Streamlit secrets
 if os.path.exists("./openai.key"):
     os.environ["OPENAI_API_KEY"] = open("./openai.key").read().strip()
+elif os.environ.get('OPENAI_KEY'):
+    os.environ['OPENAI_API_KEY'] = os.environ.get('OPENAI_KEY')
 else:
     os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_KEY']
 
