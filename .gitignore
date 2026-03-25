@@ -21,3 +21,7 @@ Thumbs.db
 
 # Local development
 *.log
+
+# Deployment artifacts
+*.zip
+*.pdf
