@@ -63,7 +63,7 @@ backend/
     block_catalog_loader.py        # Kid Spark piece catalog → block_catalog
     router.py                      # FastAPI routes for bundle upload / ingest / jobs
 
-  retrieval/                       # === Developer B builds; both pipelines use ===
+  retrieval/                       # === Developer A & B builds; both pipelines use ===
     __init__.py
     search.py                      # Hybrid vector + metadata search
     expansion.py                   # Bundle expansion (siblings + relations + policy)
@@ -81,7 +81,7 @@ backend/
     validator.py                   # Step F — ValidationResult
     orchestrator.py                # Phases: consult → block awareness → generate
 
-  api/                             # === Developer B ===
+  api/                             # === Developer A & B ===
     __init__.py
     main.py                        # FastAPI app, routers, middleware, lifespan
     sessions.py                    # Session lifecycle (upload, message, approve, generate)
