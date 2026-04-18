@@ -1,0 +1,10 @@
+This is a placeholder for sample storybook text used in tests.
+
+Replace with actual storybook content or a representative excerpt for
+integration testing. The content should include:
+  - A title
+  - Character names
+  - A setting description
+  - A plot with a clear theme (e.g., perseverance)
+  - Objects or scenes that could be built with Kid Spark blocks
+  - Vocabulary appropriate for the target grade band

@@ -1,0 +1,40 @@
+# KidSpark AI Backend Dependencies
+# Install: pip install -r requirements.txt
+
+# --- Web Framework ---
+fastapi
+uvicorn[standard]
+
+# --- AI / LLM ---
+pydantic-ai
+openai
+langchain
+langchain-openai
+
+# --- Database ---
+sqlalchemy[asyncio]
+asyncpg
+pgvector
+alembic
+
+# --- Document Parsing ---
+docling
+
+# --- Google Cloud ---
+google-cloud-storage
+google-cloud-secret-manager
+google-cloud-logging
+
+# --- Data Validation ---
+pydantic>=2.0
+
+# --- HTTP ---
+httpx
+
+# --- Testing ---
+pytest
+pytest-asyncio
+
+# --- Utilities ---
+python-multipart
+python-dotenv
