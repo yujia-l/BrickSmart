@@ -16,14 +16,14 @@ load_dotenv(dotenv_path=env_path)
 # --- OpenAI ---
 # Cloud Run currently exposes the OpenAI Secret Manager value as OPENAI_KEY.
 # Local/dev tooling may use OPENAI_API_KEY, so support both names.
-OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY", "")
+OPENAI_API_KEY: str = (os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY", "")).strip()
 OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o")
 OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS: int = 3072
 
 # --- Hyper3D / Rodin ---
-HYPER3D_API_KEY: str = os.getenv("HYPER3D_API_KEY", "")
-HYPER3D_BASE_URL: str = os.getenv("HYPER3D_BASE_URL", "https://api.hyper3d.com/api/v2")
+HYPER3D_API_KEY: str = os.getenv("HYPER3D_API_KEY", "").strip()
+HYPER3D_BASE_URL: str = os.getenv("HYPER3D_BASE_URL", "https://api.hyper3d.com/api/v2").strip()
 RODIN_TIER: str = os.getenv("RODIN_TIER", "Gen-2.5-Low")
 RODIN_QUALITY: str = os.getenv("RODIN_QUALITY", "extra-low")
 RODIN_MESH_MODE: str = os.getenv("RODIN_MESH_MODE", "Raw")
