@@ -21,6 +21,11 @@ Thumbs.db
 
 # Local development
 *.log
+openai.key
+work/
+backend/generated/
+tmp/
+toy_airplane_30k/
 
 # Deployment artifacts
 *.zip

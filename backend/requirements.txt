@@ -6,35 +6,37 @@ fastapi
 uvicorn[standard]
 
 # --- AI / LLM ---
-pydantic-ai
-openai
-langchain
-langchain-openai
-
-# --- Database ---
-sqlalchemy[asyncio]
-asyncpg
-pgvector
-alembic
-
-# --- Document Parsing ---
-docling
-
-# --- Google Cloud ---
-google-cloud-storage
-google-cloud-secret-manager
-google-cloud-logging
+openai>=1.30
 
 # --- Data Validation ---
 pydantic>=2.0
 
 # --- HTTP ---
 httpx
+requests
+pillow
+numpy
+matplotlib
+pypdf
+reportlab
+
+# --- Utilities ---
+python-multipart
+python-dotenv
 
 # --- Testing ---
 pytest
 pytest-asyncio
 
-# --- Utilities ---
-python-multipart
-python-dotenv
+# ---- Future (uncomment when needed) ----
+# pydantic-ai
+# langchain
+# langchain-openai
+# sqlalchemy[asyncio]
+# asyncpg
+# pgvector
+# alembic
+# docling
+# google-cloud-storage
+# google-cloud-secret-manager
+# google-cloud-logging

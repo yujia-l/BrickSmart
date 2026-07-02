@@ -2,44 +2,192 @@
 KidSpark AI — Block Awareness Agent (Kid Spark Piece Catalog)
 Owner: Developer B
 
-This agent determines what Kid Spark physical pieces are needed for the
-agreed build artifact, with focus on movable and articulated parts.
+Determines what Kid Spark physical pieces are needed for the agreed
+build artifact, with focus on movable and articulated parts.
 
-PURPOSE:
-  The teacher knows what they want students to build, but may not know which
-  Kid Spark pieces enable specific movements (spinning, pivoting, rolling).
-  This agent bridges that gap by asking targeted questions about articulation
-  and mapping answers to the Kid Spark block catalog.
-
-RESPONSIBILITIES:
-  - Load the Kid Spark block catalog from the database
-  - Given the ConsultationSummary (agreed artifact and its parts), identify
-    which parts could potentially move
-  - Ask the teacher about movement preferences:
-      * "Should the propeller spin?"
-      * "Should the wings flap or stay fixed?"
-      * "Should it have rolling wheels?"
-  - Map each movement type to specific Kid Spark piece types:
-      * Spinning (continuous rotation) -> wheel/axle piece
-      * Pivoting (limited arc) -> angle connector
-      * Rolling (ground movement) -> wheel pieces + axle
-      * Static structure -> cube blocks (windowed)
-      * Bridging (flat connection) -> flat connector
-  - Produce a BlockRequirements spec listing all parts, their movement type,
-    suggested pieces, and connector types needed
-
-INPUTS:
-  - ConsultationSummary (from consultation agent)
-  - Block catalog (from database)
-  - Teacher messages about movement preferences
-
-OUTPUTS:
-  - BlockRequirements (Pydantic model, see models/schemas.py)
-
-AGENT SETUP:
-  - Pydantic AI Agent with result_type=BlockRequirements, deps_type=BlockAwarenessDeps
-  - Block catalog loaded as context dependency
-  - 1-2 turns of interaction with teacher, then produces final output
-
-REFERENCE: KIDSPARK_TECHNICAL_SPEC.md Section 7.3, "Block Awareness Agent"
+When no OpenAI API key is configured, returns scripted mock responses
+so the pipeline is testable offline.
 """
+
+import logging
+
+from config import OPENAI_API_KEY, OPENAI_MODEL
+from models.schemas import (
+    ArtifactPart,
+    BlockRequirements,
+    ConsultationSummary,
+)
+from agents.mock_data import MOCK_BLOCK_CATALOG
+
+logger = logging.getLogger(__name__)
+
+SYSTEM_PROMPT = """\
+You are a Kid Spark block-building expert. Given an agreed build artifact
+from the teacher consultation, you determine which Kid Spark Early Inventors
+STEM Lab pieces are needed.
+
+CONSULTATION SUMMARY:
+{consultation_summary}
+
+KID SPARK BLOCK CATALOG:
+{block_catalog}
+
+YOUR JOB:
+1. List the main parts of the artifact
+2. Ask the teacher which parts should move and how
+3. Map each part to specific Kid Spark piece types
+4. Identify which special connectors are needed for articulated parts
+5. Produce a BlockRequirements spec
+
+When producing BlockRequirements, movement values must be exactly one of:
+spinning, rolling, pivoting, static.
+
+Movement-to-piece mapping:
+- Spinning (continuous rotation) → Wheel/axle piece
+- Pivoting (limited arc) → Angle connector
+- Rolling (ground movement) → Wheel pieces + axle
+- Static structure → Cube blocks (windowed)
+- Bridging (flat connection) → Flat connector
+
+Be concise and helpful. If the teacher isn't sure about movement, suggest
+what would be fun and educational based on the artifact type.
+
+Respond conversationally first. When you have enough information about
+movement preferences, you will produce the final BlockRequirements."""
+
+
+def _build_system_prompt(consultation_summary: ConsultationSummary) -> str:
+    catalog_text = "\n".join(
+        f"- {p.piece_name} ({p.piece_type}): {p.description} "
+        f"[rotation={p.supports_rotation}, pivot={p.supports_pivot}, "
+        f"axle={p.supports_axle}]"
+        for p in MOCK_BLOCK_CATALOG
+    )
+    return SYSTEM_PROMPT.format(
+        consultation_summary=consultation_summary.model_dump_json(indent=2),
+        block_catalog=catalog_text,
+    )
+
+
+MOCK_BLOCK_RESPONSE = (
+    "Your **flying delivery vehicle** has these main parts: "
+    "wings, body, cargo compartment, propeller, and landing gear.\n\n"
+    "Let me ask about movement:\n"
+    "- Should the **propeller** spin?\n"
+    "- Should the **wings** move or stay fixed?\n"
+    "- Should the **cargo compartment** open?\n"
+    "- Should it have **rolling wheels** on the landing gear?\n\n"
+    "Tell me which parts should move and how!"
+)
+
+MOCK_BLOCK_REQUIREMENTS = BlockRequirements(
+    artifact_label="flying delivery vehicle",
+    parts=[
+        ArtifactPart(
+            part_name="propeller",
+            movement="spinning",
+            suggested_pieces=["wheel_axle"],
+            piece_count=1,
+            notes="Axle through front-mounted cube block",
+        ),
+        ArtifactPart(
+            part_name="wings",
+            movement="static",
+            suggested_pieces=["cube_block"],
+            piece_count=4,
+            notes="Two cubes per wing, extending from body sides",
+        ),
+        ArtifactPart(
+            part_name="body",
+            movement="static",
+            suggested_pieces=["cube_block"],
+            piece_count=4,
+            notes="Central fuselage structure",
+        ),
+        ArtifactPart(
+            part_name="cargo_compartment",
+            movement="static",
+            suggested_pieces=["cube_block"],
+            piece_count=2,
+            notes="Attached under or behind body",
+        ),
+        ArtifactPart(
+            part_name="landing_gear",
+            movement="rolling",
+            suggested_pieces=["wheel_axle", "flat_connector"],
+            piece_count=2,
+            notes="Wheels mounted on axles under body",
+        ),
+    ],
+    connector_types_needed=["flat_connector", "wheel_axle"],
+    total_cube_blocks=10,
+    total_special_pieces=4,
+    articulation_summary="Spinning propeller (1x wheel/axle), rolling landing gear (2x wheel/axle + flat connectors)",
+)
+
+
+async def handle_block_awareness_message(
+    message: str,
+    consultation_summary: ConsultationSummary,
+    chat_history: list[dict[str, str]],
+) -> str:
+    """Process a teacher message about block/movement preferences."""
+    if not OPENAI_API_KEY:
+        logger.warning("No OpenAI API key — returning mock block awareness response")
+        return MOCK_BLOCK_RESPONSE
+
+    from openai import OpenAI
+
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    system_prompt = _build_system_prompt(consultation_summary)
+
+    messages = [{"role": "system", "content": system_prompt}]
+    for msg in chat_history:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+    messages.append({"role": "user", "content": message})
+
+    response = client.chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=messages,
+        temperature=0.7,
+        max_tokens=800,
+    )
+
+    return response.choices[0].message.content
+
+
+async def finalize_block_requirements(
+    consultation_summary: ConsultationSummary,
+    chat_history: list[dict[str, str]],
+) -> BlockRequirements:
+    """Produce the final BlockRequirements from the conversation."""
+    if not OPENAI_API_KEY:
+        logger.warning("No OpenAI API key — returning mock BlockRequirements")
+        return MOCK_BLOCK_REQUIREMENTS
+
+    from openai import OpenAI
+
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    system_prompt = _build_system_prompt(consultation_summary)
+
+    messages = [{"role": "system", "content": system_prompt}]
+    for msg in chat_history:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+    messages.append({
+        "role": "user",
+        "content": (
+            "Based on our discussion, produce the final BlockRequirements "
+            "in the required JSON format."
+        ),
+    })
+
+    response = client.beta.chat.completions.parse(
+        model=OPENAI_MODEL,
+        messages=messages,
+        response_format=BlockRequirements,
+        temperature=0.3,
+    )
+
+    return response.choices[0].message.parsed
