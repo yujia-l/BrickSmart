@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BrickSmart Model Build</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">BrickSmart</p>
+        <h1>Contract-driven model build</h1>
+        <p>Upload models to <code>model_store</code>, register versioned build contracts in <code>model_registry</code>, and keep every execution under an isolated <code>runs/&lt;run-id&gt;</code> directory.</p>
+      </div>
+    </header>
+
+    <section>
+      <h2>Upload model</h2>
+      <label for="model-id">Model ID</label>
+      <input id="model-id" type="text" placeholder="class-project-airplane" />
+      <label for="model-file">OBJ file</label>
+      <input id="model-file" type="file" accept=".obj,model/obj,text/plain" />
+      <div class="actions"><button id="upload-model">Upload model</button></div>
+      <div id="upload-status" class="status">No upload</div>
+    </section>
+
+    <section>
+      <h2>Register model contract</h2>
+      <label for="contract-id">Contract ID</label>
+      <input id="contract-id" type="text" placeholder="class-project-airplane-standard-kit" />
+      <label for="contract-file">Task-context JSON</label>
+      <input id="contract-file" type="file" accept=".json,application/json" />
+      <label for="confirmation-file">Segment confirmations CSV or JSON</label>
+      <input id="confirmation-file" type="file" accept=".csv,.json,text/csv,application/json" />
+      <div class="actions"><button id="upload-contract">Register contract</button></div>
+      <div id="contract-status" class="status">No contract registered</div>
+    </section>
+
+    <section>
+      <h2>Run model contract</h2>
+      <label for="task-context">Contract URI</label>
+      <input id="task-context" type="text" value="contract://bird-standard-kit" />
+      <label for="model-uri">Model URI override (optional)</label>
+      <input id="model-uri" type="text" placeholder="model://class-project-airplane" />
+      <label for="inventory-path">Inventory profile override</label>
+      <input id="inventory-path" type="text" value="config/inventory/standard_kit.yaml" />
+      <div class="actions">
+        <button id="run-model">Build model</button>
+      </div>
+      <div id="model-status" class="status">Not run</div>
+      <div id="model-metrics" class="metric-grid"></div>
+      <p id="model-output" class="note"></p>
+      <p id="model-run" class="note"></p>
+    </section>
+
+    <section>
+      <h2>Default inventory</h2>
+      <div id="inventory" class="inventory-grid"></div>
+    </section>
+
+    <section>
+      <h2>Generic candidate-allocation demo</h2>
+      <div class="actions">
+        <button id="run-candidates" class="secondary">Run candidate demo</button>
+      </div>
+      <div id="candidate-status" class="status">Not run</div>
+      <table>
+        <thead><tr><th>Group</th><th>Selected candidate</th><th>Status</th><th>Requirements</th></tr></thead>
+        <tbody id="decisions"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

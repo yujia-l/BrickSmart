@@ -1,0 +1,27 @@
+block_id,block_role,source_segment_id,segment_label,segment_name,subassembly_id,block_family,position,size,rotation,male_face,symmetry_source_segment_id
+1,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x2x2,"[0, 4, 4]","[2, 2, 2]",0,+X,
+2,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x2x2,"[2, 4, 4]","[2, 2, 2]",0,+X,
+3,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x3x2,"[4, 4, 3]","[2, 2, 3]",0,+X,
+4,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x2x2,"[0, 6, 4]","[2, 2, 2]",270,-Y,
+5,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x2x2,"[2, 6, 4]","[2, 2, 2]",270,-Y,
+6,segment_structural,1,left_wing,Left Wing,segment_1,standard_2x2x2,"[4, 6, 4]","[2, 2, 2]",270,-Y,
+7,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x2x2,"[14, 4, 4]","[2, 2, 2]",180,-X,1.0
+8,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x2x2,"[12, 4, 4]","[2, 2, 2]",180,-X,1.0
+9,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x3x2,"[10, 4, 3]","[2, 2, 3]",180,-X,1.0
+10,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x2x2,"[14, 6, 4]","[2, 2, 2]",270,-Y,1.0
+11,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x2x2,"[12, 6, 4]","[2, 2, 2]",270,-Y,1.0
+12,segment_structural,3,right_wing,Right Wing,segment_3,standard_2x2x2,"[10, 6, 4]","[2, 2, 2]",270,-Y,1.0
+13,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[6, 0, 0]","[2, 2, 2]",0,+X,
+14,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[8, 0, 0]","[2, 2, 2]",0,+X,
+15,segment_structural,2,body,Central Body,segment_2,standard_2x3x2,"[6, 2, 0]","[2, 2, 3]",0,+X,
+16,segment_structural,2,body,Central Body,segment_2,standard_2x3x2,"[8, 2, 0]","[2, 2, 3]",270,-Y,
+17,segment_structural,2,body,Central Body,segment_2,standard_2x3x2,"[6, 4, 0]","[2, 2, 3]",270,-Y,
+18,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[6, 4, 3]","[2, 2, 2]",0,+X,
+19,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[8, 4, 0]","[2, 2, 2]",270,-Y,
+20,segment_structural,2,body,Central Body,segment_2,standard_2x3x2,"[8, 4, 2]","[2, 2, 3]",270,-Y,
+21,segment_structural,2,body,Central Body,segment_2,standard_2x4x2,"[6, 6, 1]","[2, 2, 4]",270,-Y,
+22,segment_structural,2,body,Central Body,segment_2,standard_2x4x2,"[8, 6, 1]","[2, 2, 4]",270,-Y,
+23,segment_structural,2,body,Central Body,segment_2,standard_2x4x2,"[6, 8, 1]","[2, 2, 4]",270,-Y,
+24,segment_structural,2,body,Central Body,segment_2,standard_2x4x2,"[8, 8, 1]","[2, 2, 4]",270,-Y,
+25,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[6, 10, 3]","[2, 2, 2]",270,-Y,
+26,segment_structural,2,body,Central Body,segment_2,standard_2x2x2,"[8, 10, 3]","[2, 2, 2]",270,-Y,

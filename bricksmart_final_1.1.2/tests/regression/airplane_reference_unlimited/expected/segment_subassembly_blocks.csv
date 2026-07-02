@@ -1,0 +1,73 @@
+block_id,block_role,source_segment_id,segment_label,segment_name,subassembly_id,block_family,position,size,rotation,male_face,symmetry_source_segment_id
+1,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[0, 2, 2]","[2, 2, 2]",0,+X,
+2,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[2, 2, 2]","[2, 2, 2]",0,+X,
+3,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[4, 2, 2]","[2, 2, 2]",0,+X,
+4,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[0, 4, 2]","[2, 2, 2]",270,-Y,
+5,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[2, 4, 2]","[2, 2, 2]",270,-Y,
+6,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[4, 4, 2]","[2, 2, 2]",270,-Y,
+7,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[0, 6, 2]","[2, 2, 2]",270,-Y,
+8,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[2, 6, 2]","[2, 2, 2]",270,-Y,
+9,segment_structural,1,left_wing,Left Lower Wing,segment_1,standard_2x2x2,"[4, 6, 2]","[2, 2, 2]",270,-Y,
+10,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[14, 2, 2]","[2, 2, 2]",180,-X,1.0
+11,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[12, 2, 2]","[2, 2, 2]",180,-X,1.0
+12,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[10, 2, 2]","[2, 2, 2]",180,-X,1.0
+13,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[14, 4, 2]","[2, 2, 2]",270,-Y,1.0
+14,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[12, 4, 2]","[2, 2, 2]",270,-Y,1.0
+15,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[10, 4, 2]","[2, 2, 2]",270,-Y,1.0
+16,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[14, 6, 2]","[2, 2, 2]",270,-Y,1.0
+17,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[12, 6, 2]","[2, 2, 2]",270,-Y,1.0
+18,segment_structural,10,right_wing,Right Lower Wing,segment_10,standard_2x2x2,"[10, 6, 2]","[2, 2, 2]",270,-Y,1.0
+19,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[0, 4, 5]","[2, 2, 2]",0,+X,
+20,segment_structural,2,wing,Upper Wing,segment_2,standard_2x3x2,"[2, 4, 4]","[2, 2, 3]",0,+X,
+21,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[4, 4, 6]","[2, 2, 2]",0,+X,
+22,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[6, 4, 6]","[2, 2, 2]",0,+X,
+23,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[8, 4, 6]","[2, 2, 2]",0,+X,
+24,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[10, 4, 6]","[2, 2, 2]",0,+X,
+25,segment_structural,2,wing,Upper Wing,segment_2,standard_2x3x2,"[12, 4, 4]","[2, 2, 3]",0,+X,
+26,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[14, 4, 5]","[2, 2, 2]",0,+X,
+27,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[0, 6, 5]","[2, 2, 2]",270,-Y,
+28,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[2, 6, 5]","[2, 2, 2]",270,-Y,
+29,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[4, 6, 6]","[2, 2, 2]",270,-Y,
+30,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[6, 6, 6]","[2, 2, 2]",270,-Y,
+31,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[8, 6, 6]","[2, 2, 2]",270,-Y,
+32,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[10, 6, 6]","[2, 2, 2]",270,-Y,
+33,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[12, 6, 5]","[2, 2, 2]",270,-Y,
+34,segment_structural,2,wing,Upper Wing,segment_2,standard_2x2x2,"[14, 6, 5]","[2, 2, 2]",270,-Y,
+35,segment_structural,3,horizontal_tail,Left Horizontal Tail,segment_3,standard_2x2x2,"[4, 12, 2]","[2, 2, 2]",0,+X,
+36,segment_structural,3,horizontal_tail,Left Horizontal Tail,segment_3,standard_2x2x2,"[4, 14, 1]","[2, 2, 2]",270,-Y,
+37,segment_structural,11,horizontal_tail,Right Horizontal Tail,segment_11,standard_2x2x2,"[10, 12, 2]","[2, 2, 2]",180,-X,3.0
+38,segment_structural,11,horizontal_tail,Right Horizontal Tail,segment_11,standard_2x2x2,"[10, 14, 1]","[2, 2, 2]",270,-Y,3.0
+39,segment_structural,4,connector_strut,Left Wing Strut,segment_4,standard_2x2x2,"[4, 2, 4]","[2, 2, 2]",0,+X,
+40,segment_structural,4,connector_strut,Left Wing Strut,segment_4,standard_2x2x2,"[4, 4, 4]","[2, 2, 2]",270,-Y,
+41,segment_structural,4,connector_strut,Left Wing Strut,segment_4,standard_2x2x2,"[4, 6, 4]","[2, 2, 2]",270,-Y,
+42,segment_structural,12,connector_strut,Right Wing Strut,segment_12,standard_2x2x2,"[10, 2, 4]","[2, 2, 2]",180,-X,4.0
+43,segment_structural,12,connector_strut,Right Wing Strut,segment_12,standard_2x2x2,"[10, 4, 4]","[2, 2, 2]",270,-Y,4.0
+44,segment_structural,12,connector_strut,Right Wing Strut,segment_12,standard_2x2x2,"[10, 6, 4]","[2, 2, 2]",270,-Y,4.0
+45,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[6, 0, 2]","[2, 2, 4]",0,+X,
+46,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[8, 0, 2]","[2, 2, 4]",0,+X,
+47,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 2, 0]","[2, 2, 2]",0,+X,
+48,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[6, 2, 2]","[2, 2, 4]",270,-Y,
+49,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[8, 2, 0]","[2, 2, 4]",270,-Y,
+50,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 2, 4]","[2, 2, 2]",270,-Y,
+51,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[6, 4, 1]","[2, 2, 3]",270,-Y,
+52,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 4, 4]","[2, 2, 2]",270,-Y,
+53,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 4, 1]","[2, 2, 2]",270,-Y,
+54,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[8, 4, 3]","[2, 2, 3]",270,-Y,
+55,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 6, 1]","[2, 2, 2]",270,-Y,
+56,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[6, 6, 3]","[2, 2, 3]",270,-Y,
+57,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[8, 6, 1]","[2, 2, 3]",270,-Y,
+58,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 6, 4]","[2, 2, 2]",270,-Y,
+59,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 8, 0]","[2, 2, 2]",0,+X,
+60,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[6, 8, 2]","[2, 2, 3]",270,-Y,
+61,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[8, 8, 0]","[2, 2, 3]",270,-Y,
+62,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 8, 3]","[2, 2, 2]",270,-Y,
+63,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[6, 10, 0]","[2, 2, 3]",270,-Y,
+64,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 10, 3]","[2, 2, 2]",270,-Y,
+65,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 10, 0]","[2, 2, 2]",270,-Y,
+66,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[8, 10, 2]","[2, 2, 3]",270,-Y,
+67,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[6, 12, 0]","[2, 2, 2]",270,-Y,
+68,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[6, 12, 2]","[2, 2, 3]",270,-Y,
+69,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x3x2,"[8, 12, 0]","[2, 2, 3]",270,-Y,
+70,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x2x2,"[8, 12, 3]","[2, 2, 2]",270,-Y,
+71,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[6, 14, 1]","[2, 2, 4]",270,-Y,
+72,segment_structural,6,fuselage,Fuselage,segment_6,standard_2x4x2,"[8, 14, 1]","[2, 2, 4]",270,-Y,

@@ -1,0 +1,12 @@
+global_step,phase,segment_id,segment_label,local_step,row,status,new_block_ids,new_block_count
+1,build_segment_subassembly,1.0,left_wing,1.0,1.0,valid,"1,2,3",3
+2,build_segment_subassembly,1.0,left_wing,2.0,2.0,valid,"4,5,6",3
+3,build_segment_subassembly,3.0,right_wing,1.0,1.0,valid,"7,8,9",3
+4,build_segment_subassembly,3.0,right_wing,2.0,2.0,valid,"10,11,12",3
+5,build_segment_subassembly,2.0,body,1.0,1.0,valid,"13,14",2
+6,build_segment_subassembly,2.0,body,2.0,2.0,valid,"15,16",2
+7,build_segment_subassembly,2.0,body,3.0,3.0,valid,"17,18,19,20",4
+8,build_segment_subassembly,2.0,body,4.0,4.0,valid,"21,22",2
+9,build_segment_subassembly,2.0,body,5.0,5.0,valid,"23,24",2
+10,build_segment_subassembly,2.0,body,6.0,6.0,valid,"25,26",2
+11,final_validated_state,,,,,valid,,0

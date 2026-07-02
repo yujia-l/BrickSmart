@@ -1,0 +1,15 @@
+{
+  "contract_id": "bird-standard-kit",
+  "version_id": "baseline",
+  "canonical_uri": "contract://bird-standard-kit@baseline",
+  "context_path": "task_context.json",
+  "confirmations_path": "segment_confirmations.csv",
+  "context_sha256": "3e868469f09369d6d71ebce2a40611f10c470ca992b37b618d26aa6ae94c309c",
+  "confirmations_sha256": "e7a2f955e4e2122b6574aae73cef25275a48580bd49a2d0b05f8789f605247c1",
+  "model_id": "bird-three-segment-build",
+  "model_uri": "model://bird-base",
+  "created_at": "2026-07-02T01:54:32.447724Z",
+  "metadata": {
+    "purpose": "regression_example"
+  }
+}

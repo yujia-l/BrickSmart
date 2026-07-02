@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bricksmart"
+version = "1.1.2"
+description = "Model-agnostic BrickSmart planner with dynamic model storage, versioned contracts, isolated runs, XLSX catalog, and constrained inventory"
+requires-python = ">=3.11"
+dependencies = [
+  "PyYAML>=6.0",
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "pydantic>=2.0",
+  "numpy>=1.26",
+  "pandas>=2.0",
+  "trimesh>=4.0",
+  "plotly>=5.20",
+  "matplotlib>=3.8",
+  "scipy>=1.12",
+  "openpyxl>=3.1",
+  "Pillow>=10.0",
+  "requests>=2.31",
+  "python-multipart>=0.0.9"
+]
+
+[project.optional-dependencies]
+s3 = ["boto3>=1.34"]
+dev = ["pytest>=8.0", "httpx>=0.27", "build>=1.2"]
+
+[project.scripts]
+bricksmart-plan = "bricksmart.cli:main"
+bricksmart-build = "bricksmart.build_cli:main"
+bricksmart-build-row-column = "bricksmart.row_column_cli:main"
+bricksmart-build-obj-greedy = "bricksmart.obj_cli:main"
+bricksmart-catalog-inspect = "bricksmart.catalog_cli:main"
+bricksmart-model-store = "bricksmart.model_store_cli:main"
+bricksmart-contract-registry = "bricksmart.model_registry_cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "backend"}
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["backend/tests"]
+addopts = "-q"
+
+[tool.setuptools.package-data]
+bricksmart = ["config/**/*.yaml", "config/**/*.yml", "config/**/*.json"]

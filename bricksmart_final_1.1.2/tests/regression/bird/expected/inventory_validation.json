@@ -1,0 +1,132 @@
+{
+  "valid": true,
+  "inventory_id": "standard_kit",
+  "inventory_mode": "finite",
+  "usage_rows": [
+    {
+      "block_family": "angle_joint",
+      "capacity": 12,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 12,
+      "status": "PASS"
+    },
+    {
+      "block_family": "angle_symmetrical",
+      "capacity": 6,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 6,
+      "status": "PASS"
+    },
+    {
+      "block_family": "big_wheel",
+      "capacity": 4,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "bucket",
+      "capacity": 1,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 1,
+      "status": "PASS"
+    },
+    {
+      "block_family": "bucket_arms",
+      "capacity": 1,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 1,
+      "status": "PASS"
+    },
+    {
+      "block_family": "feature_beam_3x1x1",
+      "capacity": 4,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "feature_beam_7x1x1",
+      "capacity": 4,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "feature_beam_curved",
+      "capacity": 4,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "hinge_block",
+      "capacity": 2,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 2,
+      "status": "PASS"
+    },
+    {
+      "block_family": "rotation_block",
+      "capacity": 2,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 2,
+      "status": "PASS"
+    },
+    {
+      "block_family": "small_wheel",
+      "capacity": 4,
+      "used": 0,
+      "ledger_committed": 0,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x2x2",
+      "capacity": 16,
+      "used": 16,
+      "ledger_committed": 16,
+      "remaining": 0,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x3x2",
+      "capacity": 10,
+      "used": 6,
+      "ledger_committed": 6,
+      "remaining": 4,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x4x2",
+      "capacity": 12,
+      "used": 4,
+      "ledger_committed": 4,
+      "remaining": 8,
+      "status": "PASS"
+    }
+  ],
+  "overages": {},
+  "ledger_mismatches": {},
+  "open_reservations": {},
+  "recount": {
+    "standard_2x2x2": 16,
+    "standard_2x3x2": 6,
+    "standard_2x4x2": 4
+  },
+  "ledger_committed": {
+    "standard_2x2x2": 16,
+    "standard_2x3x2": 6,
+    "standard_2x4x2": 4
+  }
+}

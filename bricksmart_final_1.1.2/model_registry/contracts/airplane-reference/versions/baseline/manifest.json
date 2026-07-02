@@ -1,0 +1,15 @@
+{
+  "contract_id": "airplane-reference",
+  "version_id": "baseline",
+  "canonical_uri": "contract://airplane-reference@baseline",
+  "context_path": "task_context.json",
+  "confirmations_path": "segment_confirmations.csv",
+  "context_sha256": "abeb276f11cffea0cf858cccc903f3738f469ef0396fb3e6cc52f86a88a73655",
+  "confirmations_sha256": "a4bddf67176eda029a8389043192475a70399944a40f61cfcc850bd769a9474c",
+  "model_id": "airplane-selective-interface-build",
+  "model_uri": "model://airplane-tripo",
+  "created_at": "2026-07-02T01:54:32.452208Z",
+  "metadata": {
+    "purpose": "regression_example"
+  }
+}

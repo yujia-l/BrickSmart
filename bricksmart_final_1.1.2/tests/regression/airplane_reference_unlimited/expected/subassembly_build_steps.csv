@@ -1,0 +1,27 @@
+global_step,phase,segment_id,segment_name,segment_label,local_step,row,status,new_block_ids,new_block_count
+1,build_segment_subassembly,1,Left Lower Wing,left_wing,1,1,valid,"1,2,3",3
+2,build_segment_subassembly,1,Left Lower Wing,left_wing,2,2,valid,"4,5,6",3
+3,build_segment_subassembly,1,Left Lower Wing,left_wing,3,3,valid,"7,8,9",3
+4,build_segment_subassembly,10,Right Lower Wing,right_wing,1,1,valid,"10,11,12",3
+5,build_segment_subassembly,10,Right Lower Wing,right_wing,2,2,valid,"13,14,15",3
+6,build_segment_subassembly,10,Right Lower Wing,right_wing,3,3,valid,"16,17,18",3
+7,build_segment_subassembly,2,Upper Wing,wing,1,1,valid,"19,20,21,22,23,24,25,26",8
+8,build_segment_subassembly,2,Upper Wing,wing,2,2,valid,"27,28,29,30,31,32,33,34",8
+9,build_segment_subassembly,3,Left Horizontal Tail,horizontal_tail,1,1,valid,35,1
+10,build_segment_subassembly,3,Left Horizontal Tail,horizontal_tail,2,2,valid,36,1
+11,build_segment_subassembly,11,Right Horizontal Tail,horizontal_tail,1,1,valid,37,1
+12,build_segment_subassembly,11,Right Horizontal Tail,horizontal_tail,2,2,valid,38,1
+13,build_segment_subassembly,4,Left Wing Strut,connector_strut,1,1,valid,39,1
+14,build_segment_subassembly,4,Left Wing Strut,connector_strut,2,2,valid,40,1
+15,build_segment_subassembly,4,Left Wing Strut,connector_strut,3,3,valid,41,1
+16,build_segment_subassembly,12,Right Wing Strut,connector_strut,1,1,valid,42,1
+17,build_segment_subassembly,12,Right Wing Strut,connector_strut,2,2,valid,43,1
+18,build_segment_subassembly,12,Right Wing Strut,connector_strut,3,3,valid,44,1
+19,build_segment_subassembly,6,Fuselage,fuselage,1,1,valid,"45,46",2
+20,build_segment_subassembly,6,Fuselage,fuselage,2,2,valid,"47,48,49,50",4
+21,build_segment_subassembly,6,Fuselage,fuselage,3,3,valid,"51,52,53,54",4
+22,build_segment_subassembly,6,Fuselage,fuselage,4,4,valid,"55,56,57,58",4
+23,build_segment_subassembly,6,Fuselage,fuselage,5,5,valid,"59,60,61,62",4
+24,build_segment_subassembly,6,Fuselage,fuselage,6,6,valid,"63,64,65,66",4
+25,build_segment_subassembly,6,Fuselage,fuselage,7,7,valid,"67,68,69,70",4
+26,build_segment_subassembly,6,Fuselage,fuselage,8,8,valid,"71,72",2

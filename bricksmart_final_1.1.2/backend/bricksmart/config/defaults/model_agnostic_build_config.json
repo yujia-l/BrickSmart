@@ -1,0 +1,16 @@
+{
+  "schema_version": "2.0",
+  "planning": {
+    "inventory_profile": "standard_kit",
+    "enforce_inventory": true,
+    "inventory_violation_policy": "fail",
+    "scarcity_weight": 0.25,
+    "atomic_selection_kinds": [
+      "symmetry_pair",
+      "functional_attachment",
+      "connector_module",
+      "repair_module"
+    ],
+    "final_inventory_recount_required": true
+  }
+}

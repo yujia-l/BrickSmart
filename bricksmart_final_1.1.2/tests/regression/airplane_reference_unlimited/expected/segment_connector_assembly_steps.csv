@@ -1,0 +1,9 @@
+assembly_step,action,anchor_segment_id,attached_segment_id,interface_id
+1,start_with_segment_subassembly,,6,
+2,attach_segment_by_direct_structural_lock,6.0,1,DJ_001_006
+3,attach_segment_by_direct_structural_lock,6.0,3,DJ_003_006
+4,attach_segment_by_direct_structural_lock,6.0,4,DJ_004_006
+5,attach_segment_by_direct_structural_lock,6.0,10,DJ_006_010
+6,attach_segment_by_direct_structural_lock,6.0,11,DJ_006_011
+7,attach_segment_by_direct_structural_lock,6.0,12,DJ_006_012
+8,attach_segment_by_direct_structural_lock,4.0,2,DJ_002_004

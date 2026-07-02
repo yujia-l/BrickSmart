@@ -1,0 +1,16 @@
+interface_id,segment_a,segment_b,segment_a_label,segment_b_label,normal_a_to_b,contact_area,assembly_edge_role,root_segment_id
+SI_001_002_001,1,2,left_wing,wing,+Z,4,optional_non_tree,6
+SI_001_004_002,1,4,left_wing,connector_strut,+Z,12,required_spanning_forest,6
+SI_001_006_003,1,6,left_wing,fuselage,+X,12,required_spanning_forest,6
+SI_002_004_004,2,4,wing,connector_strut,+X,6,optional_non_tree,6
+SI_002_004_005,2,4,wing,connector_strut,-Z,8,optional_non_tree,6
+SI_002_006_006,2,6,wing,fuselage,-Z,16,required_spanning_forest,6
+SI_002_010_007,2,10,wing,right_wing,-Z,4,optional_non_tree,6
+SI_002_012_008,2,12,wing,connector_strut,-X,6,optional_non_tree,6
+SI_002_012_009,2,12,wing,connector_strut,-Z,8,optional_non_tree,6
+SI_003_006_010,3,6,horizontal_tail,fuselage,+X,8,required_spanning_forest,6
+SI_004_006_011,4,6,connector_strut,fuselage,+X,12,optional_non_tree,6
+SI_006_010_012,6,10,fuselage,right_wing,+X,12,required_spanning_forest,6
+SI_006_011_013,6,11,fuselage,horizontal_tail,+X,8,required_spanning_forest,6
+SI_006_012_014,6,12,fuselage,connector_strut,+X,12,required_spanning_forest,6
+SI_010_012_015,10,12,right_wing,connector_strut,+Z,12,optional_non_tree,6

@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+.test-runs/
+runs/*/
+!runs/README.md
+model_store/tmp/*

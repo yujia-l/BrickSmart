@@ -1,0 +1,71 @@
+{
+  "schema_version": "bricksmart-provenance-1.1",
+  "repository_version": "1.1.2",
+  "execution_mode": "validated",
+  "validated_runtime_llm": false,
+  "automated_tests": {
+    "collected": 96,
+    "passed": 96,
+    "failed": 0
+  },
+  "live_builds": {
+    "bird": {
+      "contract_uri": "contract://bird-standard-kit@validated-1",
+      "final_claim_valid": true,
+      "final_blocks": 26,
+      "true_build_steps": 14
+    },
+    "airplane": {
+      "contract_uri": "contract://airplane-reference@validated-1",
+      "final_claim_valid": true,
+      "final_blocks": 78,
+      "true_build_steps": 41,
+      "runtime_llm_effective": false,
+      "fixture_name": "airplane_reference_unlimited",
+      "inventory_mode": "unlimited"
+    }
+  },
+  "catalog": {
+    "path": "block_catalog/block_definitions.xlsx",
+    "single_source_of_truth": true
+  },
+  "regression_policy": {
+    "source_repository_only": true,
+    "production_distribution_included": false,
+    "fixtures": [
+      "bird",
+      "airplane_reference_unlimited",
+      "airplane_standard_kit"
+    ]
+  },
+  "standard_kit_airplane": {
+    "contract_uri": "contract://airplane-standard-kit@validated-1",
+    "expected_status": "INFEASIBLE_INVENTORY",
+    "build_instructions_html_generated": false,
+    "observed_status": "INFEASIBLE_INVENTORY",
+    "failure_scope": "symmetry_pair:SP_001_010",
+    "shortages": {
+      "standard_2x2x2": {
+        "required": 18,
+        "available": 16,
+        "shortage": 2
+      }
+    },
+    "validated_final_claim": false
+  },
+  "html_generation": {
+    "generator": "backend/bricksmart/reporting/true_build_player.py",
+    "canonical_artifact": "artifacts/build_instructions.html",
+    "inputs": [
+      "validated run CSV/JSON artifacts",
+      "catalog-derived display metadata"
+    ],
+    "self_contained": true
+  },
+  "repository_independence": {
+    "external_r_and_d_runtime_dependency": false,
+    "interactive_shell_dependency": false,
+    "source_migration_markers": false,
+    "retired_r_and_d_version_identifiers": false
+  }
+}

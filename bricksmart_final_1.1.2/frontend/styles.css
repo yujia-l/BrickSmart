@@ -1,0 +1,40 @@
+:root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #17202a; background: #f4f6f8; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { width: min(1100px, calc(100% - 40px)); margin: 40px auto; }
+header { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 32px; }
+.eyebrow { text-transform: uppercase; letter-spacing: .14em; font-weight: 700; margin: 0; }
+h1 { margin: 6px 0; font-size: clamp(2rem, 6vw, 4rem); line-height: .98; }
+section { background: white; border: 1px solid #d8dde3; border-radius: 16px; padding: 24px; margin: 20px 0; box-shadow: 0 8px 30px rgba(20, 30, 40, .05); }
+button { border: 0; border-radius: 999px; padding: 14px 20px; font-weight: 700; cursor: pointer; background: #17202a; color: white; }
+.inventory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.inventory-card { border: 1px solid #d8dde3; border-radius: 12px; padding: 14px; }
+.inventory-card strong { display: block; font-size: 1.7rem; margin-top: 8px; }
+.inventory-card small { color: #5f6b76; }
+.status { font-weight: 700; margin-bottom: 14px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; border-bottom: 1px solid #e5e8eb; text-align: left; vertical-align: top; }
+code { font-size: .82rem; }
+@media (max-width: 650px) { header { display: block; } button { margin-top: 16px; } table { font-size: .85rem; } }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+button.secondary { background: #dfe5eb; color: #17202a; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 12px; margin: 14px 0 22px; }
+.metric { border: 1px solid #d8dde3; border-radius: 12px; padding: 14px; }
+.metric strong { display: block; font-size: 1.5rem; margin-top: 6px; }
+.metric small, .note { color: #5f6b76; }
+
+label {
+  display: block;
+  margin: 0.8rem 0 0.3rem;
+  font-weight: 650;
+}
+
+input[type="text"], input[type="file"] {
+  width: min(100%, 860px);
+  box-sizing: border-box;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #c8c8c8;
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+}
