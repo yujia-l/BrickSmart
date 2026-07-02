@@ -169,12 +169,11 @@ st.markdown(
         font-weight: 700;
     }
     div[data-testid="column"] div[data-testid="stVerticalBlock"]:has(#ks-lesson-components-sticky) {
-        position: sticky;
-        top: 1rem;
+        position: static;
         z-index: 20;
         align-self: flex-start;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
+        max-height: none;
+        overflow: visible;
         padding-bottom: 1rem;
         background: #ffffff;
     }
