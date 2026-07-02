@@ -18,7 +18,7 @@ st-gsheets-connection
 fastapi
 uvicorn[standard]
 pydantic>=2.0
-httpx
+httpx==0.27.2
 requests
 pillow
 numpy
