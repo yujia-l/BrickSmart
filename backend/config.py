@@ -14,7 +14,9 @@ env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 # --- OpenAI ---
-OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+# Cloud Run currently exposes the OpenAI Secret Manager value as OPENAI_KEY.
+# Local/dev tooling may use OPENAI_API_KEY, so support both names.
+OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY", "")
 OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o")
 OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS: int = 3072
