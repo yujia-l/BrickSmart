@@ -8,9 +8,21 @@ langchain_text_splitters==0.2.2
 openai==1.41.0
 SQLAlchemy==2.0.31
 streamlit==1.37.1
-duckduckgo-search==6.2.1
 pypdf==4.3.0
 docarray==0.40.0
 validators==0.33.0
 streamlit-mic-recorder
 st-gsheets-connection
+
+# KidSpark API + physicalization runtime
+fastapi
+uvicorn[standard]
+pydantic>=2.0
+httpx
+requests
+pillow
+numpy
+matplotlib
+reportlab
+python-multipart
+python-dotenv
