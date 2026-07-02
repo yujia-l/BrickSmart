@@ -2,64 +2,316 @@
 KidSpark AI — Pydantic v2 Schemas
 Owner: SHARED (Dev A and Dev B both import from here)
 
-This file defines ALL Pydantic data models used across the system. It is the
-single source of truth for data contracts between the ingestion pipeline and
-the runtime/agent pipeline.
-
-Models to implement (see KIDSPARK_TECHNICAL_SPEC.md Section 11 for full details):
-
-STEP A OUTPUT:
-  - StoryAnalysis: Automatic storybook analysis result. Fields include title,
-    characters, settings, key_events, themes, buildable_objects,
-    vocabulary_opportunities, sel_angles.
-
-CONSULTATION AGENT OUTPUT:
-  - ConsultationSummary: Result of the multi-turn teacher consultation loop.
-    Fields include agreed_theme, agreed_artifact, artifact_parts,
-    learning_objectives, grade_band, duration_minutes, literacy_focus,
-    sel_focus, teacher_preferences, kb_evidence_used, storybook_title.
-
-BLOCK AWARENESS AGENT OUTPUT:
-  - ArtifactPart: Single part of the build artifact with movement type and
-    suggested Kid Spark pieces.
-  - BlockRequirements: Full block awareness result. Fields include
-    artifact_label, parts (list of ArtifactPart), connector_types_needed,
-    total_cube_blocks, total_special_pieces, articulation_summary.
-
-BLOCK CATALOG:
-  - KidSparkPiece: A single Kid Spark block/piece definition. Fields include
-    piece_type, piece_name, colors_available, quantity_per_kit,
-    connection_mechanism, supports_rotation, supports_pivot, supports_axle,
-    structural_role, dimensions, description.
-
-GENERATION PIPELINE:
-  - TimeBlock: A single time block in the lesson flow (activity, duration, description).
-  - LessonSpec: The shared internal blueprint (Step B output). Fields include
-    theme, objectives, lesson_flow, teacher_prompts, student_steps, materials,
-    standards_alignment, build_target_profile_ref, validation_flags.
-  - BuildTargetProfile: Build target description (Step C output). Fields include
-    label, required_parts, part_descriptions, exemplar_references,
-    teacher_build_prompts, connection_hint.
-  - TeacherLessonPlan: Full teacher plan (Step D output) with sections matching
-    the canonical structure (overview, objectives, vocabulary, anticipatory_set,
-    step_read, step_learn_explore, step_invent, closure_reflection).
-  - StudentActivityGuide: Student-facing guide (Step E output) with pages
-    matching the canonical structure.
-  - ValidationResult: Validation output (Step F). Fields include is_valid,
-    warnings, structure_check, standards_alignment_check, build_coherence_check.
-
-RETRIEVAL:
-  - EvidencePack: Assembled retrieval results. Fields include teacher_cards,
-    student_cards, visual_cards, policy_cards, trace.
-  - TraceEntry: A single retrieval trace entry (node_id, score, bundle_id).
-
-LESSON PACKAGE:
-  - LessonPackage: The complete output — teacher_plan, student_guide,
-    build_target_profile, validation.
-
-INGESTION (Dev A writes, Dev B reads):
-  - KnowledgeNodeCreate: Schema for creating a knowledge node during ingestion.
-  - RelationCreate: Schema for creating a relation during ingestion.
-  - PolicyRuleCreate: Schema for creating a policy rule during ingestion.
-  - IngestionJobStatus: Status tracking for ingestion jobs.
+Single source of truth for data contracts between the ingestion pipeline
+and the runtime/agent pipeline.
 """
+
+from __future__ import annotations
+
+from enum import Enum
+from typing import Optional
+from pydantic import BaseModel, Field
+
+
+# ---------------------------------------------------------------------------
+# Enums
+# ---------------------------------------------------------------------------
+
+class SessionPhase(str, Enum):
+    story_upload = "story_upload"
+    lesson_planning = "lesson_planning"
+    model_preview = "model_preview"
+    segments_connectors = "segments_connectors"
+    build_plan = "build_plan"
+    lesson_bundle = "lesson_bundle"
+    consultation = "consultation"
+    block_awareness = "block_awareness"
+    generation = "generation"
+    refinement = "refinement"
+    complete = "complete"
+
+
+class MovementType(str, Enum):
+    spinning = "spinning"
+    pivoting = "pivoting"
+    rolling = "rolling"
+    static = "static"
+
+
+# ---------------------------------------------------------------------------
+# Step A — Storybook Analysis
+# ---------------------------------------------------------------------------
+
+class StoryAnalysis(BaseModel):
+    title: str
+    characters: list[str]
+    settings: list[str]
+    key_events: list[str]
+    themes: list[str]
+    buildable_objects: list[str]
+    vocabulary_opportunities: list[str]
+    sel_angles: list[str]
+
+
+# ---------------------------------------------------------------------------
+# Consultation Agent
+# ---------------------------------------------------------------------------
+
+class ConsultationResponse(BaseModel):
+    response: str
+    areas_covered: list[str] = Field(default_factory=list)
+    areas_remaining: list[str] = Field(default_factory=list)
+    ready_to_approve: bool = False
+
+
+class ConsultationSummary(BaseModel):
+    agreed_theme: str
+    agreed_artifact: str
+    artifact_parts: list[str]
+    learning_objectives: list[str]
+    grade_band: str
+    duration_minutes: int
+    literacy_focus: str
+    sel_focus: str
+    teacher_preferences: list[str]
+    kb_evidence_used: list[str]
+    storybook_title: str
+
+
+# ---------------------------------------------------------------------------
+# Block Awareness Agent
+# ---------------------------------------------------------------------------
+
+class ArtifactPart(BaseModel):
+    part_name: str
+    movement: str
+    suggested_pieces: list[str]
+    piece_count: int
+    notes: str
+
+
+class BlockRequirements(BaseModel):
+    artifact_label: str
+    parts: list[ArtifactPart]
+    connector_types_needed: list[str]
+    total_cube_blocks: int
+    total_special_pieces: int
+    articulation_summary: str
+
+
+class KidSparkPiece(BaseModel):
+    piece_type: str
+    piece_name: str
+    colors_available: list[str]
+    quantity_per_kit: int
+    connection_mechanism: str
+    supports_rotation: bool
+    supports_pivot: bool
+    supports_axle: bool
+    structural_role: str
+    dimensions: dict
+    description: str
+
+
+# ---------------------------------------------------------------------------
+# Generation Pipeline
+# ---------------------------------------------------------------------------
+
+class TimeBlock(BaseModel):
+    activity: str
+    duration_minutes: int
+    description: str
+
+
+class LessonSpec(BaseModel):
+    theme: str
+    objectives: list[str]
+    lesson_flow: list[TimeBlock]
+    teacher_prompts: list[str]
+    student_steps: list[str]
+    materials: list[str]
+    standards_alignment: list[str]
+    build_target_profile_ref: str
+    validation_flags: dict[str, bool] = Field(default_factory=dict)
+
+
+class BuildTargetProfile(BaseModel):
+    target_label: str
+    target_family: str
+    required_visible_parts: list[str]
+    exemplar_assets: list[str] = Field(default_factory=list)
+    teacher_planning_prompts: list[str]
+    variation_prompts: list[str]
+
+
+class TeacherPrompt(BaseModel):
+    context: str
+    prompt_text: str
+    expected_response: str
+
+
+class TeacherLessonPlan(BaseModel):
+    title: str
+    overview: str
+    learning_objectives: list[str]
+    curriculum_connections: list[str]
+    activity_details: dict
+    materials: list[str]
+    vocabulary: list[dict[str, str]]
+    pre_lesson_preparation: list[str]
+    plan_for_all_learners: str
+    anticipatory_set: str
+    step_01_read: str
+    step_02_learn_explore: str
+    step_03_invent: str
+    closure_reflection: str
+    teacher_prompts: list[TeacherPrompt]
+    troubleshooting_tips: list[dict[str, str]]
+    standards: list[str]
+
+
+class StudentGuideSection(BaseModel):
+    section_type: str
+    title: str
+    content: str
+    visual_description: Optional[str] = None
+
+
+class StudentActivityGuide(BaseModel):
+    title: str
+    grade_band: str
+    sections: list[StudentGuideSection]
+    example_build_description: str
+    real_world_connection: str
+    reflection_questions: list[str]
+
+
+class ValidationResult(BaseModel):
+    is_valid: bool
+    errors: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    auto_fixes_applied: list[str] = Field(default_factory=list)
+    checks: dict[str, bool] = Field(default_factory=dict)
+
+
+class LessonPackage(BaseModel):
+    teacher_plan: TeacherLessonPlan
+    student_guide: StudentActivityGuide
+    build_target_profile: BuildTargetProfile
+    validation: ValidationResult
+    evidence_trace: list[TraceEntry] = Field(default_factory=list)
+    iteration: int = 1
+    session_id: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Retrieval / Evidence
+# ---------------------------------------------------------------------------
+
+class EvidenceCard(BaseModel):
+    node_id: str
+    bundle_id: str
+    content_text: str
+    doc_kind: str
+    audience: str
+    lesson_stage: str
+    relevance_score: float
+
+
+class TraceEntry(BaseModel):
+    node_id: str
+    bundle_id: str
+    score: float
+    retrieval_reason: str = ""
+
+
+class EvidencePack(BaseModel):
+    teacher_cards: list[EvidenceCard] = Field(default_factory=list)
+    student_cards: list[EvidenceCard] = Field(default_factory=list)
+    visual_cards: list[EvidenceCard] = Field(default_factory=list)
+    policy_cards: list[EvidenceCard] = Field(default_factory=list)
+    trace: list[TraceEntry] = Field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# Ingestion DTOs (Dev A writes, Dev B reads)
+# ---------------------------------------------------------------------------
+
+class KnowledgeNodeCreate(BaseModel):
+    bundle_id: str
+    node_id: str
+    doc_kind: str
+    audience: str
+    lesson_stage: str
+    content_text: str
+    build_target: Optional[str] = None
+    visual_role: Optional[str] = None
+    metadata: dict = Field(default_factory=dict)
+
+
+class RelationCreate(BaseModel):
+    source_node_id: str
+    target_node_id: str
+    relation_type: str
+
+
+class PolicyRuleCreate(BaseModel):
+    framework: str
+    grade_band: str
+    strand: str
+    standard_code: Optional[str] = None
+    rule_text: str
+
+
+# ---------------------------------------------------------------------------
+# Session (in-memory runtime state)
+# ---------------------------------------------------------------------------
+
+class SessionState(BaseModel):
+    session_id: str
+    phase: SessionPhase = SessionPhase.story_upload
+    storybook_text: Optional[str] = None
+    storybook_analysis: Optional[StoryAnalysis] = None
+    teacher_messages: list[dict[str, str]] = Field(default_factory=list)
+    consultation_summary: Optional[ConsultationSummary] = None
+    block_requirements: Optional[BlockRequirements] = None
+    lesson_package: Optional[LessonPackage] = None
+    build_job_id: Optional[str] = None
+    model_preview_job_id: Optional[str] = None
+    segment_job_id: Optional[str] = None
+    document_job_id: Optional[str] = None
+    build_result: Optional[dict] = None
+    model_preview_result: Optional[dict] = None
+    segment_result: Optional[dict] = None
+    document_result: Optional[dict] = None
+    planning_state: dict = Field(default_factory=dict)
+    iteration: int = 0
+
+
+# ---------------------------------------------------------------------------
+# API request / response helpers
+# ---------------------------------------------------------------------------
+
+class MessageRequest(BaseModel):
+    message: str
+
+
+class MessageResponse(BaseModel):
+    response: str
+    phase: str
+    areas_covered: list[str] = Field(default_factory=list)
+    areas_remaining: list[str] = Field(default_factory=list)
+    ready_to_approve: bool = False
+    ready_to_generate: bool = False
+    planning_state: dict = Field(default_factory=dict)
+
+
+class SessionCreatedResponse(BaseModel):
+    session_id: str
+    phase: str
+
+
+class UploadResponse(BaseModel):
+    status: str
+    story_analysis: StoryAnalysis
+    phase: str

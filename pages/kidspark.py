@@ -1,0 +1,1078 @@
+"""KidSpark AI six-step teacher workflow."""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import time
+from pathlib import Path
+from typing import Any
+
+import requests
+import streamlit as st
+
+BACKEND_URL = os.getenv("KIDSPARK_BACKEND_URL", "http://localhost:8001")
+OPENAI_KEY_FILE = Path(__file__).resolve().parents[1] / "openai.key"
+
+SAMPLE_STORY = """Milo's Flying Delivery
+
+Milo was a young inventor who loved building things in his workshop. His
+grandmother, Grandma Rose, ran a small bakery on the other side of town.
+Every Saturday, Milo walked her fresh-baked cookies to their neighbors.
+
+One rainy Saturday, Milo had an idea. "What if I could fly the cookies
+to everyone?" He grabbed his toolbox and started designing a flying
+delivery vehicle.
+
+His first attempt crashed into the garden fence. His second attempt
+flew sideways into a tree. Milo felt frustrated, but Grandma Rose
+reminded him: "Every great inventor learns from what didn't work."
+
+Milo asked his neighborhood friends for help. Together, they redesigned
+the wings to be wider, added a stronger propeller, and built a secure
+cargo compartment for the cookies.
+
+On the next attempt, the flying delivery vehicle soared over the
+rooftops! Milo delivered cookies to every neighbor, and everyone
+cheered. Milo learned that perseverance and teamwork can turn any
+idea into reality.
+"""
+
+WIZARD_STEPS = [
+    ("story_upload", "Upload Story"),
+    ("lesson_planning", "Plan With Coach"),
+    ("model_preview", "Model Preview"),
+    ("segments_connectors", "Segments & Connectors"),
+    ("build_plan", "Build Plan"),
+    ("lesson_bundle", "Lesson Bundle"),
+    ("complete", "Ready for Class"),
+]
+
+STEP_INDEX = {key: index for index, (key, _) in enumerate(WIZARD_STEPS)}
+LEGACY_PHASE_MAP = {
+    "consultation": "lesson_planning",
+    "block_awareness": "lesson_planning",
+    "generation": "model_preview",
+    "refinement": "segments_connectors",
+}
+
+SUGGESTED_TEACHER_DIRECTION = (
+    "I teach 1st grade for 40 minutes. Focus on perseverance, teamwork, "
+    "and how inventors learn from testing. Students should build a flying "
+    "delivery plane. The propeller should spin. The body, wings, cargo "
+    "compartment, and tail should stay static. Use vocabulary and rhyming "
+    "around machine, delivery, and propeller. Students will work in partners."
+)
+
+st.set_page_config(page_title="KidSpark AI", page_icon=":bricks:", layout="wide")
+
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebarNav"] { display: none; }
+    .ks-shell-title {
+        font-size: 2.1rem;
+        font-weight: 900;
+        letter-spacing: 0;
+        margin-bottom: .15rem;
+    }
+    .ks-subtle {
+        color: #657080;
+        font-size: .96rem;
+    }
+    .ks-step-card {
+        padding: .9rem 1rem;
+        margin: .55rem 0;
+        border: 1px solid #d9e0e8;
+        background: #f7f8fb;
+        border-radius: 8px;
+        font-weight: 800;
+    }
+    .ks-step-card.done {
+        border-color: #bfe4ca;
+        background: #e8f6ec;
+        color: #216736;
+    }
+    .ks-step-card.active {
+        border-color: #f0dc94;
+        background: #fff8df;
+        color: #7d6111;
+    }
+    .ks-panel {
+        padding: 1rem 1.1rem;
+        border: 1px solid #dfe7ef;
+        border-radius: 8px;
+        background: #ffffff;
+    }
+    .ks-sticky-panel {
+        position: sticky;
+        top: 1rem;
+    }
+    .ks-component-row {
+        display: grid;
+        grid-template-columns: 28px 150px 1fr;
+        gap: .6rem;
+        padding: .55rem 0;
+        border-bottom: 1px solid #edf1f5;
+        align-items: start;
+    }
+    .ks-component-row:last-child { border-bottom: 0; }
+    .ks-label { color: #657080; font-weight: 800; }
+    .ks-value { color: #222938; }
+    .ks-empty { color: #a1a9b5; }
+    .ks-check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 999px;
+        background: #34a853;
+        color: #fff;
+        font-weight: 900;
+        margin-right: .4rem;
+    }
+    .ks-pending {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 999px;
+        border: 2px solid #cbd5e1;
+        color: #94a3b8;
+        font-weight: 900;
+    }
+    .ks-question-cue {
+        display: inline-block;
+        padding: .08rem .35rem;
+        border-radius: 6px;
+        background: #fff2b8;
+        color: #6f5100;
+        font-weight: 900;
+    }
+    .ks-ready-note {
+        margin-top: .75rem;
+        padding: .85rem .9rem;
+        border-radius: 8px;
+        background: #eaf6ee;
+        color: #216736;
+        font-weight: 800;
+    }
+    .ks-blocked-note {
+        margin-top: .75rem;
+        padding: .85rem .9rem;
+        border-radius: 8px;
+        background: #eef5ff;
+        color: #17437a;
+        font-weight: 700;
+    }
+    div[data-testid="column"] div[data-testid="stVerticalBlock"]:has(#ks-lesson-components-sticky) {
+        position: sticky;
+        top: 1rem;
+        z-index: 20;
+        align-self: flex-start;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+        padding-bottom: 1rem;
+        background: #ffffff;
+    }
+    .ks-wait {
+        position: fixed;
+        right: 2rem;
+        bottom: 2rem;
+        z-index: 9999;
+        width: min(420px, calc(100vw - 3rem));
+        padding: 1rem 1.1rem;
+        border-radius: 8px;
+        border: 1px solid #f3c0b7;
+        background: #fff8f5;
+        box-shadow: 0 18px 50px rgba(28, 35, 47, .18);
+    }
+    .ks-wait-title {
+        color: #d94d49;
+        font-weight: 900;
+        margin-bottom: .25rem;
+    }
+    .ks-wait-bar {
+        height: .35rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #f7ddd7;
+        margin-top: .7rem;
+    }
+    .ks-wait-bar span {
+        display: block;
+        width: 38%;
+        height: 100%;
+        border-radius: inherit;
+        background: #ef5a55;
+        animation: ks-slide 1.2s ease-in-out infinite;
+    }
+    @keyframes ks-slide {
+        0% { transform: translateX(-110%); }
+        100% { transform: translateX(270%); }
+    }
+    .ks-break-card {
+        margin: 1rem 0;
+        padding: 1.1rem 1.2rem;
+        border: 1px solid #f0c7a7;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #fff8ed, #fffefe);
+        color: #6f3d12;
+    }
+    .ks-break-title {
+        font-size: 1.15rem;
+        font-weight: 900;
+        margin-bottom: .25rem;
+    }
+    .ks-steam {
+        display: inline-block;
+        animation: ks-bob 1.4s ease-in-out infinite;
+        margin-right: .35rem;
+    }
+    @keyframes ks-bob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+    }
+    .ks-hero-upload {
+        min-height: 230px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #c7d2df;
+        border-radius: 8px;
+        background: #fbfcfe;
+        color: #536173;
+        font-weight: 800;
+    }
+    div[data-testid="stButton"] button {
+        border-radius: 8px;
+        font-weight: 800;
+    }
+    div[data-testid="stTabs"] button p {
+        font-weight: 850;
+        font-size: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+def api(method: str, path: str, **kwargs: Any) -> dict[str, Any]:
+    try:
+        resp = getattr(requests, method)(f"{BACKEND_URL}{path}", timeout=90, **kwargs)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.ConnectionError:
+        st.error(f"Cannot reach the KidSpark backend at {BACKEND_URL}.")
+        st.stop()
+    except requests.HTTPError as exc:
+        st.error(exc.response.text)
+        st.stop()
+
+
+def api_bytes(path: str) -> bytes | None:
+    try:
+        resp = requests.get(f"{BACKEND_URL}{path}", timeout=90)
+        resp.raise_for_status()
+        return resp.content
+    except requests.RequestException:
+        return None
+
+
+def masked_key(value: str) -> str:
+    if not value:
+        return "Not configured"
+    return f"{value[:7]}...{value[-4:]}" if len(value) > 12 else "Configured"
+
+
+def local_openai_key() -> str:
+    if "ks_openai_api_key" in st.session_state:
+        return st.session_state["ks_openai_api_key"]
+    if OPENAI_KEY_FILE.exists():
+        try:
+            key = OPENAI_KEY_FILE.read_text(encoding="utf-8").strip()
+        except OSError:
+            key = ""
+        st.session_state["ks_openai_api_key"] = key
+        return key
+    return ""
+
+
+def backend_openai_status() -> dict[str, Any]:
+    try:
+        resp = requests.get(f"{BACKEND_URL}/api/v1/settings/openai-key", timeout=8)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
+        return {"configured": False, "masked": ""}
+
+
+def save_openai_key(api_key: str) -> None:
+    key = api_key.strip()
+    if not key:
+        st.warning("Paste an OpenAI API key before saving.")
+        return
+    OPENAI_KEY_FILE.write_text(key, encoding="utf-8")
+    st.session_state["ks_openai_api_key"] = key
+    try:
+        requests.post(f"{BACKEND_URL}/api/v1/settings/openai-key", json={"api_key": key}, timeout=15).raise_for_status()
+    except requests.RequestException:
+        st.warning("Saved locally. Restart or reconnect the backend to use the new key there.")
+    else:
+        st.success("OpenAI key saved for this app.")
+
+
+def render_openai_key_box() -> None:
+    current = local_openai_key()
+    backend_status = backend_openai_status()
+    status_text = masked_key(current) if current else backend_status.get("masked") or "Not configured"
+    st.markdown("### OpenAI")
+    st.caption(f"Status: {status_text}")
+    entered = st.text_input(
+        "OpenAI API key",
+        value=current,
+        type="password",
+        key="ks_sidebar_openai_key_input",
+        label_visibility="collapsed",
+        placeholder="sk-...",
+    )
+    if st.button("Save OpenAI Key", use_container_width=True):
+        save_openai_key(entered)
+
+
+def reset_session() -> None:
+    for key in list(st.session_state.keys()):
+        if key.startswith("ks_") or key.startswith("approve_") or key.startswith("show_"):
+            st.session_state.pop(key, None)
+
+
+def hydrate_session_from_query() -> None:
+    if "ks_session_id" in st.session_state:
+        return
+    session_id = st.query_params.get("session_id")
+    if not session_id:
+        return
+    data = api("get", f"/api/v1/sessions/{session_id}")
+    st.session_state["ks_session_id"] = session_id
+    set_phase(data.get("phase", "story_upload"))
+    st.session_state["ks_story_analysis"] = data.get("storybook_analysis")
+    st.session_state["ks_messages"] = data.get("teacher_messages") or []
+    st.session_state["ks_planning_state"] = data.get("planning_state") or {}
+    if data.get("model_preview_result"):
+        st.session_state["ks_model_result"] = data["model_preview_result"]
+        st.session_state["ks_model_context"] = data["model_preview_result"].get("context", {})
+    if data.get("segment_result"):
+        st.session_state["ks_segment_result"] = data["segment_result"]
+    if data.get("document_result"):
+        st.session_state["ks_document_result"] = data["document_result"]
+    if data.get("model_preview_job_id"):
+        try:
+            st.session_state["ks_model_job"] = api("get", f"/api/v1/sessions/{session_id}/model-preview")
+        except Exception:
+            pass
+    if data.get("segment_job_id"):
+        try:
+            st.session_state["ks_segment_job"] = api("get", f"/api/v1/sessions/{session_id}/segments")
+        except Exception:
+            pass
+    if data.get("document_job_id"):
+        try:
+            st.session_state["ks_document_job"] = api("get", f"/api/v1/sessions/{session_id}/documents")
+        except Exception:
+            pass
+
+
+def current_phase() -> str:
+    raw = st.session_state.get("ks_phase", "story_upload")
+    return LEGACY_PHASE_MAP.get(raw, raw)
+
+
+def set_phase(phase: str) -> None:
+    st.session_state["ks_phase"] = LEGACY_PHASE_MAP.get(phase, phase)
+
+
+def phase_position(phase: str) -> int:
+    return STEP_INDEX.get(LEGACY_PHASE_MAP.get(phase, phase), 0)
+
+
+def render_sidebar() -> None:
+    with st.sidebar:
+        render_openai_key_box()
+        st.divider()
+        st.markdown("### KidSpark AI")
+        st.caption("Story to BrickSmart lesson bundle")
+        if st.button("New Lesson Session", use_container_width=True):
+            reset_session()
+            st.rerun()
+        phase = current_phase()
+        current = phase_position(phase)
+        st.divider()
+        st.markdown("### Progress")
+        st.progress(current / (len(WIZARD_STEPS) - 1))
+        for idx, (key, label) in enumerate(WIZARD_STEPS):
+            if key == "complete" and phase != "complete":
+                continue
+            state = "done" if idx < current else "active" if idx == current else "todo"
+            prefix = "&#10003; " if state == "done" else ""
+            st.markdown(
+                f"<div class='ks-step-card {state}'>{prefix}{idx + 1}. {label}</div>",
+                unsafe_allow_html=True,
+            )
+        if "ks_session_id" in st.session_state:
+            st.divider()
+            st.caption(f"Session: `{st.session_state['ks_session_id'][:8]}...`")
+
+
+def existing_file(path_value: Any) -> Path | None:
+    if not path_value:
+        return None
+    path = Path(str(path_value))
+    return path if path.is_file() else None
+
+
+def image_from_files(files: list[str]) -> Path | None:
+    for file in files:
+        path = existing_file(file)
+        if path and path.suffix.lower() in {".webp", ".png", ".jpg", ".jpeg"}:
+            return path
+    return None
+
+
+def render_wait(job: dict[str, Any], title: str) -> None:
+    st.markdown(
+        f"""
+        <div class="ks-wait">
+            <div class="ks-wait-title">{title}</div>
+            <div class="ks-subtle">{job.get('message', 'Working through the build stage...')}</div>
+            <div class="ks-wait-bar"><span></span></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_job_status(job: dict[str, Any], title: str) -> None:
+    st.markdown(f"#### {title}")
+    progress = int(job.get("progress", 0))
+    st.progress(progress / 100)
+    cols = st.columns([1, 2])
+    cols[0].metric("Progress", f"{progress}%")
+    cols[1].info(f"**{job.get('stage', 'Queued')}** - {job.get('message', 'Waiting for updates.')}")
+    if job.get("events"):
+        rows = list(reversed(job["events"][-5:]))
+        st.dataframe(rows, use_container_width=True, hide_index=True)
+    if job.get("status") in ("queued", "running"):
+        render_wait(job, "KidSpark is building")
+
+
+def render_step_4_break_notice(job: dict[str, Any]) -> None:
+    if job.get("status") not in ("queued", "running"):
+        return
+    st.markdown(
+        f"""
+        <div class="ks-break-card">
+            <div class="ks-break-title"><span class="ks-steam">coffee</span>Good moment for a tiny teacher break</div>
+            <div>Bang and the notebook physicalization can take a few minutes. KidSpark is still tracking the build, so you can stretch, refill coffee, or peek back in while the segments take shape.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def poll_job(endpoint: str, state_key: str, delay: int = 8) -> dict[str, Any] | None:
+    job = st.session_state.get(state_key)
+    if not job:
+        return None
+    return job
+
+
+def refresh_running_job(endpoint: str, state_key: str, delay: int = 8) -> None:
+    job = st.session_state.get(state_key)
+    if job and job.get("status") in ("queued", "running"):
+        time.sleep(delay)
+        st.session_state[state_key] = api("get", endpoint)
+        st.rerun()
+
+
+def format_value(value: Any) -> str:
+    if value is None or value == "" or value == []:
+        return "<span class='ks-empty'>Waiting for teacher input</span>"
+    if isinstance(value, list):
+        if value and isinstance(value[0], dict):
+            return "<br>".join(
+                f"{item.get('part_name', item.get('name', 'part'))}: {item.get('movement', item.get('notes', ''))}"
+                for item in value
+            )
+        return "<br>".join(str(item) for item in value)
+    return str(value)
+
+
+COMPONENT_FIELDS = [
+    ("target_grade", "Target grade"),
+    ("duration_minutes", "Duration"),
+    ("core_concept", "Core concept"),
+    ("learning_goals", "Learning goals"),
+    ("build_object", "Build object"),
+    ("moving_parts", "Moving parts"),
+    ("static_parts", "Static parts"),
+    ("literacy_focus", "Literacy"),
+    ("sel_focus", "SEL"),
+    ("constraints", "Constraints"),
+]
+
+
+def field_complete(value: Any) -> bool:
+    if value is None or value == "" or value == []:
+        return False
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, list):
+        return any(field_complete(item) for item in value)
+    if isinstance(value, dict):
+        return any(field_complete(item) for item in value.values())
+    return True
+
+
+def planning_components_complete(state: dict[str, Any]) -> bool:
+    return all(field_complete(state.get(key)) for key, _ in COMPONENT_FIELDS)
+
+
+def missing_component_labels(state: dict[str, Any]) -> list[str]:
+    return [label for key, label in COMPONENT_FIELDS if not field_complete(state.get(key))]
+
+
+def emphasize_planning_cues(text: str) -> str:
+    cues = [
+        "target grade",
+        "grade",
+        "duration",
+        "timing",
+        "core concept",
+        "theme",
+        "learning goals",
+        "learning objectives",
+        "build artifact",
+        "build object",
+        "moving parts",
+        "static parts",
+        "literacy focus",
+        "vocabulary",
+        "SEL focus",
+        "constraints",
+    ]
+    highlighted = text
+    for cue in sorted(cues, key=len, reverse=True):
+        highlighted = re.sub(
+            rf"(?<![\w*])({re.escape(cue)})(?![\w*])",
+            r"<span class='ks-question-cue'>\1</span>",
+            highlighted,
+            flags=re.IGNORECASE,
+        )
+    return highlighted
+
+
+CHECKLIST_ADDENDUM_RE = re.compile(
+    r"\n*\*{0,2}Before we move on, I still need to complete the checklist:\*{0,2}.*?(?:Could you share those details\?|$)",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+
+
+def strip_checklist_addendum(content: str) -> str:
+    return CHECKLIST_ADDENDUM_RE.sub("", content).rstrip()
+
+
+def render_chat_message(role: str, content: str, *, show_checklist_addendum: bool = True) -> None:
+    display_content = content if show_checklist_addendum else strip_checklist_addendum(content)
+    with st.chat_message(role):
+        if role == "assistant":
+            st.markdown(emphasize_planning_cues(display_content), unsafe_allow_html=True)
+        else:
+            st.markdown(display_content)
+
+
+def render_component_panel(state: dict[str, Any]) -> None:
+    st.markdown("#### Lesson Components")
+    st.markdown("<div class='ks-panel'>", unsafe_allow_html=True)
+    for key, label in COMPONENT_FIELDS:
+        done = field_complete(state.get(key))
+        icon = "<span class='ks-check'>&#10003;</span>" if done else "<span class='ks-pending'>-</span>"
+        st.markdown(
+            f"<div class='ks-component-row'><div>{icon}</div><div class='ks-label'>{label}</div><div class='ks-value'>{format_value(state.get(key))}</div></div>",
+            unsafe_allow_html=True,
+        )
+    st.markdown("</div>", unsafe_allow_html=True)
+    if state.get("framework_matches"):
+        st.markdown("#### Framework Anchors")
+        for item in state["framework_matches"]:
+            st.markdown(f"<span class='ks-check'>&#10003;</span>{item}", unsafe_allow_html=True)
+
+
+def create_session_from_story(story_text: str, uploaded_file: Any | None) -> None:
+    session = api("post", "/api/v1/sessions")
+    session_id = session["session_id"]
+    if uploaded_file is not None:
+        files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type or "application/pdf")}
+        upload = api("post", f"/api/v1/sessions/{session_id}/upload", files=files)
+    else:
+        upload = api("post", f"/api/v1/sessions/{session_id}/upload", data={"text": story_text})
+    analysis = upload["story_analysis"]
+    st.session_state["ks_session_id"] = session_id
+    set_phase(upload["phase"])
+    st.session_state["ks_story_analysis"] = analysis
+    st.session_state["ks_messages"] = [
+        {
+            "role": "assistant",
+            "content": (
+                f"I read **{analysis.get('title', 'the story')}** and found a few promising build ideas: "
+                f"{', '.join(analysis.get('buildable_objects', []))}.\n\n"
+                "Let's shape this into a classroom-ready lesson. Tell me the grade, timing, "
+                "what story theme you want students to notice, and what object you want them to build."
+            ),
+        }
+    ]
+    st.session_state["ks_planning_state"] = {}
+
+
+def render_header() -> None:
+    st.markdown("<div class='ks-shell-title'>KidSpark AI</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='ks-subtle'>A guided teacher workflow for turning a story into a BrickSmart build, lesson plan, activity guide, and slide companion.</div>",
+        unsafe_allow_html=True,
+    )
+    st.divider()
+
+
+def render_step_1() -> None:
+    st.subheader("Step 1 - Upload Storybook")
+    left, right = st.columns([1.1, 1])
+    with left:
+        st.markdown("<div class='ks-hero-upload'>Drop in a story PDF or paste your own text below</div>", unsafe_allow_html=True)
+        uploaded_file = st.file_uploader("Upload story PDF or text", type=["pdf", "txt", "md"], label_visibility="collapsed")
+        story_text = st.text_area("Or type/paste the story", value=SAMPLE_STORY, height=260)
+        disabled = uploaded_file is None and len(story_text.strip()) < 50
+        if st.button("Confirm & Next Step", type="primary", disabled=disabled, use_container_width=True):
+            with st.spinner("Analyzing story, matching framework anchors, and finding buildable ideas..."):
+                create_session_from_story(story_text, uploaded_file)
+            st.rerun()
+    with right:
+        st.markdown("#### What KidSpark looks for")
+        st.markdown(
+            """
+            - Story theme and SEL opportunities
+            - Vocabulary and sound-awareness moments
+            - Buildable objects from the plot
+            - Standards/framework anchors
+            - Early hints for moving or static parts
+            """
+        )
+
+
+def render_analysis_preview() -> None:
+    analysis = st.session_state.get("ks_story_analysis")
+    if not analysis:
+        return
+    with st.container(border=True):
+        st.markdown("#### Story Analysis Preview")
+        cols = st.columns(4)
+        cols[0].markdown(f"**Title**<br>{analysis.get('title', '')}", unsafe_allow_html=True)
+        cols[1].markdown("**Themes**<br>" + "<br>".join(analysis.get("themes", [])[:4]), unsafe_allow_html=True)
+        cols[2].markdown("**Build Ideas**<br>" + "<br>".join(analysis.get("buildable_objects", [])[:4]), unsafe_allow_html=True)
+        cols[3].markdown("**Vocabulary**<br>" + "<br>".join(analysis.get("vocabulary_opportunities", [])[:4]), unsafe_allow_html=True)
+
+
+def render_step_2() -> None:
+    st.subheader("Step 2 - Plan With KidSpark Coach")
+    render_analysis_preview()
+    state = st.session_state.get("ks_planning_state", {})
+    ready = planning_components_complete(state)
+    messages = st.session_state.get("ks_messages", [])
+    latest_assistant_index = next(
+        (idx for idx in range(len(messages) - 1, -1, -1) if messages[idx].get("role") == "assistant"),
+        -1,
+    )
+    chat_col, panel_col = st.columns([1.55, 1])
+    with chat_col:
+        st.markdown("#### Teacher Conversation")
+        for idx, msg in enumerate(messages):
+            show_checklist = not ready and idx == latest_assistant_index
+            render_chat_message(msg["role"], msg["content"], show_checklist_addendum=show_checklist)
+        if st.button("Use Suggested Teacher Direction", use_container_width=True):
+            st.session_state["ks_messages"].append({"role": "user", "content": SUGGESTED_TEACHER_DIRECTION})
+            with st.spinner("KidSpark is turning the suggested direction into lesson components..."):
+                data = api(
+                    "post",
+                    f"/api/v1/sessions/{st.session_state['ks_session_id']}/message",
+                    json={"message": SUGGESTED_TEACHER_DIRECTION},
+                )
+            st.session_state["ks_messages"].append({"role": "assistant", "content": data["response"]})
+            set_phase(data.get("phase", "lesson_planning"))
+            st.session_state["ks_planning_state"] = data.get("planning_state", {})
+            st.session_state["ks_ready_to_confirm_planning"] = data.get("ready_to_approve", False)
+            st.rerun()
+        with st.form("ks_chat_form", clear_on_submit=True):
+            message = st.text_area(
+                "Message KidSpark",
+                placeholder="Example: I teach 1st grade for 40 minutes. Let's focus on perseverance and build a plane. The propeller should spin; the body and wings stay static.",
+                height=95,
+            )
+            sent = st.form_submit_button("Send", type="primary", use_container_width=True)
+        if sent and message.strip():
+            st.session_state["ks_messages"].append({"role": "user", "content": message.strip()})
+            with st.spinner("KidSpark is updating the lesson components..."):
+                data = api(
+                    "post",
+                    f"/api/v1/sessions/{st.session_state['ks_session_id']}/message",
+                    json={"message": message.strip()},
+                )
+            st.session_state["ks_messages"].append({"role": "assistant", "content": data["response"]})
+            set_phase(data.get("phase", "lesson_planning"))
+            st.session_state["ks_planning_state"] = data.get("planning_state", {})
+            st.session_state["ks_ready_to_confirm_planning"] = data.get("ready_to_approve", False)
+            st.rerun()
+    with panel_col:
+        st.markdown("<span id='ks-lesson-components-sticky'></span>", unsafe_allow_html=True)
+        render_component_panel(state)
+        missing = missing_component_labels(state)
+        if ready:
+            st.markdown("<div class='ks-ready-note'>All lesson components are checked. Ready for the model preview.</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(
+                "<div class='ks-blocked-note'>KidSpark will unlock the next step once these are complete: "
+                + ", ".join(missing)
+                + ".</div>",
+                unsafe_allow_html=True,
+            )
+        if st.button("Confirm & Next Step", type="primary", disabled=not ready, use_container_width=True):
+            with st.spinner("Finalizing the teacher-approved planning state..."):
+                data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-planning")
+            set_phase(data["phase"])
+            st.session_state["ks_planning_state"] = data.get("planning_state", {})
+            st.session_state["ks_model_context"] = data.get("model_task_context", {})
+            st.rerun()
+
+
+def render_step_3() -> None:
+    st.subheader("Step 3 - Review Model Preview")
+    context = st.session_state.get("ks_model_context", {})
+    if not context:
+        data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-planning")
+        st.session_state["ks_planning_state"] = data.get("planning_state", {})
+        st.session_state["ks_model_context"] = data.get("model_task_context", {})
+        context = st.session_state.get("ks_model_context", {})
+        if not context:
+            st.info("Confirm the planning conversation first.")
+            return
+    st.markdown("KidSpark sends this teacher-approved prompt to Rodin. Regenerate until the model looks right before segmentation.")
+    prompt = st.text_area("Rodin visual prompt", value=context.get("rodin_prompt", ""), height=160, key="ks_rodin_prompt")
+    if st.button("Generate / Regenerate Model Preview", type="primary", use_container_width=True):
+        body = {"rodin_prompt": prompt, "refinement": ""}
+        job = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/model-preview/refine", json=body)
+        st.session_state["ks_model_job"] = job
+        st.rerun()
+    job = poll_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/model-preview", "ks_model_job")
+    if job:
+        render_job_status(job, "Rodin Preview Progress")
+        refresh_running_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/model-preview", "ks_model_job")
+        if job.get("status") == "error":
+            st.error(job.get("message", "Rodin preview failed."))
+            st.code(job.get("error", ""))
+        if job.get("status") == "complete":
+            result = job.get("result", {})
+            st.session_state["ks_model_result"] = result
+            preview = image_from_files(result.get("rodin", {}).get("files", []))
+            with st.container(border=True):
+                left, right = st.columns([1.2, 1])
+                with left:
+                    if preview:
+                        st.image(str(preview), caption="Rodin model preview", use_column_width=True)
+                    else:
+                        st.info("Rodin returned model files but no preview image. The generated model will still be used for segmentation.")
+                with right:
+                    st.markdown("#### Model Details")
+                    st.write(f"Rodin task: `{result.get('rodin', {}).get('task_uuid')}`")
+                    st.write("Moving parts are intentionally described as visually separate so Bang can segment them.")
+                    if st.button("Confirm & Next Step", type="primary", use_container_width=True):
+                        data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-model")
+                        set_phase(data["phase"])
+                        st.rerun()
+
+
+def render_segments_tables(build_plan: dict[str, Any]) -> None:
+    segments = build_plan.get("segments", [])
+    interfaces = build_plan.get("interfaces", [])
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.markdown("#### Segment Labels")
+        edited = st.data_editor(segments, key="ks_segment_editor", use_container_width=True, hide_index=True)
+        if st.button("Save Segment Label Notes", use_container_width=True):
+            rows = edited.to_dict("records") if hasattr(edited, "to_dict") else edited
+            api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments/refine", json={"updates": {"segments": rows}})
+            st.success("Segment notes saved for this session.")
+    with col_b:
+        st.markdown("#### Connector / Interface Table")
+        edited = st.data_editor(interfaces, key="ks_interface_editor", use_container_width=True, hide_index=True)
+        if st.button("Save Connector Notes", use_container_width=True):
+            rows = edited.to_dict("records") if hasattr(edited, "to_dict") else edited
+            api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments/refine", json={"updates": {"interfaces": rows}})
+            st.success("Connector notes saved for this session.")
+
+
+def render_step_4() -> None:
+    st.subheader("Step 4 - Segments & Connectors")
+    st.markdown("Review the notebook voxelization, color-coded segments, movement mapping, and connector candidates before moving into build instructions.")
+    if "ks_segment_job" not in st.session_state:
+        if st.button("Run Bang Segmentation And Notebook Voxelization", type="primary", use_container_width=True):
+            st.session_state["ks_segment_job"] = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments")
+            st.rerun()
+        return
+    job = poll_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments", "ks_segment_job")
+    if not job:
+        return
+    render_step_4_break_notice(job)
+    render_job_status(job, "Segmentation And Notebook Progress")
+    refresh_running_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments", "ks_segment_job")
+    if job.get("status") == "error":
+        st.error(job.get("message", "Segmentation failed."))
+        st.code(job.get("error", ""))
+        if st.button("Back To Model Preview", use_container_width=True):
+            set_phase("model_preview")
+            st.rerun()
+        return
+    if job.get("status") != "complete":
+        return
+    result = job.get("result", {})
+    st.session_state["ks_segment_result"] = result
+    build_plan = result.get("build_plan", {})
+    notebook = build_plan.get("notebook_outputs", {})
+    metrics = st.columns(4)
+    metrics[0].metric("Voxel size", notebook.get("voxel_size", "unknown"))
+    metrics[1].metric("Segments", notebook.get("segment_count", 0))
+    metrics[2].metric("Blocks", notebook.get("block_count", 0))
+    metrics[3].metric("Connector candidates", len(notebook.get("connector_candidates", [])))
+    img_cols = st.columns(3)
+    for col, label, key in [
+        (img_cols[0], "Voxelized segments", "segment_visualization_image"),
+        (img_cols[1], "Notebook multiview", "segment_multiview_image"),
+        (img_cols[2], "Final block reference", "final_image"),
+    ]:
+        image = existing_file(notebook.get(key))
+        with col:
+            st.markdown(f"#### {label}")
+            if image:
+                st.image(str(image), use_column_width=True)
+            else:
+                st.info("Image not available.")
+    if notebook.get("connector_candidates"):
+        st.markdown("#### Moving Parts To Connector Candidates")
+        st.dataframe(notebook["connector_candidates"], use_container_width=True, hide_index=True)
+    render_segments_tables(build_plan)
+    refinement = st.text_area("Segment or connector refinement notes", placeholder="Example: propeller should be the spinning segment attached to the front nose.", height=100)
+    col_a, col_b = st.columns([1, 1])
+    with col_a:
+        if st.button("Save Refinement Notes", use_container_width=True, disabled=not refinement.strip()):
+            api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments/refine", json={"refinement": refinement})
+            st.success("Refinement notes saved.")
+    with col_b:
+        if st.button("Confirm & Next Step", type="primary", use_container_width=True):
+            data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-segments")
+            set_phase(data["phase"])
+            st.rerun()
+
+
+def render_notebook_build_plan(build_plan: dict[str, Any]) -> bool:
+    notebook = build_plan.get("notebook_outputs", {})
+    steps = notebook.get("instruction_steps", [])
+    final_image = existing_file(notebook.get("final_image"))
+    if final_image:
+        st.image(str(final_image), caption="Final BrickSmart build target", use_column_width=True)
+    if notebook.get("block_inventory"):
+        st.markdown("#### Inventory")
+        st.dataframe(notebook["block_inventory"], use_container_width=True, hide_index=True)
+    if not steps:
+        st.warning("No notebook build steps were generated.")
+        return False
+    st.markdown("#### Step-by-step build guide")
+    cols = st.columns([1, 1, 2])
+    with cols[0]:
+        if st.button("Approve All Steps", use_container_width=True):
+            for step in steps:
+                st.session_state[f"approve_step_{step.get('step_number')}"] = True
+            st.rerun()
+    with cols[1]:
+        st.checkbox("Show all multiview sheets", key="show_all_multiviews")
+    approvals = []
+    for step in steps:
+        number = step.get("step_number")
+        with st.container(border=True):
+            left, right = st.columns([1.15, 1])
+            with left:
+                st.markdown(f"### Step {number}: {step.get('title', 'Build next section')}")
+                st.write(f"**Teacher:** {step.get('teacher_instruction', '')}")
+                st.write(f"**Student:** {step.get('student_instruction', '')}")
+                if step.get("segment_labels"):
+                    st.caption("Segments: " + ", ".join(step.get("segment_labels", [])))
+                if step.get("inventory"):
+                    st.dataframe(step["inventory"], use_container_width=True, hide_index=True)
+                approvals.append(st.checkbox("Teacher approves this build step", key=f"approve_step_{number}"))
+            with right:
+                image = existing_file(step.get("image_path"))
+                multiview = existing_file(step.get("multiview_path"))
+                if image:
+                    st.image(str(image), caption=f"Step {number}", use_column_width=True)
+                if multiview and st.session_state.get("show_all_multiviews", False):
+                    st.image(str(multiview), caption=f"Step {number} placement views", use_column_width=True)
+    return bool(approvals and all(approvals))
+
+
+def render_step_5() -> None:
+    st.subheader("Step 5 - Build Plan")
+    result = st.session_state.get("ks_segment_result")
+    if not result:
+        job = api("get", f"/api/v1/sessions/{st.session_state['ks_session_id']}/segments")
+        result = job.get("result") if job.get("status") == "complete" else None
+    if not result:
+        st.info("Confirm segments and connectors first.")
+        return
+    complete = render_notebook_build_plan(result.get("build_plan", {}))
+    st.info("This build plan uses the actual notebook/CSP output. Placeholder demo step art is not used in this flow.")
+    if st.button("Confirm & Next Step", type="primary", disabled=not complete, use_container_width=True):
+        data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-build-plan")
+        set_phase(data["phase"])
+        st.rerun()
+
+
+def render_document_preview(kind: str, doc: dict[str, Any]) -> None:
+    md_path = existing_file(doc.get("markdown_path"))
+    if md_path:
+        render_markdown_with_images(md_path.read_text(encoding="utf-8"))
+    else:
+        st.warning("Markdown preview was not found.")
+    pdf_bytes = api_bytes(f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents/{kind}/download")
+    if pdf_bytes:
+        st.download_button(
+            f"Download {doc.get('title', kind)} PDF",
+            pdf_bytes,
+            file_name=f"{kind}.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+
+
+def render_markdown_with_images(markdown_text: str) -> None:
+    pending: list[str] = []
+    for raw_line in markdown_text.splitlines():
+        image_info = image_line(raw_line)
+        if not image_info:
+            pending.append(raw_line)
+            continue
+        if pending:
+            st.markdown("\n".join(pending))
+            pending = []
+        st.caption(image_info["label"])
+        st.image(str(image_info["path"]), use_column_width=True)
+    if pending:
+        st.markdown("\n".join(pending))
+
+
+def image_line(line: str) -> dict[str, Any] | None:
+    prefixes = [
+        ("Final built reference image:", "Final built reference"),
+        ("Image:", "Build step image"),
+        ("Placement views:", "Placement views"),
+    ]
+    stripped = line.strip()
+    for prefix, label in prefixes:
+        if not stripped.startswith(prefix):
+            continue
+        path = existing_file(stripped[len(prefix):].strip())
+        if path and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}:
+            return {"label": label, "path": path}
+    return None
+
+
+def render_step_6() -> None:
+    st.subheader("Step 6 - Lesson Bundle")
+    st.markdown("Review the three classroom documents before downloading: teacher lesson plan, student activity guide, and slide companion.")
+    if "ks_document_job" not in st.session_state:
+        if st.button("Generate Lesson Bundle", type="primary", use_container_width=True):
+            st.session_state["ks_document_job"] = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents")
+            st.rerun()
+        return
+    job = poll_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents", "ks_document_job", delay=5)
+    if not job:
+        return
+    render_job_status(job, "Lesson Bundle Progress")
+    refresh_running_job(f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents", "ks_document_job", delay=5)
+    if job.get("status") == "error":
+        st.error(job.get("message", "Document generation failed."))
+        st.code(job.get("error", ""))
+        return
+    if job.get("status") != "complete":
+        return
+    result = job.get("result", {})
+    bundle = result.get("document_bundle", {})
+    validation = bundle.get("validation", {})
+    st.markdown("#### Validation")
+    cols = st.columns(3)
+    for idx, kind in enumerate(["lesson_plan", "activity_guide", "slide_companion"]):
+        item = validation.get(kind, {})
+        with cols[idx]:
+            if item.get("is_valid"):
+                st.success(kind.replace("_", " ").title())
+            else:
+                st.warning(f"{kind.replace('_', ' ').title()}: {', '.join(item.get('missing', []))}")
+    documents = bundle.get("documents", {})
+    tabs = st.tabs(["Lesson Plan", "Activity Guide", "Slide Companion", "Full JSON"])
+    for tab, kind in zip(tabs[:3], ["lesson_plan", "activity_guide", "slide_companion"]):
+        with tab:
+            refinement = st.text_area(f"Refinement notes for {kind.replace('_', ' ')}", key=f"refine_{kind}", height=80)
+            if st.button(f"Save {kind.replace('_', ' ').title()} Notes", key=f"save_{kind}", disabled=not refinement.strip()):
+                api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents/{kind}/refine", json={"refinement": refinement})
+                st.success("Notes saved.")
+            render_document_preview(kind, documents.get(kind, {}))
+    with tabs[3]:
+        st.download_button(
+            "Download Full Result JSON",
+            json.dumps(result, indent=2),
+            file_name="kidspark_lesson_bundle.json",
+            mime="application/json",
+            use_container_width=True,
+        )
+        st.json(result)
+    if bundle.get("all_valid"):
+        st.success("All three documents are validated and ready for classroom use.")
+        if st.button("Confirm Ready For Class", type="primary", use_container_width=True):
+            data = api("post", f"/api/v1/sessions/{st.session_state['ks_session_id']}/confirm-documents")
+            set_phase(data.get("phase", "complete"))
+            st.rerun()
+
+
+def render_active_step() -> None:
+    phase = current_phase()
+    if phase == "story_upload":
+        render_step_1()
+    elif phase == "lesson_planning":
+        render_step_2()
+    elif phase == "model_preview":
+        render_step_3()
+    elif phase == "segments_connectors":
+        render_step_4()
+    elif phase == "build_plan":
+        render_step_5()
+    elif phase == "lesson_bundle":
+        render_step_6()
+    elif phase == "complete":
+        st.success("This KidSpark lesson is ready for class. The lesson plan, activity guide, and slide companion are available in the lesson bundle step.")
+        if st.button("Review Lesson Bundle", use_container_width=True):
+            set_phase("lesson_bundle")
+            st.rerun()
+
+
+hydrate_session_from_query()
+render_sidebar()
+render_header()
+render_active_step()

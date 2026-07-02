@@ -1,21 +1,24 @@
 """
-KidSpark AI — Health Check Endpoint
-Owner: Developer B
-
-This module provides health and readiness endpoints for Cloud Run.
-
-ENDPOINTS TO IMPLEMENT:
-
-  GET /health
-    - Basic liveness check
-    - Returns {"status": "ok"}
-
-  GET /health/ready
-    - Readiness check that verifies:
-        * Database connection is alive
-        * OpenAI API key is configured
-        * GCS bucket is accessible
-    - Returns {"status": "ready", "checks": {...}} or 503 if not ready
-
-REFERENCE: KIDSPARK_TECHNICAL_SPEC.md Section 12, "Deployment and Operations"
+KidSpark AI — Health Check Endpoints
 """
+
+from fastapi import APIRouter
+
+router = APIRouter(tags=["health"])
+
+
+@router.get("/health")
+async def liveness():
+    return {"status": "ok"}
+
+
+@router.get("/health/ready")
+async def readiness():
+    checks = {
+        "openai_key_configured": bool(__import__("config").OPENAI_API_KEY),
+    }
+    all_ok = all(checks.values())
+    return {
+        "status": "ready" if all_ok else "degraded",
+        "checks": checks,
+    }

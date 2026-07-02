@@ -1,28 +1,40 @@
 """
 KidSpark AI — FastAPI Application Entry Point
 Owner: Developer B
-
-This module creates and configures the FastAPI application instance.
-
-RESPONSIBILITIES:
-  - Create the FastAPI app with title, version, description
-  - Include routers:
-      * ingestion router (from ingestion/router.py — Dev A's endpoints)
-      * session router (from api/sessions.py — Dev B's endpoints)
-      * health router (from api/health.py)
-  - Configure middleware:
-      * CORS (allow Streamlit/React frontend origins)
-      * Request logging
-  - Set up lifespan events:
-      * on_startup: initialize database connection pool, verify GCP credentials
-      * on_shutdown: close database connections
-  - Mount under /api/v1 prefix
-
-RUNNING:
-  uvicorn api.main:app --reload --port 8000
-
-DEPLOYMENT:
-  This app is containerized via backend/Dockerfile and deployed to GCP Cloud Run.
-
-REFERENCE: KIDSPARK_TECHNICAL_SPEC.md Section 5, "System Architecture"
 """
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from api.build_demo import router as build_demo_router
+from api.health import router as health_router
+from api.sessions import router as sessions_router
+from api.settings import router as settings_router
+
+app = FastAPI(
+    title="KidSpark AI",
+    version="0.1.0",
+    description="Backend API for KidSpark AI lesson generation system",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(health_router)
+app.include_router(sessions_router)
+app.include_router(build_demo_router)
+app.include_router(settings_router)
+
+
+@app.get("/")
+async def root():
+    return {
+        "service": "KidSpark AI",
+        "version": "0.1.0",
+        "docs": "/docs",
+    }
