@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+from base64 import b64encode
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,8 @@ import streamlit as st
 
 BACKEND_URL = os.getenv("KIDSPARK_BACKEND_URL", "http://localhost:8001")
 OPENAI_KEY_FILE = Path(__file__).resolve().parents[1] / "openai.key"
+STATIC_DOWNLOAD_DIR = Path(__file__).resolve().parents[1] / "static" / "kidspark_downloads"
+DATA_URI_DOWNLOAD_LIMIT = 2_500_000
 
 SAMPLE_STORY = """Milo's Flying Delivery
 
@@ -254,6 +257,19 @@ st.markdown(
         font-weight: 850;
         font-size: 1rem;
     }
+    .ks-direct-download {
+        margin: .35rem 0 1rem 0;
+        font-size: .92rem;
+        color: #475467;
+    }
+    .ks-direct-download a {
+        color: #1f6fb2;
+        font-weight: 750;
+        text-decoration: none;
+    }
+    .ks-direct-download a:hover {
+        text-decoration: underline;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -278,8 +294,51 @@ def api_bytes(path: str) -> bytes | None:
         resp = requests.get(f"{BACKEND_URL}{path}", timeout=90)
         resp.raise_for_status()
         return resp.content
-    except requests.RequestException:
+    except requests.RequestException as exc:
+        st.warning(f"Could not prepare the PDF download yet: {exc}")
         return None
+
+
+def stage_pdf_download(kind: str, pdf_bytes: bytes) -> str | None:
+    session_id = st.session_state.get("ks_session_id", "session")
+    if not pdf_bytes:
+        return None
+    try:
+        target_dir = STATIC_DOWNLOAD_DIR / re.sub(r"[^a-zA-Z0-9_-]+", "_", str(session_id))
+        target_dir.mkdir(parents=True, exist_ok=True)
+        target = target_dir / f"{kind}.pdf"
+        target.write_bytes(pdf_bytes)
+        return f"/app/static/kidspark_downloads/{target_dir.name}/{kind}.pdf"
+    except OSError as exc:
+        st.caption(f"Direct PDF link could not be staged: {exc}")
+        return None
+
+
+def render_pdf_downloads(kind: str, title: str, pdf_bytes: bytes) -> None:
+    safe_title = title or kind.replace("_", " ").title()
+    st.download_button(
+        f"Download {safe_title} PDF",
+        pdf_bytes,
+        file_name=f"{kind}.pdf",
+        mime="application/pdf",
+        use_container_width=True,
+    )
+    static_url = stage_pdf_download(kind, pdf_bytes)
+    link_bits = []
+    if static_url:
+        link_bits.append(f"<a href='{static_url}' download='{kind}.pdf' target='_blank'>Open direct PDF link</a>")
+    if len(pdf_bytes) <= DATA_URI_DOWNLOAD_LIMIT:
+        fallback = b64encode(pdf_bytes).decode("ascii")
+        link_bits.append(
+            f"<a href='data:application/pdf;base64,{fallback}' download='{kind}.pdf'>Download via fallback link</a>"
+        )
+    if link_bits:
+        st.markdown(
+            "<div class='ks-direct-download'>"
+            + " <span>&middot;</span> ".join(link_bits)
+            + "</div>",
+            unsafe_allow_html=True,
+        )
 
 
 def masked_key(value: str) -> str:
@@ -952,13 +1011,9 @@ def render_document_preview(kind: str, doc: dict[str, Any]) -> None:
         st.warning("Markdown preview was not found.")
     pdf_bytes = api_bytes(f"/api/v1/sessions/{st.session_state['ks_session_id']}/documents/{kind}/download")
     if pdf_bytes:
-        st.download_button(
-            f"Download {doc.get('title', kind)} PDF",
-            pdf_bytes,
-            file_name=f"{kind}.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
+        render_pdf_downloads(kind, doc.get("title", kind), pdf_bytes)
+    else:
+        st.error("PDF download is not ready. Try refreshing this step; if it persists, regenerate the lesson bundle.")
 
 
 def render_markdown_with_images(markdown_text: str) -> None:

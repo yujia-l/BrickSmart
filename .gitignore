@@ -26,6 +26,7 @@ work/
 backend/generated/
 tmp/
 toy_airplane_30k/
+static/kidspark_downloads/
 
 # Deployment artifacts
 *.zip
