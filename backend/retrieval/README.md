@@ -1,46 +1,102 @@
 # KidSpark Teacher-Conversation RAG Integration
 
-This directory is the runtime retrieval boundary between the separately managed
-ingestion pipeline and the existing KidSpark teacher-planning flow.
+The goal is to let the planning coach consult prior lesson bundles, framework
+rules, activity guides, and slide companions without changing the
+teacher-facing workflow.
 
-The ingestion process may load or rebuild the knowledge base independently.
-KidSpark must query that data while the teacher is planning a lesson so its
-suggestions can be grounded in prior lesson bundles, framework rules, activity
-guides, and slide companions.
+The ingestion process prepares and refreshes the knowledge base. The runtime
+retrieval layer queries that prepared data during story analysis and teacher
+conversation, then supplies a compact evidence pack to the existing planning
+agent.
 
-## Ownership Boundary
+## Integration Blueprint
 
-- `backend/ingestion/` owns parsing, chunking, embeddings, bundle construction,
-  and loading data into GCS/Postgres.
-- `backend/retrieval/` owns read-only lookup, bundle expansion, evidence
-  assembly, caching, and graceful fallback.
-- `backend/agents/orchestrator.py` decides when retrieval runs and passes the
-  bounded evidence pack to the teacher-facing agent.
-- The planning agent remains responsible for the conversation. Retrieval must
-  provide evidence, not generate the final teacher response.
+RAG fits into the current request path between KidSpark's planning-state
+snapshot and the teacher-facing planning agent:
 
-Do not import ingestion jobs from the request path and do not run document
-processing during a teacher turn.
+```mermaid
+flowchart LR
+    A["Story upload or teacher message"] --> B["KidSpark orchestrator"]
+    B --> C["Planning-state snapshot"]
+    C --> D["Runtime retrieval adapter"]
+    D --> E["Hybrid search and metadata filters"]
+    E --> F["Lesson-bundle expansion"]
+    F --> G["Bounded evidence pack"]
+    G --> H["KidSpark planning agent"]
+    H --> I["Teacher response and updated checklist"]
+    G --> J["Session evidence trace"]
+    K["Ingestion pipeline"] --> L["GCS and Postgres/pgvector"]
+    L --> E
+```
 
-## Current Teacher Flow
+The existing API, session, and UI flow remain in place. The main implementation
+work is to add the retrieval adapter, call it from the orchestrator, and pass
+its result into the current consultation agent.
 
-The relevant runtime entry points are:
+### Where Retrieval Connects
 
-1. `run_storybook_analysis()` in `backend/agents/orchestrator.py`
-   - Stores extracted story text and its analysis.
-   - This is the first opportunity to retrieve similar lesson bundles and
-     framework anchors.
-2. `route_message()` in `backend/agents/orchestrator.py`
-   - Handles every planning turn.
-   - Retrieval context should be refreshed only when the planning topic or
-     captured lesson state changes.
-3. `confirm_teacher_planning()` in `backend/agents/orchestrator.py`
-   - Freezes the teacher-approved plan.
-   - The evidence trace used during planning should be preserved with the
-     generated model context for later document provenance.
+There are three insertion points in `backend/agents/orchestrator.py`:
 
-The HTTP path already reaches these functions through
-`backend/api/sessions.py`. No separate teacher-chat UI flow is required.
+1. `run_storybook_analysis()`
+   - Runs after the uploaded story has been extracted and analyzed.
+   - Retrieves similar lesson families, story themes, build examples, and
+     relevant framework anchors.
+   - Saves the initial evidence pack and trace on the session.
+2. `route_message()`
+   - Runs for each teacher-planning turn.
+   - Builds a focused retrieval query from the teacher's latest message,
+     captured planning state, and remaining checklist fields.
+   - Reuses cached evidence when the effective query has not changed.
+   - Passes the resulting evidence to `handle_consultation_message()`.
+3. `confirm_teacher_planning()`
+   - Runs after every required lesson component has been confirmed.
+   - Preserves the evidence trace with the approved planning context so later
+     model prompts and lesson documents can retain source provenance.
+
+The HTTP routes in `backend/api/sessions.py` already call these orchestration
+functions, so the RAG lookup does not require a separate endpoint or a new
+teacher-chat screen.
+
+### Separation Of Concerns
+
+- **Knowledge preparation: `backend/ingestion/`**
+  - Parse source documents and create chunks, embeddings, lesson bundles,
+    relations, and policy records.
+  - Load prepared artifacts into GCS and Postgres/pgvector.
+  - Run as an offline or administrative process rather than during a teacher
+    request.
+- **Runtime retrieval: `backend/retrieval/`**
+  - Search prepared records, apply metadata filters, expand matching lesson
+    bundles, assemble evidence, cache results, and handle lookup failures.
+  - Return structured evidence and provenance without composing the teacher's
+    final response.
+- **Conversation coordination: `backend/agents/orchestrator.py`**
+  - Decide when retrieval is useful, build the query context, store retrieval
+    status on the session, and pass evidence to the planning agent.
+- **Teacher coaching: `backend/agents/consultation.py`**
+  - Use the evidence to make grounded suggestions and ask focused questions.
+  - Continue to rely on teacher confirmation before marking lesson components
+    complete.
+
+This separation keeps document processing away from the interactive request
+path while allowing ingestion and retrieval implementations to evolve without
+changing the KidSpark UI or teacher-session API.
+
+### Minimum Implementation Checklist
+
+To complete the first working integration:
+
+1. Implement search in `backend/retrieval/search.py`.
+2. Implement lesson-family expansion in `backend/retrieval/expansion.py`.
+3. Implement bounded evidence assembly in `backend/retrieval/evidence.py`.
+4. Add `backend/retrieval/runtime.py` as the stable adapter used by the
+   orchestrator.
+5. Add retrieval state and trace fields to `SessionState`.
+6. Call the adapter from story analysis and teacher-message handling.
+7. Add an optional `evidence` argument to `handle_consultation_message()`.
+8. Add timeout, cache, empty-result, and provenance tests.
+9. Verify that RAG failure falls back to the current static reference context
+   without interrupting the teacher conversation.
 
 ## Adapter To Implement
 
