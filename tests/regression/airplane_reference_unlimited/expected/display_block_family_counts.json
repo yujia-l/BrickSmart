@@ -1,0 +1,27 @@
+[
+  {
+    "block_family": "big_wheel",
+    "count": 2,
+    "block_roles": "functional_attachment"
+  },
+  {
+    "block_family": "rotation_block",
+    "count": 1,
+    "block_roles": "functional_motion_connector"
+  },
+  {
+    "block_family": "standard_2x2x2",
+    "count": 57,
+    "block_roles": "functional_subassembly_structural, segment_structural"
+  },
+  {
+    "block_family": "standard_2x3x2",
+    "count": 12,
+    "block_roles": "segment_structural"
+  },
+  {
+    "block_family": "standard_2x4x2",
+    "count": 6,
+    "block_roles": "segment_structural"
+  }
+]

@@ -1,0 +1,137 @@
+{
+  "catalog": {
+    "selectors": {
+      "segment_connector": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "connector"
+          }
+        ]
+      },
+      "structural": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "structural"
+          }
+        ]
+      }
+    }
+  },
+  "contract_policy": {
+    "reject_provisional_metadata": true
+  },
+  "coordinate_system": {
+    "build_axis": "+Y",
+    "column_packing_axis": "Z",
+    "planner_axis_flips": [
+      false,
+      false,
+      false
+    ],
+    "planner_axis_order": [
+      0,
+      1,
+      2
+    ],
+    "planner_up_axis": "Z",
+    "preprocessing_axis_flips": [
+      false,
+      false,
+      false
+    ],
+    "preprocessing_axis_order": [
+      0,
+      1,
+      2
+    ]
+  },
+  "display_name": "Replace With Display Name",
+  "functional_assemblies": [],
+  "functional_attachments": [],
+  "inventory": {
+    "coordination_mode": "global_deferred_commit",
+    "profile_path": "config/inventory/standard_kit.yaml"
+  },
+  "model_id": "replace_with_model_id",
+  "model_source": {
+    "expected_sha256": "optional-sha256-fingerprint",
+    "filename": "model.obj",
+    "uri": "model://replace-with-registered-model-id"
+  },
+  "object_type_hint": "optional_descriptive_hint",
+  "paths": {
+    "catalog_sheet": "Block Definitions",
+    "catalog_xlsx": "block_catalog/block_definitions.xlsx",
+    "relative_to": "project_root"
+  },
+  "schema_version": "bricksmart-model-contract-1.0",
+  "segment_assembly": {
+    "enabled": true,
+    "preserve_source_segment_boundaries": true,
+    "segment_packing": {
+      "build_each_segment_independently": true,
+      "candidate_build_axes": [
+        "+Y",
+        "+X",
+        "-Y",
+        "-X"
+      ],
+      "planner_mode": "catalog_row_column_planner"
+    },
+    "structural_connector_policy": {
+      "join_mode": "direct_structural_lock"
+    }
+  },
+  "segment_semantics": {
+    "auto_confirm_from_obj_object_names": false,
+    "confirmed_segment_names": {},
+    "labels_file": "segment_confirmations.csv",
+    "labels_file_format": "csv",
+    "unknown_label": "unknown"
+  },
+  "symmetry": {
+    "enabled": false,
+    "paired_segment_ids": []
+  },
+  "task_id": "replace_with_task_id",
+  "voxelization": {
+    "grid_size": 16,
+    "preprocessing": {
+      "clean_vertical_columns": true,
+      "enforce_2x2_footprint": true,
+      "remap_segments_to_2x2_grid": true,
+      "split_disconnected_components": true,
+      "thicken_floor_and_ceiling": true
+    },
+    "random_seed": 0,
+    "samples_per_triangle": 30,
+    "sampling_mode": "deterministic_surface"
+  },
+  "execution_policy": {
+    "mode": "validated",
+    "allow_runtime_llm": false,
+    "final_claim_requires_deterministic_inputs": true
+  },
+  "llm": {
+    "llm1": {
+      "enabled": false,
+      "role": "contract_authoring_only"
+    },
+    "llm2": {
+      "enabled": false,
+      "role": "contract_authoring_only"
+    }
+  }
+}

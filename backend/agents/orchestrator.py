@@ -33,6 +33,7 @@ from build3d.jobs import (
     start_model_preview_job,
     start_segments_job,
 )
+from build3d.validated_planner_adapter import apply_catalog_constraints, semantic_segment_targets
 
 # ---------------------------------------------------------------------------
 # In-memory session store (replaced by DB in production)
@@ -219,10 +220,48 @@ def build_seed_context(session: SessionState) -> dict:
         }
         for part in reqs.parts
     ]
-    movement_text = "; ".join(f"{part['part_name']} should be {part['movement']}" for part in parts)
+    moving_parts = [part for part in parts if part["movement"] != "static"]
+    static_parts = [part for part in parts if part["movement"] == "static"]
+    moving_names = [part["part_name"] for part in moving_parts]
+    static_names = [part["part_name"] for part in static_parts]
+    movement_text = (
+        "; ".join(f"{part['part_name']} should be {part['movement']}" for part in moving_parts)
+        if moving_parts
+        else "No separate moving feature is required"
+    )
     artifact = reqs.artifact_label or summary.agreed_artifact
     title = summary.storybook_title or (analysis.title if analysis else "Uploaded story")
-    return {
+    build_constraints = session.build_constraints or {
+        "object_type_hint": artifact,
+        "moving_parts": moving_names,
+        "teacher_requested_static_parts": static_names,
+        "wheel_count": sum(1 for part in parts if part["movement"] == "rolling"),
+        "symmetry": "auto",
+        "inventory_mode": "standard_kit",
+        "max_validated_blocks": 28,
+        "max_semantic_segments": 4,
+        "max_moving_parts": 1,
+        "min_segment_survival_fraction": 0.75,
+        "minimum_surviving_segments": 2,
+        "optional_decorative_features": [],
+        "bang_segmentation_requirements": [
+            "Keep the primary moving part visually separate from the static body.",
+            "Merge static details into a few broad 2x2-compatible surfaces.",
+            "Target two to four semantic regions and about 20 to 28 blocks.",
+            "Do not preserve decorative/contact-only fragments as separate segments.",
+        ],
+    }
+    segment_targets = semantic_segment_targets(
+        {"artifact_label": artifact, "artifact_family": "teacher-selected story build", "parts": parts, "build_constraints": build_constraints}
+    )
+    build_constraints.setdefault("required_visible_parts", segment_targets)
+    build_constraints.setdefault("semantic_segment_targets", segment_targets)
+    static_merge_note = (
+        f"Teacher-requested static details ({', '.join(static_names)}) should be represented as labels or surface details inside those large regions, not separate source segments. "
+        if static_names
+        else ""
+    )
+    base_context = {
         "storybook_title": title,
         "grade_band": summary.grade_band,
         "duration_minutes": summary.duration_minutes,
@@ -238,13 +277,17 @@ def build_seed_context(session: SessionState) -> dict:
             for word in (analysis.vocabulary_opportunities if analysis else [])
         ],
         "rodin_prompt": (
-            f"A simple, child-friendly toy model of a {artifact}. "
-            f"The model must show clearly separated segments for: {', '.join(p['part_name'] for p in parts)}. "
+            f"Create a very simple chunky block-toy model of a {artifact}. "
+            f"Use only {len(segment_targets)} large visible regions for the validated build: {', '.join(segment_targets)}. "
             f"Movement intent: {movement_text}. "
-            "Make spinning, rolling, or pivoting parts visually distinct from the static body so Bang segmentation can identify them. "
-            "Use chunky plastic block-like toy geometry, stable proportions, and simple readable shapes."
+            "Make the primary moving part visually distinct from the static body so Bang segmentation can identify it. "
+            f"{static_merge_note}"
+            "Use chunky plastic block-like toy geometry, stable proportions, simple readable shapes, and broad flat contact surfaces. "
+            "Avoid thin fins, tiny details, smooth tapers, dense curves, connector/contact decorations, unsupported decorative pieces, and features smaller than a 2x2 block footprint."
         ),
+        "build_constraints": build_constraints,
     }
+    return apply_catalog_constraints(base_context)
 
 
 def planning_state_snapshot(session: SessionState) -> dict:
@@ -455,7 +498,9 @@ def _static_mentions(text: str, moving_parts: list[dict] | None = None) -> list[
 
 def start_session_model_preview(session_id: str, context_override: dict | None = None) -> dict:
     session = _sessions[session_id]
-    context = context_override or build_seed_context(session)
+    reset_downstream_model_outputs(session)
+    context = apply_catalog_constraints(context_override or build_seed_context(session))
+    session.build_constraints = context.get("build_constraints", session.build_constraints)
     job = start_model_preview_job(context, session_id=session_id)
     session.model_preview_job_id = job["job_id"]
     return job
@@ -471,12 +516,23 @@ def get_session_model_preview(session_id: str) -> dict | None:
     return job
 
 
+def reset_downstream_model_outputs(session: SessionState) -> None:
+    """Discard artifacts that were generated from an older model preview."""
+    session.segment_job_id = None
+    session.document_job_id = None
+    session.build_job_id = None
+    session.segment_result = None
+    session.build_result = None
+    session.document_result = None
+
+
 def confirm_session_model(session_id: str) -> dict:
     session = _sessions[session_id]
     job = get_session_model_preview(session_id)
     if not job or job.get("status") != "complete":
         raise ValueError("Model preview must be complete before confirming.")
     session.model_preview_result = job.get("result")
+    reset_downstream_model_outputs(session)
     session.phase = SessionPhase.segments_connectors
     return {"status": "confirmed", "phase": session.phase.value, "model_preview": session.model_preview_result}
 
@@ -515,6 +571,7 @@ def confirm_session_segments(session_id: str) -> dict:
         raise ValueError("Segments must be complete before confirming.")
     session.segment_result = job.get("result")
     session.build_result = job.get("result")
+    _require_validated_build_result(session.build_result)
     session.phase = SessionPhase.build_plan
     return {"status": "confirmed", "phase": session.phase.value}
 
@@ -523,8 +580,21 @@ def confirm_session_build_plan(session_id: str) -> dict:
     session = _sessions[session_id]
     if not session.build_result:
         raise ValueError("Build plan is not available yet.")
+    _require_validated_build_result(session.build_result)
     session.phase = SessionPhase.lesson_bundle
     return {"status": "confirmed", "phase": session.phase.value}
+
+
+def _require_validated_build_result(result: dict) -> None:
+    build_plan = (result or {}).get("build_plan", {})
+    notebook = build_plan.get("notebook_outputs", {}) if isinstance(build_plan, dict) else {}
+    validated = {}
+    if isinstance(build_plan, dict):
+        validated = build_plan.get("validated_planner") or notebook.get("validated_planner") or {}
+    if validated and not validated.get("final_claim_valid"):
+        status = validated.get("build_status") or "not validated"
+        reason = validated.get("reason") or "Regenerate a simpler model before moving to classroom build instructions."
+        raise ValueError(f"Validated build is not approvable yet ({status}). {reason}")
 
 
 def start_session_documents(session_id: str) -> dict:

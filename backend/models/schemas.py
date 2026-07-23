@@ -285,6 +285,7 @@ class SessionState(BaseModel):
     segment_result: Optional[dict] = None
     document_result: Optional[dict] = None
     planning_state: dict = Field(default_factory=dict)
+    build_constraints: dict = Field(default_factory=dict)
     iteration: int = 0
 
 

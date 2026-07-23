@@ -1,0 +1,8 @@
+# Production source distributions omit repository-only verification fixtures.
+prune tests/regression
+prune .test-runs
+prune runs
+prune pipeline_runtime
+global-exclude *.py[cod]
+global-exclude .DS_Store
+global-exclude __pycache__

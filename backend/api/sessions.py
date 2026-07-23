@@ -50,6 +50,7 @@ router = APIRouter(prefix="/api/v1", tags=["sessions"])
 class RefineModelRequest(BaseModel):
     rodin_prompt: str | None = None
     refinement: str = ""
+    build_constraints: dict[str, Any] = Field(default_factory=dict)
 
 
 class GenericRefinementRequest(BaseModel):
@@ -161,6 +162,9 @@ async def refine_model_preview(session_id: str, body: RefineModelRequest):
             base["rodin_prompt"] = body.rodin_prompt
         if body.refinement:
             base["rodin_prompt"] = f"{base.get('rodin_prompt', '')} Teacher refinement: {body.refinement}"
+        if body.build_constraints:
+            base["build_constraints"] = body.build_constraints
+            session.build_constraints = body.build_constraints
         session.model_preview_job_id = None
         session.model_preview_result = None
         return start_session_model_preview(session_id, context_override=base)
@@ -187,11 +191,25 @@ async def start_segments(session_id: str):
     try:
         if session.segment_job_id:
             existing = get_session_segments(session_id)
-            if existing and existing.get("status") in {"queued", "running", "complete"}:
+            if existing and existing.get("status") in {"queued", "running"}:
                 return existing
+            if existing and existing.get("status") == "complete" and _segment_job_matches_current_model(session, existing):
+                return existing
+            session.segment_job_id = None
+            session.segment_result = None
+            session.build_result = None
         return start_session_segments(session_id)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
+
+
+def _segment_job_matches_current_model(session: Any, segment_job: dict[str, Any]) -> bool:
+    """Prevent a regenerated model preview from reusing stale Bang/notebook output."""
+    current = session.model_preview_result or {}
+    segment_result = segment_job.get("result") or {}
+    current_task = ((current.get("rodin") or {}).get("task_uuid") or "").strip()
+    segment_task = ((segment_result.get("rodin") or {}).get("task_uuid") or "").strip()
+    return bool(current_task and segment_task and current_task == segment_task)
 
 
 @router.get("/sessions/{session_id}/segments")

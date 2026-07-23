@@ -1,0 +1,1295 @@
+{
+  "authoring_provenance": {
+    "llm": {
+      "endpoint_used_during_authoring": "http://127.0.0.1:11434/api/chat",
+      "llm2_fallback_models": [
+        "llava:7b"
+      ],
+      "llm2_maximum_retries_per_model": 1,
+      "llm2_model": "qwen2.5:14b",
+      "llm2_response_format": "json",
+      "llm2_temperature": 0.0,
+      "llm2_timeout_seconds": 120,
+      "models": {
+        "interface_classifier": "qwen2.5:14b",
+        "vision_segment_labeler": "llava:7b"
+      },
+      "provider": "ollama"
+    }
+  },
+  "catalog": {
+    "required_columns": [
+      "block_family",
+      "category",
+      "geometry_size",
+      "visual_shape",
+      "primary_male_faces",
+      "primary_female_faces",
+      "placement_mode",
+      "motion_type",
+      "current_solver_enabled",
+      "functional_role",
+      "functional_attachment_enabled",
+      "attachment_candidate_rule",
+      "default_packing_priority"
+    ],
+    "selectors": {
+      "segment_connector": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "connector"
+          },
+          {
+            "field": "placement_mode",
+            "op": "equals",
+            "value": "in_between"
+          }
+        ]
+      },
+      "structural": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "structural"
+          }
+        ]
+      }
+    }
+  },
+  "connector_rules": [],
+  "contract_id": "airplane-standard-kit",
+  "contract_policy": {
+    "reject_provisional_metadata": false
+  },
+  "conversation_contract": {
+    "allow_catalog_role_query_without_exact_family": true,
+    "backend_role": "validate_catalog_match_geometry_collision_clearance_contact_and_symmetry",
+    "exact_catalog_family_policy": "an_exact_block_family_must_be_explicitly_confirmed_in_the_instructor_conversation",
+    "llm_role": "translate_confirmed_intent_into_catalog_requirements_without_overriding_it",
+    "model_task_context_scope": "instructor_build_intent_functional_requirements_and_catalog_constraints",
+    "segment_confirmation_csv_scope": "source_segment_identity_and_semantics_only",
+    "unconfirmed_exact_family_behavior": "needs_instructor_confirmation_do_not_guess"
+  },
+  "coordinate_system": {
+    "build_axis": "+Y",
+    "column_packing_axis": "Z",
+    "planner_axis_flips": [
+      false,
+      false,
+      false
+    ],
+    "planner_axis_order": [
+      0,
+      2,
+      1
+    ],
+    "planner_up_axis": "Z",
+    "preprocessing_axis_flips": [
+      false,
+      false,
+      false
+    ],
+    "preprocessing_axis_order": [
+      0,
+      1,
+      2
+    ]
+  },
+  "display_name": "A segmented toy airplane used to exercise the model-agnostic Reservation pipeline. Object type guides semantic labeling only; interface reservation strategy is derived from connection semantics, instructor intent, geometry, and catalog capabilities.",
+  "execution_policy": {
+    "allow_runtime_llm": false,
+    "final_claim_requires_deterministic_inputs": true,
+    "mode": "validated"
+  },
+  "final_claim_policy": {
+    "allow_diagnostic_structural_output_when_incomplete": true,
+    "require_functional_attachments_complete": true,
+    "require_hard_interface_reservations_complete": true,
+    "require_structural_connectors_complete": true,
+    "require_structural_segment_subassemblies_complete": true,
+    "require_validated_llm2_or_fallback_catalog_decisions": true,
+    "soft_interface_reservations_are_advisory": true
+  },
+  "functional_assemblies": [
+    {
+      "anchor_segment_id": 6,
+      "assembly_id": "main_propeller",
+      "assembly_type": "motion_connected_structural_subassembly",
+      "block_family_requirement": {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "propeller_structural_subassembly",
+        "decision_source": "instructor_conversation",
+        "mode": "exact",
+        "required_block_family": "standard_2x2x2"
+      },
+      "build_order": [
+        "rotation_connector",
+        "center_propeller_block",
+        "lower_propeller_block",
+        "upper_propeller_block"
+      ],
+      "connector": {
+        "axis": "Y",
+        "motion_type": "free_rotation",
+        "placement_policy": "outside_front_face_centered_on_symmetry_plane",
+        "required_block_family": "rotation_block"
+      },
+      "connector_axis": "Y",
+      "connector_motion_type": "free_rotation",
+      "display_name": "Propeller Assembly",
+      "enabled": true,
+      "instruction_templates": {
+        "connector": "Attach {display_name} connector block {block_ids} to {anchor_name}.",
+        "member": "Add block {block_ids} to the {display_name} subassembly."
+      },
+      "layout_axis": "Z",
+      "members": {
+        "block_family_requirement": {
+          "allow_family_fallback": false,
+          "confirmation_status": "confirmed",
+          "decision_id": "propeller_structural_subassembly",
+          "decision_source": "instructor_conversation",
+          "mode": "exact",
+          "required_block_family": "standard_2x2x2"
+        },
+        "catalog_query": {
+          "all": [
+            {
+              "field": "current_solver_enabled",
+              "op": "truthy"
+            },
+            {
+              "field": "functional_role",
+              "op": "equals",
+              "value": "structural"
+            },
+            {
+              "field": "block_family",
+              "op": "equals",
+              "value": "standard_2x2x2"
+            }
+          ]
+        },
+        "count": 3,
+        "layout_axis": "Z",
+        "member_templates": [
+          {
+            "face_roles": {
+              "+X": "female",
+              "+Y": "female",
+              "+Z": "male",
+              "-X": "female",
+              "-Y": "female",
+              "-Z": "female"
+            },
+            "member_role": "center",
+            "offset_index": 0
+          },
+          {
+            "face_roles": {
+              "+X": "female",
+              "+Y": "female",
+              "+Z": "male",
+              "-X": "female",
+              "-Y": "female",
+              "-Z": "female"
+            },
+            "member_role": "lower",
+            "offset_index": -1
+          },
+          {
+            "face_roles": {
+              "+X": "male",
+              "+Y": "female",
+              "+Z": "female",
+              "-X": "female",
+              "-Y": "female",
+              "-Z": "female"
+            },
+            "member_role": "upper",
+            "offset_index": 1
+          }
+        ],
+        "required_block_family": "standard_2x2x2"
+      },
+      "migration_source": "runtime_4_legacy_special_subassembly",
+      "physical_target_id": "main_propeller",
+      "placement_policy": "outside_front_face_centered_on_symmetry_plane",
+      "required_block_family": "standard_2x2x2",
+      "source_segment_ids": [
+        7,
+        9
+      ],
+      "structural_block_catalog_query": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "structural"
+          },
+          {
+            "field": "block_family",
+            "op": "equals",
+            "value": "standard_2x2x2"
+          }
+        ]
+      },
+      "structural_block_count": 3,
+      "validation": {
+        "require_centered_on_symmetry_axis": true,
+        "require_connector_to_anchor_lock": true,
+        "require_connector_to_subassembly_lock": true,
+        "require_internal_propeller_locking": true,
+        "require_internal_subassembly_locking": true,
+        "require_rotation_to_fuselage_lock": true,
+        "require_rotation_to_propeller_lock": true,
+        "require_three_structural_propeller_blocks": true
+      }
+    }
+  ],
+  "functional_attachment_policy": {
+    "allow_off_grid_candidate_geometry": true,
+    "allow_structural_baseline_when_pending": true,
+    "candidate_generation_mode": "interface_driven",
+    "enforce_exact_expected_count_after_grouping": true,
+    "fail_when_required_candidate_missing": false,
+    "fail_when_required_labels_missing": false,
+    "max_candidates_per_target": 250,
+    "minimum_candidate_source_overlap_ratio": 0.15,
+    "minimum_contact_area": 2,
+    "required_for_complete_build_claim": true,
+    "reservation_mode": "selected_candidate_footprint",
+    "reserve_clearance": true,
+    "selection_mode": "best_valid_per_physical_target",
+    "source_removal_mode": "selected_candidate_overlap_and_clearance"
+  },
+  "functional_attachments": [
+    {
+      "attachment_id": "main_wheels",
+      "block_family_requirement": {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "landing_gear_wheel_family",
+        "decision_source": "instructor_conversation",
+        "mode": "exact",
+        "required_block_family": "big_wheel",
+        "unconfirmed_behavior": "needs_instructor_confirmation"
+      },
+      "candidate_strategy": "replacement_at_target_structure_interface",
+      "catalog_family_selection_source": "instructor_build_intent",
+      "catalog_query": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_attachment_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "wheel"
+          },
+          {
+            "field": "block_family",
+            "op": "equals",
+            "value": "big_wheel"
+          }
+        ]
+      },
+      "count_policy": "exact_physical_instances",
+      "expected_count": 2,
+      "motion_type": "wheel",
+      "physical_target_grouping": {
+        "group_same_side_fragments": true,
+        "manual_groups": [
+          {
+            "confirmation_source": "simulated_teacher_confirmation",
+            "physical_target_id": "main_wheel_left",
+            "side": "left",
+            "source_segment_ids": [
+              5
+            ],
+            "status": "confirmed"
+          },
+          {
+            "confirmation_source": "simulated_teacher_confirmation",
+            "physical_target_id": "main_wheel_right",
+            "side": "right",
+            "source_segment_ids": [
+              8
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "mode": "semantic_side_and_interface_cluster"
+      },
+      "required": true,
+      "required_block_family": "big_wheel",
+      "semantic_confirmation_source": "segment_confirmation_csv",
+      "semantic_labels": [
+        "left_wheel",
+        "right_wheel",
+        "wheel"
+      ],
+      "source_removal_policy": "selected_candidate_overlap_and_clearance",
+      "wheel_family_selection_policy": "confirmed_exact_family_no_fallback"
+    },
+    {
+      "attachment_id": "propeller",
+      "block_family_requirement": {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "propeller_rotation_connector_family",
+        "decision_source": "instructor_conversation",
+        "mode": "exact",
+        "required_block_family": "rotation_block",
+        "unconfirmed_behavior": "needs_instructor_confirmation"
+      },
+      "candidate_strategy": "rotation_connector_to_structural_propeller_subassembly",
+      "catalog_family_selection_source": "instructor_build_intent",
+      "catalog_query": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "connector"
+          },
+          {
+            "field": "placement_mode",
+            "op": "equals",
+            "value": "in_between"
+          },
+          {
+            "field": "motion_type",
+            "op": "equals",
+            "value": "free_rotation"
+          },
+          {
+            "field": "block_family",
+            "op": "equals",
+            "value": "rotation_block"
+          }
+        ]
+      },
+      "count_policy": "exact_physical_instances",
+      "expected_count": 1,
+      "motion_type": "rotation",
+      "physical_target_grouping": {
+        "manual_groups": [
+          {
+            "confirmation_source": "simulated_teacher_confirmation",
+            "physical_group_name": "Propeller Assembly",
+            "physical_target_id": "main_propeller",
+            "side": "center",
+            "source_segment_ids": [
+              7,
+              9
+            ],
+            "status": "confirmed"
+          }
+        ],
+        "mode": "semantic_and_interface_cluster"
+      },
+      "required": true,
+      "required_block_family": "rotation_block",
+      "semantic_confirmation_source": "segment_confirmation_csv",
+      "semantic_labels": [
+        "propeller",
+        "propeller_blade"
+      ],
+      "source_removal_policy": "semantic_replacement_group"
+    }
+  ],
+  "instructor_build_intent": {
+    "confirmed_by_role": "instructor",
+    "decision_source": "instructor_conversation",
+    "decisions": [
+      {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "landing_gear_wheel_family",
+        "expected_count": 2,
+        "physical_target_ids": [
+          "main_wheel_left",
+          "main_wheel_right"
+        ],
+        "required_block_family": "big_wheel",
+        "requirement": "Use exactly two big_wheel blocks for the left and right landing-gear wheel targets."
+      },
+      {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "propeller_rotation_connector_family",
+        "expected_count": 1,
+        "physical_target_ids": [
+          "main_propeller"
+        ],
+        "required_block_family": "rotation_block",
+        "requirement": "Connect the propeller assembly to the fuselage with one centered rotation_block."
+      },
+      {
+        "allow_family_fallback": false,
+        "confirmation_status": "confirmed",
+        "decision_id": "propeller_structural_subassembly",
+        "expected_count": 3,
+        "required_block_family": "standard_2x2x2",
+        "requirement": "Build the propeller from three standard_2x2x2 structural blocks attached to the rotation connector."
+      },
+      {
+        "confirmation_status": "confirmed",
+        "decision_id": "rigid_segment_join_policy",
+        "requirement": "Use validated direct male-to-female structural locks for ordinary rigid segment joins; do not insert hinge blocks."
+      },
+      {
+        "confirmation_status": "confirmed",
+        "decision_id": "selective_interface_reservation_policy",
+        "decision_source": "model_agnostic_reservation_pipeline_policy",
+        "requirement": "Use hard reservations only for exact functional, motion, replacement, or explicitly docked interfaces. Use soft reservations for ordinary rigid joins and no reservation for relationships that require no physical connection."
+      }
+    ],
+    "scope": "current_toy_airplane_build",
+    "status": "confirmed"
+  },
+  "interface_reservations": {
+    "allow_boundary_only_requirement_when_catalog_role_is_unknown": true,
+    "conflict_policy": "fatal_only_when_distinct_hard_groups_require_incompatible_roles_on_same_face_patch",
+    "decision_precedence": [
+      "explicit_task_context_rule",
+      "required_functional_or_motion_interface",
+      "exact_catalog_family_or_docking_requirement",
+      "ordinary_rigid_structural_interface",
+      "no_physical_connection"
+    ],
+    "default_optional_functional_strategy": "soft",
+    "default_required_functional_strategy": "hard",
+    "default_structural_interface_strategy": "soft",
+    "enabled": true,
+    "enforce_hard_during_rotation_planning": true,
+    "explicit_requirements": [
+      {
+        "reason": "Required functional attachments need an exact validated receiving face.",
+        "required_only": true,
+        "reservation_strategy": "hard",
+        "rule_id": "required_functional_attachments_are_hard",
+        "scope": "functional_attachment"
+      },
+      {
+        "connection_types": [
+          "rigid",
+          "structural_connector",
+          "direct_structural_lock"
+        ],
+        "reason": "Ordinary rigid joins should remain connectable without forcing a single exact face.",
+        "reservation_strategy": "soft",
+        "rule_id": "ordinary_rigid_joins_are_soft",
+        "scope": "structural_interface"
+      }
+    ],
+    "hard_connection_types": [
+      "rotation",
+      "hinge",
+      "wheel_replacement",
+      "replacement",
+      "functional_attachment",
+      "axle",
+      "motion",
+      "special_connector"
+    ],
+    "hard_requirements_block_final_claim": true,
+    "maximum_anchor_alternatives_per_group": 8,
+    "none_connection_types": [
+      "none",
+      "no_connection",
+      "decorative",
+      "visual_only",
+      "ignore"
+    ],
+    "reject_hard_candidate_when_no_receiving_anchor": true,
+    "reject_soft_candidate_when_no_receiving_anchor": false,
+    "replacement_removal_scope": "selected_validated_footprint_only",
+    "score_soft_during_rotation_planning": true,
+    "soft_connection_types": [
+      "rigid",
+      "structural_connector",
+      "direct_structural_lock",
+      "structural"
+    ],
+    "soft_requirements_block_final_claim": false,
+    "soft_satisfied_rotation_bonus": 1,
+    "soft_unsatisfied_candidate_penalty": 250,
+    "strategy_mode": "derive_per_interface_hard_soft_none",
+    "unspecified_requirement_default_strategy": "hard",
+    "whole_segment_reservation_prohibited": true
+  },
+  "llm": {
+    "llm1": {
+      "enabled": false,
+      "may_override_teacher_confirmation": false,
+      "model": "llava:7b",
+      "reason": "This backend starts after teacher-confirmed segment semantics have been written by the front end."
+    },
+    "llm2": {
+      "allowed_connection_types": [
+        "structural_connector",
+        "rigid",
+        "rotation",
+        "hinge",
+        "wheel_replacement",
+        "none"
+      ],
+      "catalog_requirement_fields": [
+        "category",
+        "functional_role",
+        "placement_mode",
+        "motion_type",
+        "functional_attachment_enabled",
+        "attachment_candidate_rule",
+        "visual_shape"
+      ],
+      "classify_functional_targets": true,
+      "classify_structural_interfaces": true,
+      "enabled": false,
+      "fallback_on_error": true,
+      "fallback_policy": "task_context_catalog_query_then_catalog_selector",
+      "maximum_catalog_capability_rows_in_prompt": 40,
+      "may_override_teacher_confirmation": false,
+      "require_catalog_match": true,
+      "required_interface_policy_is_hard_constraint": true,
+      "role": "contract_authoring_only",
+      "runtime_reason": "Validated builds consume confirmed contract decisions and do not call an LLM.",
+      "save_raw_responses": false
+    }
+  },
+  "model_id": "airplane-selective-interface-build",
+  "model_source": {
+    "expected_sha256": "8efb5241b300fa4cc2427ee46212818ad4873ef4382bfe6e2d0523deec8ff062",
+    "filename": "tripo_convert_1f420a52-b8e1-4d94-a634-567465fa35c8.obj",
+    "model_id": "airplane-tripo",
+    "uri": "model://airplane-tripo"
+  },
+  "object_description": "A segmented toy airplane used to exercise the model-agnostic Reservation pipeline. Object type guides semantic labeling only; interface reservation strategy is derived from connection semantics, instructor intent, geometry, and catalog capabilities.",
+  "object_type_hint": "airplane",
+  "packing_policy": {
+    "enable_segment_local_consolidation": true,
+    "family_priority_overrides": {},
+    "prefer_larger_blocks_on_ties": true,
+    "prefer_larger_blocks_tie_order": [
+      "standard_2x4x2",
+      "standard_2x3x2",
+      "standard_2x2x2"
+    ],
+    "reject_equal_family_multiset_reordering": true,
+    "require_consolidation_all_blocks_accepted": true,
+    "require_consolidation_exact_coverage": true,
+    "require_consolidation_receiving_faces_valid": true,
+    "rollback_invalid_consolidation": true,
+    "segment_local_consolidation_mode": "meaningful_family_change_then_full_revalidation"
+  },
+  "paths": {
+    "catalog_sheet": "Block Definitions",
+    "catalog_xlsx": "../block_catalog/block_definitions.xlsx",
+    "relative_to": "pipeline_runtime"
+  },
+  "planner_diagnostics": {
+    "beam_increase_recommendation_only_when_pruning_is_observed": true,
+    "enabled": true,
+    "include_contact_rows": true,
+    "include_rotation_assignment": true,
+    "per_segment": true,
+    "replace_segment_rows_in_shared_rollup": true,
+    "top_attempts_per_packing_variant": 8,
+    "write_attempt_csv": true,
+    "write_contact_csv": true,
+    "write_reason_summary_csv": true,
+    "write_shared_rollup": true,
+    "write_summary_json": true
+  },
+  "regression": {
+    "source_model_sha256": "8efb5241b300fa4cc2427ee46212818ad4873ef4382bfe6e2d0523deec8ff062"
+  },
+  "runtime_logging": {
+    "show_assembly_step_table": false,
+    "show_catalog_details": false,
+    "show_debug_settings": false,
+    "show_environment": false,
+    "show_final_summary": true,
+    "show_gate_messages": true,
+    "show_inline_render_messages": false,
+    "show_intermediate_tables": false,
+    "show_output_paths": false,
+    "show_planner_configuration": false,
+    "show_planner_parents": false,
+    "show_planner_rows": false,
+    "show_planner_summary": true,
+    "show_visualization_paths": false
+  },
+  "schema_version": "bricksmart-model-contract-1.0",
+  "segment_assembly": {
+    "assembly_graph": {
+      "include_non_tree_interfaces_as_optional": true,
+      "mode": "maximum_contact_spanning_forest",
+      "preferred_root_labels": [
+        "fuselage",
+        "main_body",
+        "body"
+      ],
+      "root_fallback": "largest_structural_segment",
+      "root_step_anchor_policy": "null_not_applicable"
+    },
+    "assembly_validation": {
+      "require_connector_lock_to_both_segments": true,
+      "require_each_required_interface_has_connector": true,
+      "require_each_segment_exactly_covered": true,
+      "require_each_segment_locking_connected": true,
+      "require_final_segment_graph_connected": true,
+      "require_no_collisions": true,
+      "require_no_direct_structural_cross_segment_locks": true
+    },
+    "enabled": true,
+    "functional_attachment_policy": {
+      "allow_source_functional_replacement_overlap": true,
+      "big_wheel_allow_partial_off_grid": true,
+      "big_wheel_candidate_geometry_mode": "visible_disc_with_hidden_catalog_anchor",
+      "big_wheel_world_axle_axis": "X",
+      "big_wheel_world_disc_plane": "YZ",
+      "big_wheel_world_vertical_axis": "Z",
+      "big_wheel_world_visible_size": [
+        1,
+        3,
+        3
+      ],
+      "center_rotation_block_on_model_symmetry_axis": true,
+      "reject_flat_xy_wheel_candidates": true,
+      "require_anchor_contact": true,
+      "require_source_overlap": true,
+      "require_thin_dimension_on_axle_axis": true,
+      "rotation_centering_uses_block_center": true,
+      "validation_mode": "source_replacement_plus_anchor_contact",
+      "wheel_axle_axis": "X",
+      "wheel_disc_plane": "YZ",
+      "wheel_orientation_mode": "vertical_disc",
+      "wheel_vertical_axis": "Z"
+    },
+    "functional_target_segments_are_not_structural_subassemblies": true,
+    "interface_detection": {
+      "aggregate_by_segment_pair_and_normal": true,
+      "minimum_contact_area": 2,
+      "mode": "face_adjacency"
+    },
+    "preserve_source_segment_boundaries": true,
+    "segment_packing": {
+      "allow_multiple_root_components": true,
+      "bidirectional_symmetry_recovery": true,
+      "build_axis": "+Y",
+      "build_each_segment_independently": true,
+      "candidate_build_axes": [
+        "+Y",
+        "+X",
+        "-Y",
+        "-X"
+      ],
+      "column_axis": "Z",
+      "column_footprint": [
+        2,
+        2
+      ],
+      "connector_face_enforcement_stage": "reservation_selective_prepack_hard_soft_and_postbuild_validation",
+      "fail_on_partial_2x2_footprint": true,
+      "failed_segment_gate": "skip_connector_and_functional_instantiation_but_write_diagnostics",
+      "female_female_support_allowed_for_final_component_bridge": true,
+      "final_segment_connectivity_policy": "single_supported_face_contact_component",
+      "male_female_lock_required_per_nonroot_step": true,
+      "maximum_temporary_root_components": 8,
+      "planner_config": {
+        "build_axis": "+Y",
+        "exact_rotation_search_limit": 4,
+        "fail_when_no_valid_row_state": true,
+        "max_extra_blocks_per_column": 0,
+        "minimize_exposed_male_area": true,
+        "per_column_sequence_limit": 4,
+        "plan_beam_width": 3,
+        "prefer_effective_packing_priority": true,
+        "prefer_forward_female_frontier": true,
+        "rotation_beam_width": 128,
+        "rotation_solutions_per_row": 2,
+        "row_packing_beam_width": 4
+      },
+      "planner_mode": "catalog_row_column_planner",
+      "require_single_final_locking_component": true,
+      "root_exemption_scope": "multiple_temporary_roots_first_step_final_single_component",
+      "source_mask_policy": "untouched_structuralized_segment_masks",
+      "stop_after_first_valid_build_axis": true,
+      "write_build_axis_audit": true
+    },
+    "structural_block_cross_segment_policy": "forbid_locking",
+    "structural_connector_policy": {
+      "allow_hinge_block_for_rigid_interface": false,
+      "allow_intended_anchor_overlap": true,
+      "catalog_selector": "segment_connector",
+      "connection_type_catalog_constraints": {
+        "hinge": {
+          "all": [
+            {
+              "field": "motion_type",
+              "op": "equals",
+              "value": "hinge"
+            }
+          ]
+        },
+        "rigid": {
+          "all": [
+            {
+              "field": "motion_type",
+              "op": "not_in",
+              "values": [
+                "free_rotation"
+              ]
+            }
+          ]
+        },
+        "rotation": {
+          "all": [
+            {
+              "field": "motion_type",
+              "op": "equals",
+              "value": "free_rotation"
+            }
+          ]
+        },
+        "structural_connector": {
+          "all": [
+            {
+              "field": "motion_type",
+              "op": "not_in",
+              "values": [
+                "free_rotation"
+              ]
+            }
+          ]
+        }
+      },
+      "direct_join_requires_male_to_female_lock": true,
+      "enabled": true,
+      "enforce_receiving_faces_during_rotation_planning": true,
+      "instantiate_special_connector_blocks": false,
+      "join_mode": "direct_structural_lock",
+      "maximum_candidates_per_interface": 500,
+      "maximum_receiving_face_alternatives_per_side": 4,
+      "minimum_receiving_face_satisfaction_ratio": 1.0,
+      "minimum_retained_contact_area_per_segment": 1,
+      "minimum_source_overlap_voxels_per_segment": 1,
+      "missing_rule_behavior": "report_pending_do_not_guess",
+      "placement_validation_mode": "embedded_anchor_layer",
+      "postbuild_require_lock_to_both_segments": true,
+      "postbuild_require_zero_geometry_overlap": true,
+      "postbuild_reselect_using_actual_structural_faces": true,
+      "prefer_structural_female_receiving_face": true,
+      "receiving_face_requirement_source": "selected_connector_catalog_face_roles",
+      "receiving_face_selection_mode": "one_of_ranked_anchor_patches_per_segment_side",
+      "reject_candidate_when_receiving_face_impossible": false,
+      "reject_unrelated_overlap": true,
+      "require_full_receiving_contact_coverage": false,
+      "require_interface_connector_rule": true,
+      "require_valid_candidate_for_complete_build_claim": true,
+      "required_anchor_voxels_per_segment": 4,
+      "required_on_each_assembly_graph_edge": false,
+      "reservation_strategy_mode": "per_interface_hard_soft_none",
+      "reserve_connector_geometry": false,
+      "reserve_receiving_faces": true,
+      "rigid_join_confirmation_status": "confirmed",
+      "rigid_join_decision_source": "instructor_build_intent",
+      "special_connector_requires_explicit_motion_type": true,
+      "synthesize_candidate_for_each_required_tree_interface": true
+    }
+  },
+  "segment_semantics": {
+    "allowed_labels": [
+      "fuselage",
+      "body",
+      "main_body",
+      "left_wing",
+      "right_wing",
+      "wing",
+      "horizontal_tail",
+      "vertical_tail",
+      "tail",
+      "nose",
+      "engine",
+      "left_wheel",
+      "right_wheel",
+      "wheel",
+      "connector_strut",
+      "propeller",
+      "propeller_blade",
+      "decorative",
+      "unknown",
+      "cockpit",
+      "landing_gear"
+    ],
+    "auto_confirm_from_obj_object_names": false,
+    "confirmation_policy": {
+      "authoritative_source": "simulated_teacher_frontend",
+      "confirmed_labels_apply_before_interfaces": true,
+      "confirmed_names_used_for_display": true,
+      "labels_file_default_status": "confirmed",
+      "require_teacher_confirmation_for_left_right_names": true,
+      "unconfirmed_labels_may_affect_backend": false
+    },
+    "confirmation_template_output": "segment_confirmations_required.csv",
+    "confirmed_segment_names": {
+      "1": "Left Lower Wing",
+      "10": "Right Lower Wing",
+      "11": "Right Horizontal Tail",
+      "12": "Right Wing Strut",
+      "2": "Upper Wing",
+      "3": "Left Horizontal Tail",
+      "4": "Left Wing Strut",
+      "5": "Left Main Wheel",
+      "6": "Fuselage",
+      "7": "Propeller Blade A",
+      "8": "Right Main Wheel",
+      "9": "Propeller Blade B"
+    },
+    "display_name_fallback_order": [
+      "confirmed_name",
+      "confirmed_label",
+      "proposed_label",
+      "segment_id"
+    ],
+    "fail_when_all_labels_unknown": false,
+    "invalid_label_fallback": "unknown",
+    "labels_file": "segment_confirmations.csv",
+    "labels_file_format": "csv",
+    "labels_file_schema": {
+      "authoritative_statuses": [
+        "confirmed",
+        "corrected",
+        "approved",
+        "accepted"
+      ],
+      "confirmed_label_columns": [
+        "confirmed_label",
+        "segment_label",
+        "final_label",
+        "semantic_label",
+        "label"
+      ],
+      "display_name_columns": [
+        "confirmed_name",
+        "segment_display_name",
+        "segment_name",
+        "display_name"
+      ],
+      "segment_id_columns": [
+        "segment_id",
+        "source_segment_id",
+        "id"
+      ],
+      "source_columns": [
+        "confirmation_source",
+        "label_source",
+        "source",
+        "decision_source"
+      ],
+      "status_columns": [
+        "confirmation_status",
+        "status"
+      ]
+    },
+    "manual_confirmed_labels_apply_before_interfaces": true,
+    "manual_review_policy": "none_simulated_all_confirmed",
+    "manual_review_required_segment_ids": [],
+    "manual_segment_labels": {},
+    "obj_object_name_aliases": {},
+    "provisional_segment_labels": {},
+    "reject_concatenated_labels": true,
+    "segment_confirmation_records": [],
+    "simulation_metadata": {
+      "confirmation_source": "simulated_teacher_confirmation",
+      "coordinate_side_convention": "low_X_is_left_high_X_is_right",
+      "enabled": true,
+      "not_actual_teacher_review": true,
+      "purpose": "backend_integration_test_after_frontend_teacher_confirmation"
+    },
+    "unknown_label": "unknown",
+    "unknown_label_gate_stage": "after_obj_name_aliases_labels_file_manual_labels_and_teacher_confirmations",
+    "write_confirmation_template_before_failure": true
+  },
+  "semantic_preflight": {
+    "allow_geometry_to_quarantine_confirmed_overrides": true,
+    "enabled": true,
+    "evaluate_required_left_right_pairs": true,
+    "maximum_pair_voxel_ratio": 3.0,
+    "maximum_suggestions_per_target": 5,
+    "minimum_pair_mirror_iou": 0.5,
+    "minimum_target_voxels": 4,
+    "quarantine_invalid_functional_pairs": true,
+    "quarantined_label": "unknown",
+    "quarantined_segments_return_to_structural_pool": true,
+    "required_pair_failure_blocks_final_claim": true,
+    "suggest_alternative_mirror_partners": true
+  },
+  "structuralization": {
+    "catalog_height_policy": "enabled_structural_column_heights",
+    "column_axis": "Z",
+    "confirmed_symmetry_repairs": [
+      {
+        "apply": true,
+        "confirmation_source": "user_visual_review_of_v30_segmented_model",
+        "reason": "The two horizontal-tail sides should be mirrored; the source segmentation contains unequal thickness.",
+        "repair_id": "horizontal_tail_pair",
+        "segment_a": 3,
+        "segment_b": 11,
+        "template_segment_id": 3
+      }
+    ],
+    "drop_segments_below_retention_threshold_when_unowned": true,
+    "drop_source_penalty": 120.0,
+    "enabled": true,
+    "expansion_penalty": 4.0,
+    "functional_cell_reservation": "reserve_complete_2x2_cell_layer",
+    "lattice_footprint": [
+      2,
+      2
+    ],
+    "lattice_offset_candidates": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "lattice_offset_objective": "gate_active_retention_then_min_added_removed_and_padding",
+    "lattice_offset_search_enabled": true,
+    "majority_owner_bonus": 8.0,
+    "match_source_weight": 120.0,
+    "minimum_source_voxels_to_require_retention": 4,
+    "ownership_mode": "global_cell_layer_dynamic_programming",
+    "require_catalog_representable_column_runs": true,
+    "require_connected_segment_masks": true,
+    "require_exact_2x2_footprints": true,
+    "run_transition_penalty": 2.0,
+    "source_grid": "planner_segment_grid_raw",
+    "steal_other_source_penalty": 80.0,
+    "symmetry_repair_overwrite_other_segments": false,
+    "symmetry_repair_require_conflict_free": true
+  },
+  "symmetry": {
+    "auto_exactify_accepted_pairs": true,
+    "auto_exactify_minimum_iou": 0.75,
+    "auto_exactify_require_conflict_free": true,
+    "auto_exactify_template_policy": "maximum_source_retention_then_minimum_added_geometry",
+    "axis": "X",
+    "candidate_pair_signature": "family_origin_size_and_mirrored_world_face_roles",
+    "center_plane": null,
+    "center_plane_mode": "infer_best_mirror_iou",
+    "connector_pair_selection": "exact_mirrored_candidates",
+    "enabled": true,
+    "enforcement": "mirror_valid_pairs",
+    "final_claim_requires_symmetry": true,
+    "functional_pair_selection": "exact_mirrored_candidates",
+    "independent_fallback_allowed_for_diagnostics": true,
+    "minimum_mirror_iou": 0.75,
+    "pair_discovery_mode": "declared_then_semantic_then_geometry",
+    "paired_segment_ids": [
+      [
+        1,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        8
+      ]
+    ],
+    "prefer_mirrored_segment_plan_when_pair_valid": true,
+    "reject_declared_pair_when_geometry_invalid": true,
+    "require_at_least_one_valid_pair": true,
+    "require_exact_packable_mask_for_mirroring": true,
+    "template_side_preference": "left"
+  },
+  "task_id": "airplane-selective-interface-build",
+  "visualization": {
+    "allow_functional_only_final_display": false,
+    "append_terminal_final_state_step": true,
+    "assembly_player_ghost_opacity": 0.38,
+    "assembly_player_ready_opacity": 1.0,
+    "assembly_player_show_all_subassemblies_button": true,
+    "assembly_player_show_interface_indicator": true,
+    "assembly_player_show_pending_anchor_ghost": true,
+    "assembly_player_show_pending_segment_ghost": true,
+    "assembly_player_show_source_context": false,
+    "assembly_player_start_at_first_step": true,
+    "block_opacity": 1.0,
+    "candidate_preview_limit_per_group": 30,
+    "complete_timeline_annotation_y": 0.86,
+    "complete_timeline_control_y": 0.93,
+    "complete_timeline_initial_step": 1,
+    "complete_timeline_scene_top": 0.74,
+    "context_opacity": 0.1,
+    "enabled": false,
+    "external_player_generated_by_runner": true,
+    "generate_assembly_player_figure": false,
+    "generate_complete_build_timeline_figure": false,
+    "generate_final_state_figure": false,
+    "generate_interactive_face_contact_figure": false,
+    "generate_noninline_interactive_viewers": false,
+    "generate_proper_complete_build_step_player": false,
+    "generate_proper_segment_build_step_players": false,
+    "generate_reservation_candidate_filter_view": false,
+    "generate_reservation_reservation_fulfillment_view": false,
+    "generate_reservation_selective_reservation_view": false,
+    "include_valid_connectors_in_incomplete_state": true,
+    "include_valid_functionals_in_incomplete_state": true,
+    "inline_visualization_profile": "segmentation_comparison+reference_validated_steps+reference_face_connections+assembly_player+final_state",
+    "interactive": false,
+    "interactive_block_outline_color": "rgba(0,0,0,1.0)",
+    "interactive_block_outline_opacity": 1.0,
+    "interactive_block_outline_width": 5.0,
+    "interactive_block_outlines": true,
+    "interactive_blue_green_min_opacity": 1.0,
+    "interactive_blue_green_preview_min_opacity": 0.42,
+    "interactive_embed_plotlyjs": "inline_once",
+    "interactive_face_contact_block_opacity": 0.24,
+    "interactive_face_contact_bounds_padding": 0.8,
+    "interactive_face_contact_contact_mode": "mechanical_face_status",
+    "interactive_face_contact_dynamic_bounds": true,
+    "interactive_face_contact_female_marker_size": 5,
+    "interactive_face_contact_height": 700,
+    "interactive_face_contact_male_marker_size": 5,
+    "interactive_face_contact_outline_opacity": 0.42,
+    "interactive_face_contact_outline_width": 2.0,
+    "interactive_face_contact_rotation_block_opacity": 0.62,
+    "interactive_face_contact_side_width": 3,
+    "interactive_face_contact_support_width": 6,
+    "interactive_face_contact_wheel_opacity": 0.48,
+    "interactive_face_controls_mode": "independent",
+    "interactive_face_default_mode": "blocks",
+    "interactive_face_marker_offset": 0.08,
+    "interactive_face_markers_exposed_only": true,
+    "interactive_female_marker_line_width": 2,
+    "interactive_female_marker_size": 8,
+    "interactive_final_control_x": 0.01,
+    "interactive_final_control_xanchor": "left",
+    "interactive_final_control_y": 0.93,
+    "interactive_final_control_yanchor": "top",
+    "interactive_final_female_control_x": 0.27,
+    "interactive_final_male_control_x": 0.01,
+    "interactive_final_scene_top": 0.8,
+    "interactive_final_title_x": 0.5,
+    "interactive_final_title_y": 0.985,
+    "interactive_final_top_margin": 105,
+    "interactive_include_plotlyjs": true,
+    "interactive_inline_mode": "embedded_html",
+    "interactive_male_marker_line_width": 1,
+    "interactive_male_marker_size": 6,
+    "interactive_player_height": 740,
+    "interactive_player_width": "100%",
+    "interactive_renderer": "browser",
+    "marker_size": 5,
+    "maximum_inline_validated_steps": null,
+    "maximum_source_context_voxels": 25000,
+    "plotly_annotation_wrap_width": 92,
+    "proper_build_steps_annotation_y": 0.86,
+    "proper_build_steps_control_y": 0.93,
+    "proper_build_steps_current_opacity": 1.0,
+    "proper_build_steps_face_markers_default": false,
+    "proper_build_steps_height": 760,
+    "proper_build_steps_initial_step": 1,
+    "proper_build_steps_previous_block_rgb": [
+      185,
+      185,
+      185
+    ],
+    "proper_build_steps_previous_color_mode": "lightened_family",
+    "proper_build_steps_previous_opacity": 0.28,
+    "proper_build_steps_rejected_rgb": [
+      220,
+      45,
+      45
+    ],
+    "proper_build_steps_scene_top": 0.72,
+    "proper_build_steps_show_source_context": true,
+    "proper_build_steps_source_context_opacity": 0.2,
+    "reference_blue_green_min_alpha": 1.0,
+    "reference_blue_green_prior_min_alpha": 0.9,
+    "reference_face_block_alpha": 0.22,
+    "reference_face_connection_block_alpha": 1.0,
+    "reference_face_female_marker_size": 20,
+    "reference_face_figsize": [
+      7.0,
+      5.8
+    ],
+    "reference_face_male_marker_size": 18,
+    "reference_face_markers_exposed_only": true,
+    "reference_female_marker_fill": "white",
+    "reference_female_marker_size": 54,
+    "reference_final_block_alpha": 1.0,
+    "reference_inline_current_block_alpha": 1.0,
+    "reference_inline_dpi": 90,
+    "reference_inline_face_marker_size": 82,
+    "reference_inline_figsize": [
+      7.0,
+      5.8
+    ],
+    "reference_inline_label_fontsize": 8,
+    "reference_inline_layout_pad": 0.45,
+    "reference_inline_line_width_scale": 0.7,
+    "reference_inline_prior_block_alpha": 0.72,
+    "reference_inline_tick_fontsize": 7,
+    "reference_inline_title_fontsize": 10,
+    "reference_inline_validation_fontsize": 7,
+    "reference_male_marker_size": 42,
+    "reference_marker_edge_width": 1.2,
+    "reference_marker_halo_scale": 1.55,
+    "reference_marker_offset": 0.08,
+    "reference_segment_panel_figsize": [
+      12.0,
+      7.5
+    ],
+    "reference_solid_edgecolor": "black",
+    "reference_solid_figsize": [
+      6.0,
+      5.2
+    ],
+    "reference_solid_linewidth": 0.28,
+    "reference_step_current_alpha": 1.0,
+    "reference_step_figsize": [
+      7.0,
+      5.8
+    ],
+    "reference_step_marker_offset": 0.1,
+    "reference_step_marker_size": 64,
+    "reference_step_maximum_inline_steps": null,
+    "reference_step_prior_alpha": 0.28,
+    "reference_step_show_order_labels": true,
+    "save_interactive_html": false,
+    "save_static_final_png": false,
+    "save_static_segment_plan_png": false,
+    "save_static_terminal_state_png": false,
+    "save_static_validated_step_pngs": false,
+    "saved_step_current_alpha": 1.0,
+    "saved_step_prior_alpha": 0.28,
+    "saved_step_prior_gray": false,
+    "saved_step_show_build_axis": true,
+    "saved_step_show_face_markers": true,
+    "segment_row_progression_mode": "previous_rows_gray_current_row_catalog_color",
+    "show_available_final_state_when_incomplete": false,
+    "show_block_family_counts": false,
+    "show_count_table_before_build_player": false,
+    "show_count_table_before_final_state": false,
+    "show_counts_in_legend": false,
+    "show_dedicated_inline_complete_build_timeline_cell": false,
+    "show_dedicated_inline_face_contact_cell": false,
+    "show_dedicated_inline_final_state_cell": false,
+    "show_dedicated_inline_player_cell": false,
+    "show_dedicated_inline_proper_complete_build_steps_cell": false,
+    "show_dedicated_inline_proper_segment_build_steps_cell": false,
+    "show_face_markers_default": false,
+    "show_inline_assembly_assembly_player": false,
+    "show_inline_assembly_sequence": false,
+    "show_inline_assembly_steps": false,
+    "show_inline_final": false,
+    "show_inline_final_state": false,
+    "show_inline_planning_layers": false,
+    "show_inline_reference_block_type_view": false,
+    "show_inline_reference_face_connection_view": false,
+    "show_inline_reference_final_object": false,
+    "show_inline_reference_validated_steps": false,
+    "show_inline_reservation_candidate_filter_view": false,
+    "show_inline_reservation_reservation_fulfillment_view": false,
+    "show_inline_reservation_selective_reservation_view": false,
+    "show_inline_reserved_faces": false,
+    "show_inline_segment_sequences": false,
+    "show_inline_segmentation_comparison": false,
+    "show_inline_segmented": false,
+    "show_inline_structuralization_delta": false,
+    "show_inline_structuralized_model": false,
+    "show_inline_subassembly_build_steps": false,
+    "show_inline_symmetry_pairs": false,
+    "show_per_segment_players_when_full_build_invalid": false,
+    "show_reference_assembly_player": false,
+    "show_reference_face_diagnostic": false,
+    "show_reference_interactive_final_state": false,
+    "show_reference_segment_panel": false,
+    "show_reference_solid_block_overview": false,
+    "show_reference_validated_steps": false,
+    "show_segment_display_names": false,
+    "show_source_context_when_incomplete": false,
+    "show_valid_connector_blocks_when_final_incomplete": false,
+    "show_valid_functional_blocks_when_final_incomplete": false,
+    "source_context_marker_opacity": 0.18,
+    "source_context_marker_size": 4,
+    "step_progression_camera_from_build_axis": true,
+    "step_progression_current_alpha": 1.0,
+    "step_progression_focus_bounds": true,
+    "step_progression_focus_padding": 1.25,
+    "step_progression_label_mode": "block_id",
+    "step_progression_minimum_span": 5.0,
+    "step_progression_previous_alpha": 0.28,
+    "step_progression_previous_color_mode": "lightened_family",
+    "step_progression_previous_lighten_fraction": 0.62,
+    "suppress_full_model_player_when_final_claim_invalid": true,
+    "wheel_render_axle_axis": "X",
+    "wheel_render_mode": "vertical_disc",
+    "wheel_render_plane": "YZ",
+    "wheel_render_vertical_axis": "Z"
+  },
+  "voxelization": {
+    "cache_mode": "rebuild",
+    "edge_samples_per_voxel": 2.0,
+    "grid_size": 16,
+    "preprocessing": {
+      "clean_vertical_columns": true,
+      "enforce_2x2_footprint": true,
+      "remap_segments_to_2x2_grid": true,
+      "split_disconnected_components": true,
+      "thicken_floor_and_ceiling": true
+    },
+    "random_seed": 0,
+    "samples_per_triangle": 30,
+    "sampling_mode": "deterministic_surface",
+    "save_intermediate_grids": true
+  }
+}

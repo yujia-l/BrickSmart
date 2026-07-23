@@ -1,0 +1,20 @@
+{
+  "schema_version": "bricksmart-inventory-feasibility-1.0",
+  "status": "INFEASIBLE_INVENTORY",
+  "final_claim_valid": false,
+  "inventory_id": "standard_kit",
+  "inventory_mode": "finite",
+  "failure_scope": "symmetry_pair:SP_001_010",
+  "shortages": {
+    "standard_2x2x2": {
+      "available": 16,
+      "capacity": 16,
+      "committed": 0,
+      "required": 18,
+      "reserved": 0,
+      "shortage": 2
+    }
+  },
+  "build_instructions_html_generated": false,
+  "reason": "The first required mirrored structural pair needs 18 standard_2x2x2 blocks, but the physical kit contains 16. Planning stops before a validated build or HTML instruction player is produced."
+}

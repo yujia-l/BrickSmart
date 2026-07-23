@@ -1,0 +1,64 @@
+{
+  "valid": true,
+  "inventory_id": "unlimited",
+  "inventory_mode": "unlimited",
+  "usage_rows": [
+    {
+      "block_family": "big_wheel",
+      "capacity": null,
+      "used": 2,
+      "ledger_committed": 2,
+      "remaining": null,
+      "status": "PASS"
+    },
+    {
+      "block_family": "rotation_block",
+      "capacity": null,
+      "used": 1,
+      "ledger_committed": 1,
+      "remaining": null,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x2x2",
+      "capacity": null,
+      "used": 57,
+      "ledger_committed": 57,
+      "remaining": null,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x3x2",
+      "capacity": null,
+      "used": 12,
+      "ledger_committed": 12,
+      "remaining": null,
+      "status": "PASS"
+    },
+    {
+      "block_family": "standard_2x4x2",
+      "capacity": null,
+      "used": 6,
+      "ledger_committed": 6,
+      "remaining": null,
+      "status": "PASS"
+    }
+  ],
+  "overages": {},
+  "ledger_mismatches": {},
+  "open_reservations": {},
+  "recount": {
+    "big_wheel": 2,
+    "rotation_block": 1,
+    "standard_2x2x2": 57,
+    "standard_2x3x2": 12,
+    "standard_2x4x2": 6
+  },
+  "ledger_committed": {
+    "big_wheel": 2,
+    "rotation_block": 1,
+    "standard_2x2x2": 57,
+    "standard_2x3x2": 12,
+    "standard_2x4x2": 6
+  }
+}

@@ -1,0 +1,28 @@
+schema_version: "5.0"
+source:
+  model_uri: model://bird-base
+  up_axis: auto
+voxelization:
+  target_longest_cells: 18
+  minimum_component_voxels: 1
+planning:
+  policy: globally_allocate_symmetry_pairs_then_build_by_segment
+  minimum_candidate_fill_ratio: 0.20
+  coverage_target: 0.93
+  scarcity_weight: 0.25
+  require_source_segment_representation: true
+  symmetry_mode: required
+  minimum_target_symmetry: 0.95
+  minimum_build_volume_symmetry: 0.98
+  minimum_exact_block_symmetry: 1.0
+inventory:
+  profile: backend/bricksmart/config/inventory/standard_kit.yaml
+  catalog: block_catalog/block_definitions.xlsx
+outputs:
+  segment_build_player: true
+  final_catalog_colored_png: true
+  symmetry_validation: true
+notes:
+  - Structural approximation checkpoint only.
+  - Mirrored placements reserve inventory atomically.
+  - Functional blocks wait for confirmed segment semantics.

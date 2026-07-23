@@ -36,7 +36,7 @@ from build3d.instructions import (
     describe_instruction_step as describe_physical_instruction_step,
     generate_row_steps as generate_physical_row_steps,
 )
-from build3d.voxelizer import build_segmented_voxel_grid
+from build3d.voxelizer import build_segmented_voxel_grid, compute_contact_surfaces
 
 
 PALETTE = np.array(
@@ -82,6 +82,7 @@ def generate_notebook_outputs(
     clean_segments: bool = True,
     movement_intents: list[dict[str, Any]] | None = None,
     teacher_connection_intent: str = "",
+    max_semantic_segments: int | None = None,
 ) -> dict[str, Any]:
     output_dir = job_dir / "notebook_outputs"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -101,10 +102,24 @@ def generate_notebook_outputs(
     # Notebook stage: load Bang segments, voxelize them, clean the grid, and
     # detect segment adjacency/contact surfaces.
     segment_lookup = segment_label_lookup(segment_rows)
+    source_vertices, source_segments = load_obj_segments(obj_path)
+    raw_voxel_segment = obj_to_voxel_with_segments(source_vertices, source_segments, voxel_size)
     voxel_build = build_segmented_voxel_grid(obj_path, voxel_size=voxel_size, clean_segments=clean_segments)
     voxel_segment = voxel_build.voxel_segment
     adjacency = voxel_build.adjacency
     contacts = voxel_build.contacts
+    cleaned_source_voxel_segment = voxel_segment.copy()
+    coarsening = coarsen_to_validated_segment_budget(
+        voxel_segment,
+        segment_rows,
+        max_segment_count=max_semantic_segments,
+    )
+    if coarsening.get("applied"):
+        voxel_segment = coarsening["voxel_segment"]
+        adjacency = compute_segment_adjacency(voxel_segment)
+        contacts = compute_contact_surfaces(voxel_segment)
+        if not coarsening.get("label_mapping_preserved"):
+            segment_lookup = remap_coarsened_segment_labels(segment_rows, voxel_segment, movement_intents or [])
     connector_candidates = infer_connector_sites(
         movement_intents or [],
         segment_rows or [],
@@ -165,6 +180,12 @@ def generate_notebook_outputs(
 
     block_inventory = physical_block_inventory_summary(blocks)
     contact_summary = summarize_contacts(contacts)
+    segment_survival = summarize_segment_survival(
+        raw_voxel_segment,
+        cleaned_source_voxel_segment,
+        source_segments,
+    )
+    semantic_survival = summarize_semantic_target_survival(voxel_segment, coarsening)
     validation = {
         "is_fully_connected": connectivity_report.get("is_fully_connected", False),
         "component_count": connectivity_report.get("component_count", 0),
@@ -172,6 +193,7 @@ def generate_notebook_outputs(
         "bridge_block_count": connectivity_report.get("bridge_block_count", 0),
         "connector_candidate_count": len(connector_candidates),
         "connector_review_required": any(item.get("status") != "candidate" for item in connector_candidates),
+        "segment_survival": segment_survival,
     }
     manifest = {
         "status": "generated",
@@ -181,6 +203,18 @@ def generate_notebook_outputs(
         "voxel_size": voxel_size,
         "clean_segments": clean_segments,
         "segment_count": int(len([x for x in np.unique(voxel_segment) if x > 0])),
+        "source_segment_count": segment_survival["source_segment_count"],
+        "surviving_segment_count": semantic_survival.get(
+            "surviving_semantic_target_count",
+            segment_survival["surviving_segment_count"],
+        ),
+        "segment_preservation_fraction": semantic_survival.get(
+            "preservation_fraction",
+            segment_survival["preservation_fraction"],
+        ),
+        "source_segment_preservation_fraction": segment_survival["preservation_fraction"],
+        "semantic_target_survival": semantic_survival,
+        "recommended_next_voxel_size": segment_survival["recommended_next_voxel_size"],
         "block_count": len(blocks),
         "block_inventory": block_inventory,
         "blocks": serialize_blocks(blocks),
@@ -188,6 +222,7 @@ def generate_notebook_outputs(
         "contacts": contact_summary,
         "connector_candidates": connector_candidates,
         "validation": validation,
+        "segment_coarsening": {key: value for key, value in coarsening.items() if key != "voxel_segment"},
         "final_image": str(brick_preview),
         "segment_visualization_image": str(segment_visualization),
         "segment_multiview_image": str(multiview),
@@ -199,6 +234,156 @@ def generate_notebook_outputs(
     }
     _write_manifest(output_dir, manifest)
     return manifest
+
+
+def coarsen_to_validated_segment_budget(
+    voxel_segment: np.ndarray,
+    segment_rows: list[dict[str, Any]] | None,
+    *,
+    max_segment_count: int | None = None,
+) -> dict[str, Any]:
+    """Merge small voxel regions until coarse teacher-approved region budgets are met.
+
+    Bang can split one teacher-approved static idea into many disconnected color
+    regions. That is useful diagnostically, but it makes the classroom build
+    look harder than the validated planning budget allows. When the pipeline has
+    already created coarse validated segment rows, merge the smallest regions
+    into adjacent larger regions before rendering and decomposing the build.
+    """
+    rows = segment_rows or []
+    coarse = bool(rows) and all(
+        str(row.get("source_segment_grouping") or "") == "coarse_validated_region"
+        for row in rows
+    )
+    target_count = len(rows) if coarse else 0
+    if max_segment_count is not None and max_segment_count > 0:
+        target_count = min(target_count, int(max_segment_count))
+    ids = [int(value) for value in np.unique(voxel_segment) if value > 0]
+    explicit_groups: list[tuple[int, list[int]]] = []
+    for group_id, row in enumerate(rows[:target_count], start=1):
+        source_ids = []
+        for value in row.get("source_segment_ids", []) or []:
+            try:
+                source_ids.append(int(value))
+            except (TypeError, ValueError):
+                continue
+        if source_ids:
+            explicit_groups.append((group_id, sorted(set(source_ids))))
+
+    if explicit_groups:
+        source_to_group = {
+            source_id: group_id
+            for group_id, source_ids in explicit_groups
+            for source_id in source_ids
+        }
+        static_group_ids = [
+            index
+            for index, row in enumerate(rows[:target_count], start=1)
+            if str(row.get("movement") or "static").lower() == "static"
+        ]
+        fallback_group = static_group_ids[0] if static_group_ids else 1
+        normalized = np.zeros_like(voxel_segment)
+        unassigned_source_ids: list[int] = []
+        for source_id in ids:
+            group_id = source_to_group.get(source_id)
+            if group_id is None:
+                group_id = fallback_group
+                unassigned_source_ids.append(source_id)
+            normalized[voxel_segment == source_id] = group_id
+        ending_ids = [int(value) for value in np.unique(normalized) if value > 0]
+        return {
+            "applied": True,
+            "strategy": "contract_semantic_groups",
+            "label_mapping_preserved": True,
+            "target_segment_count": int(target_count),
+            "starting_segment_count": int(len(ids)),
+            "ending_segment_count": int(len(ending_ids)),
+            "source_to_semantic_group": source_to_group,
+            "unassigned_source_ids": unassigned_source_ids,
+            "voxel_segment": normalized,
+        }
+
+    if not target_count or len(ids) <= target_count:
+        return {"applied": False, "target_segment_count": target_count, "starting_segment_count": len(ids)}
+
+    coarsened = voxel_segment.copy()
+    merges: list[dict[str, int]] = []
+    while True:
+        ids = [int(value) for value in np.unique(coarsened) if value > 0]
+        if len(ids) <= target_count:
+            break
+        counts = {sid: int(np.count_nonzero(coarsened == sid)) for sid in ids}
+        adjacency = compute_segment_adjacency(coarsened)
+        source_id = min(ids, key=lambda sid: (counts.get(sid, 0), sid))
+        neighbors = [sid for sid in adjacency.get(source_id, []) if sid in counts]
+        candidates = neighbors or [sid for sid in ids if sid != source_id]
+        if not candidates:
+            break
+        target_id = max(candidates, key=lambda sid: (counts.get(sid, 0), -sid))
+        coarsened[coarsened == source_id] = target_id
+        merges.append({"from_segment": int(source_id), "to_segment": int(target_id)})
+
+    id_map = {sid: index for index, sid in enumerate(sorted(int(value) for value in np.unique(coarsened) if value > 0), start=1)}
+    normalized = np.zeros_like(coarsened)
+    for old_id, new_id in id_map.items():
+        normalized[coarsened == old_id] = new_id
+
+    return {
+        "applied": True,
+        "target_segment_count": int(target_count),
+        "starting_segment_count": int(len([value for value in np.unique(voxel_segment) if value > 0])),
+        "ending_segment_count": int(len(id_map)),
+        "merges": merges,
+        "id_normalization": id_map,
+        "voxel_segment": normalized,
+    }
+
+
+def summarize_semantic_target_survival(
+    voxel_segment: np.ndarray,
+    coarsening: dict[str, Any],
+) -> dict[str, Any]:
+    """Report preservation at the teacher-approved semantic target level."""
+    if not coarsening.get("applied") or not coarsening.get("label_mapping_preserved"):
+        return {}
+    target_count = int(coarsening.get("target_segment_count") or 0)
+    surviving = len([value for value in np.unique(voxel_segment) if value > 0])
+    fraction = min((surviving / target_count) if target_count else 1.0, 1.0)
+    return {
+        "status": "pass" if surviving > 0 and fraction >= 0.75 else "review",
+        "semantic_target_count": target_count,
+        "surviving_semantic_target_count": surviving,
+        "preservation_fraction": round(float(fraction), 4),
+        "grouping_strategy": coarsening.get("strategy"),
+    }
+
+
+def summarize_segment_survival(
+    raw_voxel_segment: np.ndarray,
+    cleaned_voxel_segment: np.ndarray,
+    source_segments: list[ObjSegment],
+) -> dict[str, Any]:
+    raw_counts = {
+        int(segment_id): int(np.count_nonzero(raw_voxel_segment == segment_id))
+        for segment_id in np.unique(raw_voxel_segment)
+        if segment_id > 0
+    }
+    clean_ids = [int(segment_id) for segment_id in np.unique(cleaned_voxel_segment) if segment_id > 0]
+    source_count = max(len(source_segments), len(raw_counts))
+    surviving_count = len(clean_ids)
+    preservation_fraction = min((surviving_count / source_count) if source_count else 1.0, 1.0)
+    missing_count = max(source_count - surviving_count, 0)
+    status = "pass" if missing_count == 0 or preservation_fraction >= 0.75 else "review"
+    return {
+        "status": status,
+        "source_segment_count": int(source_count),
+        "surviving_segment_count": int(surviving_count),
+        "preservation_fraction": round(float(preservation_fraction), 4),
+        "missing_segment_count": int(missing_count),
+        "raw_counts": raw_counts,
+        "clean_segment_ids": clean_ids,
+        "recommended_next_voxel_size": 32 if cleaned_voxel_segment.shape[0] < 32 and status != "pass" else None,
+    }
 
 
 def load_obj_segments(path: Path) -> tuple[np.ndarray, list[ObjSegment]]:
@@ -245,6 +430,77 @@ def segment_label_lookup(segment_rows: list[dict[str, Any]] | None) -> dict[int,
         label = str(row.get("label") or row.get("source_name") or f"segment_{segment_id}")
         lookup[segment_id] = label.replace("_", " ")
     return lookup
+
+
+def remap_coarsened_segment_labels(
+    segment_rows: list[dict[str, Any]] | None,
+    voxel_segment: np.ndarray,
+    movement_intents: list[dict[str, Any]],
+) -> dict[int, str]:
+    """Assign teacher-facing labels to the merged voxel regions.
+
+    Coarsening intentionally renumbers Bang regions after merging. The old
+    segment IDs no longer describe the physical regions, so reuse the desired
+    labels but place them by geometry: the largest region is usually the stable
+    body/core, and the smallest visible region is usually the moving feature.
+    """
+    ids = [int(value) for value in np.unique(voxel_segment) if value > 0]
+    if not ids:
+        return segment_label_lookup(segment_rows)
+
+    counts = {sid: int(np.count_nonzero(voxel_segment == sid)) for sid in ids}
+    available_ids = set(ids)
+    labels = [clean_segment_label(row) for row in segment_rows or []]
+    labels = [label for label in labels if label]
+    if not labels:
+        return {sid: f"segment {sid}" for sid in ids}
+
+    assigned: dict[int, str] = {}
+    body_label = first_label_matching(labels, ["body", "fuselage", "core", "shell", "frame", "structure"])
+    if body_label:
+        body_id = max(available_ids, key=lambda sid: (counts[sid], -sid))
+        assigned[body_id] = body_label
+        available_ids.remove(body_id)
+
+    moving_labels = [str(item.get("part_name") or item.get("label") or "").replace("_", " ").strip() for item in movement_intents]
+    moving_label = first_label_matching(labels, significant_words(moving_labels)) or first_label_matching(
+        labels,
+        ["propeller", "wheel", "axle", "door", "spinner", "rotor", "moving"],
+    )
+    if moving_label and available_ids:
+        moving_id = min(available_ids, key=lambda sid: (counts[sid], sid))
+        assigned[moving_id] = moving_label
+        available_ids.remove(moving_id)
+
+    remaining_labels = [label for label in labels if label not in assigned.values()]
+    for sid, label in zip(sorted(available_ids), remaining_labels):
+        assigned[sid] = label
+
+    for sid in ids:
+        assigned.setdefault(sid, f"segment {sid}")
+    return assigned
+
+
+def clean_segment_label(row: dict[str, Any]) -> str:
+    return str(row.get("label") or row.get("source_name") or "").replace("_", " ").strip()
+
+
+def significant_words(values: list[str]) -> list[str]:
+    words: list[str] = []
+    for value in values:
+        for token in re_slug(value).split("_"):
+            if len(token) > 2:
+                words.append(token)
+    return words
+
+
+def first_label_matching(labels: list[str], tokens: list[str]) -> str | None:
+    token_set = [token.lower() for token in tokens if token]
+    for label in labels:
+        haystack = label.lower()
+        if any(token in haystack for token in token_set):
+            return label
+    return None
 
 
 def infer_connector_sites(

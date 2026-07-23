@@ -1,0 +1,17 @@
+[
+  {
+    "block_family": "standard_2x2x2",
+    "count": 16,
+    "block_roles": "segment_structural"
+  },
+  {
+    "block_family": "standard_2x3x2",
+    "count": 6,
+    "block_roles": "segment_structural"
+  },
+  {
+    "block_family": "standard_2x4x2",
+    "count": 4,
+    "block_roles": "segment_structural"
+  }
+]

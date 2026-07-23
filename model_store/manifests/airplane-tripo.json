@@ -1,0 +1,14 @@
+{
+  "model_id": "airplane-tripo",
+  "canonical_uri": "model://airplane-tripo",
+  "sha256": "8efb5241b300fa4cc2427ee46212818ad4873ef4382bfe6e2d0523deec8ff062",
+  "size_bytes": 944262,
+  "object_path": "objects/sha256/8e/8efb5241b300fa4cc2427ee46212818ad4873ef4382bfe6e2d0523deec8ff062.obj",
+  "original_filename": "tripo_convert_1f420a52-b8e1-4d94-a634-567465fa35c8.obj",
+  "media_type": "model/obj",
+  "created_at": "2026-07-02T01:14:47.831372+00:00",
+  "metadata": {
+    "fixture": "airplane regression",
+    "source": "reference implementation"
+  }
+}
