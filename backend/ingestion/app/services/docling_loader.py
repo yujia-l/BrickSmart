@@ -39,10 +39,29 @@ def _converter(settings):
 
 
 def load_document(path, settings):
+    """Parse a PDF from a local file path."""
+    doc = _converter(settings).convert(path).document
+    return _parse(doc, settings, path.split("/")[-1])
+
+
+def load_stream(name, data, settings):
+    """Parse a PDF from in-memory bytes (no local file is ever written).
+
+    Args:
+        name: a filename label (e.g. "teacher_plan.pdf") — used only for logging/format hints.
+        data: the raw PDF bytes.
+        settings: a Settings instance.
+    """
+    from docling.datamodel.base_models import DocumentStream
+
+    source = DocumentStream(name=name, stream=io.BytesIO(data))
+    doc = _converter(settings).convert(source).document
+    return _parse(doc, settings, name)
+
+
+def _parse(doc, settings, label):
     from docling_core.types.doc import DocItemLabel
     from docling_core.types.doc.document import TextItem, TableItem, PictureItem
-
-    doc = _converter(settings).convert(path).document
 
     sections, cur = [], {"header": "(start)", "page_no": 1, "lines": []}
     tables, pictures = [], []
@@ -93,5 +112,5 @@ def load_document(path, settings):
     except Exception:
         pass
     _log.info("docling parsed %s: %d sections, %d tables, %d pictures",
-              path.split("/")[-1], len(sections), len(tables), len(pictures))
+              label, len(sections), len(tables), len(pictures))
     return {"sections": sections, "tables": tables, "pictures": pictures, "page_count": page_count}

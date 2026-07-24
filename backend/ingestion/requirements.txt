@@ -1,0 +1,38 @@
+# ============================================================================
+# KidSpark RAG backend — pinned dependencies (FastAPI, MVC)
+# Install:  pip install -r requirements.txt
+# ============================================================================
+
+# --- API / web framework ---
+fastapi==0.139.0
+uvicorn[standard]==0.51.0
+
+# --- config / settings ---
+pydantic==2.13.4
+pydantic-settings==2.14.2
+python-dotenv==1.2.2
+
+# --- logging ---
+colorama==0.4.4
+
+# --- database: Postgres + pgvector star schema ---
+SQLAlchemy==2.0.51
+psycopg[binary]==3.3.4
+pgvector==0.5.0
+
+# --- embeddings / vision (OpenAI path) ---
+openai==2.44.0
+numpy==2.2.6
+
+# --- document parsing (ingestion pipeline) ---
+docling==2.113.0
+docling-core==2.87.1
+# OCR engine for docling (in-image / scanned text). docling ships no engine by default.
+onnxruntime==1.20.1
+rapidocr-onnxruntime==1.4.4
+
+# --- data source (Google Cloud Storage) ---
+google-cloud-storage==3.13.0
+
+# --- reranker (cross-encoder path) ---
+sentence-transformers==5.6.0

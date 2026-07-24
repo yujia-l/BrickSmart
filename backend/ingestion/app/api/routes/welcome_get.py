@@ -1,4 +1,4 @@
-"""Welcome route — a friendly root endpoint under the API prefix."""
+"""Welcome route - a friendly root endpoint under the API prefix."""
 from fastapi import APIRouter
 
 from app.core.config import settings

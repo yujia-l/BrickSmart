@@ -1,4 +1,4 @@
-"""Pydantic request/response schemas (the API contract — the 'View' data models)."""
+"""Pydantic request/response schemas (the API contract - the 'View' data models)."""
 from typing import Optional, Dict, Any, List
 
 from pydantic import BaseModel, Field

@@ -1,4 +1,4 @@
-"""KidSpark RAG backend — FastAPI application factory."""
+"""KidSpark RAG backend - FastAPI application factory."""
 import time
 
 import uvicorn

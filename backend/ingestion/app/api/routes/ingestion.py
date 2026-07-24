@@ -1,4 +1,4 @@
-"""Ingestion route — trigger the GCS -> database load from the API (the 'Controller').
+"""Ingestion route - trigger the GCS -> database load from the API (the 'Controller').
 
   POST /ingest   {embed?} -> streams processed bundles from GCS into the star schema
 

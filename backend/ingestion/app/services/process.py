@@ -141,9 +141,7 @@ def run(settings, kstore=None, limit=None, caption=True, log=None):
     """Process every lesson discovered in GCS into ``Knowledge_chunks`` artifacts."""
     emit = log or _log.info
     kstore = kstore or knowledge.KnowledgeStore(settings)
-    bundles = datasource.discover(settings)
-    if limit:
-        bundles = bundles[:limit]
+    bundles = datasource.discover(settings, limit=limit)   # limit applied BEFORE download (fast)
     emit(f"processing {len(bundles)} lesson bundle(s)")
     return _process_bundles(bundles, settings, kstore, caption, emit)
 

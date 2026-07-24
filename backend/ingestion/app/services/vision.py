@@ -1,10 +1,10 @@
-"""Multimodal image handling - STRUCTURED, context-grounded captioning + a separate OCR signal
+"""Multimodal image handling — STRUCTURED, context-grounded captioning + a separate OCR signal
 (the expert-recommended caption-then-embed approach). Each Docling picture produces:
 
   * an IMAGE chunk whose embeddable text is a rich caption = content + educational purpose + relation
     hint (retrieves well against conceptual queries), and
   * an optional OCR chunk carrying the in-image text verbatim (so exact labels/terms like "thrust"
-    retrieve well) - its own embeddable row, sharing the image's page_id.
+    retrieve well) — its own embeddable row, sharing the image's page_id.
 
 GPT-4o Vision is grounded with document context (doc_kind, lesson, grade, nearby page text) so it never
 captions in a vacuum. No API key -> Docling's own caption / a placeholder (offline-safe)."""
@@ -72,22 +72,106 @@ def _compose(s):
     return ". ".join(p for p in parts if p).strip() or "(image)"
 
 
+_CAPTION_FIELDS = ["image_type", "content", "educational_purpose", "ocr_text", "relation_hint"]
+
+
+def _coerce(d):
+    """Keep only the expected keys; guarantee every value is a string (never None)."""
+    return {k: (str(d.get(k)).strip() if d.get(k) is not None else "") for k in _CAPTION_FIELDS}
+
+
+def _parse_json_lenient(text):
+    """json.loads, but tolerate models that wrap JSON in prose / code fences."""
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except Exception:
+        i, j = text.find("{"), text.rfind("}")
+        if i != -1 and j != -1 and j > i:
+            try:
+                return json.loads(text[i:j + 1])
+            except Exception:
+                return None
+    return None
+
+
+def _openai_caption(b64, prompt, settings):
+    """Primary captioner: OpenAI Vision. Adapts request params by model family — reasoning models
+    (gpt-5.x / o-series) reject `temperature` and use `max_completion_tokens`; classic chat models
+    (gpt-4o and older) use `temperature` + `max_tokens`. Returns a fields dict, or None."""
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
+        model = settings.VISION_MODEL or "gpt-5.6-luna"
+        messages = [{"role": "user", "content": [
+            {"type": "text", "text": prompt},
+            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}}]}]
+        params = {"model": model, "messages": messages,
+                  "response_format": {"type": "json_object"}}
+        if model.startswith(("gpt-5", "o1", "o3", "o4")):      # reasoning models
+            params["max_completion_tokens"] = 1500             # room for reasoning + JSON output
+            params["reasoning_effort"] = "low"                 # captions don't need deep reasoning
+        else:                                                  # gpt-4o and older chat models
+            params["temperature"] = 0
+            params["max_tokens"] = 700
+        for attempt in range(2):
+            r = client.chat.completions.create(**params)
+            choice = r.choices[0]
+            content = choice.message.content
+            if content:
+                d = _parse_json_lenient(content)
+                if d:
+                    return _coerce(d)
+            refusal = getattr(choice.message, "refusal", None)
+            _log.warning("openai caption empty (model=%s, finish_reason=%s, refusal=%s) attempt %d/2",
+                         model, choice.finish_reason, (refusal or "").strip()[:200], attempt + 1)
+    except Exception as e:
+        _log.warning("openai caption failed (%s: %s)", type(e).__name__, e)
+    return None
+
+
+def _ollama_caption(b64, prompt, settings):
+    """Local fallback: an Ollama vision model (e.g. llava / moondream). No API key, offline,
+    no content refusals. Returns a fields dict, or None if Ollama isn't reachable/installed."""
+    import urllib.request
+    host = (getattr(settings, "OLLAMA_HOST", "") or "http://localhost:11434").rstrip("/")
+    model = getattr(settings, "OLLAMA_VISION_MODEL", "") or "llava"
+    body = json.dumps({
+        "model": model, "prompt": prompt, "images": [b64],
+        "format": "json", "stream": False, "options": {"temperature": 0},
+    }).encode()
+    try:
+        req = urllib.request.Request(host + "/api/generate", data=body,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            data = json.loads(resp.read().decode())
+        d = _parse_json_lenient(data.get("response", ""))
+        if d:
+            _log.info("ollama caption ok (model=%s)", model)
+            return _coerce(d)
+        _log.warning("ollama caption returned no JSON (model=%s)", model)
+    except Exception as e:
+        _log.warning("ollama caption failed (%s: %s) — is Ollama running and '%s' pulled?",
+                     type(e).__name__, e, model)
+    return None
+
+
 def _structured_caption(pic, lesson_ctx, page_text, settings):
-    if settings.OPENAI_API_KEY and pic.get("image_bytes"):
-        try:
-            b64 = base64.b64encode(pic["image_bytes"]).decode()
-            from openai import OpenAI
-            r = OpenAI(api_key=settings.OPENAI_API_KEY).chat.completions.create(
-                model=settings.VISION_MODEL, temperature=0, response_format={"type": "json_object"},
-                messages=[{"role": "user", "content": [
-                    {"type": "text", "text": _STRUCT_PROMPT + f"\nContext: {lesson_ctx}\nNearby page text: {page_text}"},
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}}]}])
-            d = json.loads(r.choices[0].message.content)
-            return {k: d.get(k, "") for k in
-                    ["image_type", "content", "educational_purpose", "ocr_text", "relation_hint"]}
-        except Exception as e:
-            _log.warning("vision caption failed (%s); using fallback", e)
+    """Caption one picture, trying providers in order: OpenAI -> local Ollama -> docling/OCR text."""
+    prompt = _STRUCT_PROMPT + f"\nContext: {lesson_ctx}\nNearby page text: {page_text}"
+    if pic.get("image_bytes"):
+        b64 = base64.b64encode(pic["image_bytes"]).decode()
+        if settings.OPENAI_API_KEY:
+            d = _openai_caption(b64, prompt, settings)
+            if d and d.get("content"):
+                return d
+        if getattr(settings, "CAPTION_FALLBACK", True):
+            d = _ollama_caption(b64, prompt, settings)
+            if d and d.get("content"):
+                return d
+    # last resort: docling's own embedded caption if present, else a labelled placeholder
     cap = pic.get("caption") or ""
     return {"image_type": "figure",
-            "content": cap or "[image - set OPENAI_API_KEY for a rich caption]",
+            "content": cap or "[image — no captioner available (set OPENAI_API_KEY or run Ollama)]",
             "educational_purpose": "", "ocr_text": "", "relation_hint": ""}

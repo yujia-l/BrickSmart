@@ -41,7 +41,7 @@ class BaseConfig(BaseSettings):
     GCS_BUCKET_NAME: str = Field("", json_schema_extra={"env": "GCS_BUCKET_NAME"})
     GCS_PREFIX: str = Field("", json_schema_extra={"env": "GCS_PREFIX"})
     GCS_PROCESSED_BUCKET: str = Field("", json_schema_extra={"env": "GCS_PROCESSED_BUCKET"})
-    RAW_PREFIX: str = Field("Data", json_schema_extra={"env": "RAW_PREFIX"})
+    RAW_PREFIX: str = Field("", json_schema_extra={"env": "RAW_PREFIX"})
     KNOWLEDGE_PREFIX: str = Field("Knowledge_chunks", json_schema_extra={"env": "KNOWLEDGE_PREFIX"})
     KNOWLEDGE_LOCAL_DIR: str = Field("", json_schema_extra={"env": "KNOWLEDGE_LOCAL_DIR"})
 
@@ -53,7 +53,12 @@ class BaseConfig(BaseSettings):
     # --- models ---
     EMBED_MODEL: str = Field("text-embedding-3-large", json_schema_extra={"env": "EMBED_MODEL"})
     EMBED_DIM: int = Field(3072, json_schema_extra={"env": "EMBED_DIM"})
-    VISION_MODEL: str = Field("gpt-4o", json_schema_extra={"env": "VISION_MODEL"})
+    VISION_MODEL: str = Field("gpt-5.6-luna", json_schema_extra={"env": "VISION_MODEL"})
+
+    # --- vision fallback (local, offline captioning when OpenAI is unavailable or refuses) ---
+    CAPTION_FALLBACK: bool = Field(True, json_schema_extra={"env": "CAPTION_FALLBACK"})
+    OLLAMA_HOST: str = Field("http://localhost:11434", json_schema_extra={"env": "OLLAMA_HOST"})
+    OLLAMA_VISION_MODEL: str = Field("llava", json_schema_extra={"env": "OLLAMA_VISION_MODEL"})
 
     # --- reranker ---
     RERANKER: str = Field("cross_encoder", json_schema_extra={"env": "RERANKER"})

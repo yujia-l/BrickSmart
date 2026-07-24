@@ -47,28 +47,50 @@ def _lesson_meta(grade_band, lab, unit, lesson, raw_folder, documents):
             "bundle_id": naming.bundle_name(grade_band, lab, unit, lesson, primary)}
 
 
-def discover(settings):
+def discover(settings, limit=None):
+    """Discover lesson bundles from GCS.
+
+    Two passes so the terminal streams progress AND ``--limit`` is honoured cheaply:
+      1. list + group blobs by lesson (metadata only, no downloads),
+      2. download PDFs for the SELECTED lessons only, logging each fetch.
+    Passing ``limit`` here means we never download the whole bucket just to keep a few lessons.
+    """
     if not settings.GCS_BUCKET_NAME:
         raise ValueError("Settings.GCS_BUCKET_NAME is required — this data source reads from GCS only.")
     from app.utils.gcs import get_client
     client = get_client()
-    base = (settings.GCS_PREFIX.strip("/") + "/" if settings.GCS_PREFIX else "") + settings.RAW_PREFIX + "/"
-    cache = tempfile.mkdtemp(prefix="ksrag_raw_")
-    _log.info("listing gs://%s/%s", settings.GCS_BUCKET_NAME, base)
 
+    parts = [p.strip("/") for p in (settings.GCS_PREFIX, settings.RAW_PREFIX) if p and p.strip("/")]
+    base = ("/".join(parts) + "/") if parts else ""
+
+    cache = tempfile.mkdtemp(prefix="ksrag_raw_")
+    _log.info("listing gs://%s/%s ...", settings.GCS_BUCKET_NAME, base)
+
+    # ── pass 1: list + group (no downloads) ───────────────────────────────────────────────
     lessons = {}   # (grade,lab,unit,lesson) -> list[(filename, blob)]
+    n_blobs = 0
     for blob in client.list_blobs(settings.GCS_BUCKET_NAME, prefix=base):
         rel = blob.name[len(base):]
         if not rel or rel.endswith("/"):
             continue
+        n_blobs += 1
         info = naming.parse_raw_path(rel, raw_prefix="")   # rel already stripped of base
         key = (info["grade_band"], info["lab"], info["unit"], info["lesson"])
         lessons.setdefault(key, []).append((info["filename"], blob))
 
+    keys = sorted(lessons.keys())
+    total = len(keys)
+    if limit:
+        keys = keys[:limit]
+    _log.info("found %d file(s) across %d lesson(s); fetching %d%s",
+              n_blobs, total, len(keys), "  (--limit)" if limit else "")
+
+    # ── pass 2: download only the selected lessons, with per-lesson progress ───────────────
     out = []
-    for (grade_band, lab, unit, lesson), files in sorted(lessons.items()):
+    for i, (grade_band, lab, unit, lesson) in enumerate(keys, start=1):
         documents, pdfs = [], {}
-        for fname, blob in sorted(files):
+        files = sorted(lessons[(grade_band, lab, unit, lesson)])
+        for fname, blob in files:
             kind = detect_doc_kind(fname) or fname.rsplit(".", 1)[0]   # stem fallback keeps every file
             documents.append({"doc_kind": kind, "filename": fname, "gcs_object_path": blob.name})
             if fname.lower().endswith(".pdf"):
@@ -76,6 +98,8 @@ def discover(settings):
                 if not os.path.exists(lp):
                     blob.download_to_filename(lp)
                 pdfs[kind] = lp
+        _log.info("[%d/%d] fetched %s/%s/%s/%s (%d file(s))",
+                  i, len(keys), grade_band, lab, unit, lesson, len(files))
         raw_folder = base + "/".join([grade_band, lab, unit, lesson]).strip("/")
         out.append((_lesson_meta(grade_band, lab, unit, lesson, raw_folder, documents), pdfs))
     _log.info("discovered %d lesson bundle(s)", len(out))
