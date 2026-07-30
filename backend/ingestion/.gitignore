@@ -1,0 +1,10 @@
+# --- secrets / credentials (never commit) ---
+kidspark-499901-0653bab98493.json
+*.json.key
+.env
+.env.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
