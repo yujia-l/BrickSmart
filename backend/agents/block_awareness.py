@@ -5,13 +5,14 @@ Owner: Developer B
 Determines what Kid Spark physical pieces are needed for the agreed
 build artifact, with focus on movable and articulated parts.
 
-When no OpenAI API key is configured, returns scripted mock responses
-so the pipeline is testable offline.
+When Vertex is unavailable, returns scripted mock responses so the pipeline is
+testable offline.
 """
 
+import json
 import logging
 
-from config import OPENAI_API_KEY, OPENAI_MODEL
+from llm.vertex_gemini import generate_json, generate_text, provider_configured
 from models.schemas import (
     ArtifactPart,
     BlockRequirements,
@@ -132,29 +133,17 @@ async def handle_block_awareness_message(
     chat_history: list[dict[str, str]],
 ) -> str:
     """Process a teacher message about block/movement preferences."""
-    if not OPENAI_API_KEY:
-        logger.warning("No OpenAI API key — returning mock block awareness response")
+    if not provider_configured():
+        logger.warning("Vertex unavailable - returning mock block awareness response")
         return MOCK_BLOCK_RESPONSE
 
-    from openai import OpenAI
-
-    client = OpenAI(api_key=OPENAI_API_KEY)
-
     system_prompt = _build_system_prompt(consultation_summary)
-
-    messages = [{"role": "system", "content": system_prompt}]
-    for msg in chat_history:
-        messages.append({"role": msg["role"], "content": msg["content"]})
-    messages.append({"role": "user", "content": message})
-
-    response = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=messages,
+    return generate_text(
+        system_prompt,
+        json.dumps({"history": chat_history[-12:], "teacher_message": message}, ensure_ascii=True),
         temperature=0.7,
-        max_tokens=800,
+        max_output_tokens=1000,
     )
-
-    return response.choices[0].message.content
 
 
 async def finalize_block_requirements(
@@ -162,32 +151,20 @@ async def finalize_block_requirements(
     chat_history: list[dict[str, str]],
 ) -> BlockRequirements:
     """Produce the final BlockRequirements from the conversation."""
-    if not OPENAI_API_KEY:
-        logger.warning("No OpenAI API key — returning mock BlockRequirements")
+    if not provider_configured():
+        logger.warning("Vertex unavailable - returning mock BlockRequirements")
         return MOCK_BLOCK_REQUIREMENTS
 
-    from openai import OpenAI
-
-    client = OpenAI(api_key=OPENAI_API_KEY)
-
     system_prompt = _build_system_prompt(consultation_summary)
-
-    messages = [{"role": "system", "content": system_prompt}]
-    for msg in chat_history:
-        messages.append({"role": msg["role"], "content": msg["content"]})
-    messages.append({
-        "role": "user",
-        "content": (
-            "Based on our discussion, produce the final BlockRequirements "
-            "in the required JSON format."
+    return generate_json(
+        system_prompt,
+        json.dumps(
+            {
+                "conversation": chat_history,
+                "instruction": "Produce the final BlockRequirements from the teacher-approved discussion.",
+            },
+            ensure_ascii=True,
         ),
-    })
-
-    response = client.beta.chat.completions.parse(
-        model=OPENAI_MODEL,
-        messages=messages,
-        response_format=BlockRequirements,
+        schema=BlockRequirements,
         temperature=0.3,
     )
-
-    return response.choices[0].message.parsed

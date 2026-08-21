@@ -1,6 +1,6 @@
 """End-to-end local KidSpark demo pipeline.
 
-This is intentionally pragmatic: it uses OpenAI for the lesson/build context,
+This is intentionally pragmatic: it uses Vertex Gemini for lesson/build context,
 Rodin/Bang for the 3D asset, and a deterministic guide renderer for the first
 working demo. The notebook's full voxel/CSP path can replace the deterministic
 guide stage behind the same output contract.
@@ -17,10 +17,9 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Callable
 
-from openai import OpenAI
 from PIL import Image, ImageDraw, ImageFont
 
-from config import OPENAI_API_KEY, OPENAI_MODEL
+from llm.vertex_gemini import generate_json, provider_configured
 from build3d.rodin_client import (
     RodinError,
     choose_obj,
@@ -458,15 +457,15 @@ def run_pipeline(
     teacher_connection_intent: str = "",
     seed_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    if not OPENAI_API_KEY:
-        raise RuntimeError("OPENAI_API_KEY is not configured")
+    if not provider_configured():
+        raise RuntimeError("Vertex Gemini is not configured")
 
     job_dir.mkdir(parents=True, exist_ok=True)
 
-    progress("Analyzing story and planning build context", 5, "OpenAI is extracting the lesson target.")
+    progress("Analyzing story and planning build context", 5, "Gemini is extracting the lesson target.")
     context = create_model_context(story_text, teacher_connection_intent, seed_context, job_dir)
 
-    progress("Generating teacher lesson package", 15, "OpenAI is drafting the teacher plan and activity guide.")
+    progress("Generating teacher lesson package", 15, "Gemini is drafting the teacher plan and activity guide.")
     lesson_package = _create_lesson_package(story_text, context)
     (job_dir / "lesson_package.json").write_text(json.dumps(lesson_package, indent=2), encoding="utf-8")
 
@@ -539,23 +538,14 @@ def run_pipeline(
     return result
 
 
-def _client() -> OpenAI:
-    return OpenAI(api_key=OPENAI_API_KEY)
-
-
 def _json_chat(system: str, user: str, max_tokens: int = 2200) -> dict[str, Any]:
-    resp = _client().chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-        response_format={"type": "json_object"},
+    result = generate_json(
+        system,
+        user,
         temperature=0.35,
-        max_tokens=max_tokens,
+        max_output_tokens=max_tokens,
     )
-    content = resp.choices[0].message.content or "{}"
-    return json.loads(content)
+    return dict(result)
 
 
 def _create_model_task_context(story_text: str) -> dict[str, Any]:

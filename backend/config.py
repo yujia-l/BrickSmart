@@ -17,13 +17,42 @@ load_dotenv(dotenv_path=env_path)
 def _clean_secret(value: str | None) -> str:
     return (value or "").strip().lstrip("\ufeff")
 
-# --- OpenAI ---
-# Cloud Run currently exposes the OpenAI Secret Manager value as OPENAI_KEY.
-# Local/dev tooling may use OPENAI_API_KEY, so support both names.
+# --- Legacy OpenAI compatibility for non-KidSpark modules ---
 OPENAI_API_KEY: str = _clean_secret(os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY", ""))
 OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o")
 OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS: int = 3072
+
+# --- Vertex AI ---
+LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "vertex").strip().lower()
+GEMINI_API_KEY: str = _clean_secret(os.getenv("GEMINI_API_KEY", ""))
+GCP_PROJECT_ID: str = os.getenv(
+    "GCP_PROJECT_ID",
+    os.getenv("GOOGLE_CLOUD_PROJECT", "kidspark-499901"),
+)
+VERTEX_GENERATION_LOCATION: str = os.getenv("VERTEX_GENERATION_LOCATION", "global")
+VERTEX_EMBEDDING_LOCATION: str = os.getenv("VERTEX_EMBEDDING_LOCATION", "us-central1")
+GEMINI_PRIMARY_MODEL: str = os.getenv("GEMINI_PRIMARY_MODEL", "gemini-3.6-flash")
+GEMINI_FALLBACK_MODEL: str = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.5-flash")
+GEMINI_EMBEDDING_MODEL: str = os.getenv("GEMINI_EMBEDDING_MODEL", "gemini-embedding-001")
+GEMINI_VISUAL_EMBEDDING_MODEL: str = os.getenv(
+    "GEMINI_VISUAL_EMBEDDING_MODEL",
+    "multimodalembedding@001",
+)
+VISUAL_EMBEDDING_DIMENSIONS: int = int(os.getenv("VISUAL_EMBEDDING_DIMENSIONS", "1408"))
+KIDSPARK_OFFLINE_MODE: bool = os.getenv("KIDSPARK_OFFLINE_MODE", "false").lower() == "true"
+
+# --- KidSpark runtime retrieval ---
+KIDSPARK_RAG_ENABLED: bool = os.getenv("KIDSPARK_RAG_ENABLED", "true").lower() == "true"
+KIDSPARK_RAG_TIMEOUT_SECONDS: float = float(
+    os.getenv("KIDSPARK_RAG_TIMEOUT_SECONDS", "10")
+)
+KIDSPARK_RAG_RESULT_LIMIT: int = int(os.getenv("KIDSPARK_RAG_RESULT_LIMIT", "8"))
+KIDSPARK_RAG_CACHE_TTL_SECONDS: int = int(
+    os.getenv("KIDSPARK_RAG_CACHE_TTL_SECONDS", "600")
+)
+KIDSPARK_RAG_SERVICE_URL: str = os.getenv("KIDSPARK_RAG_SERVICE_URL", "").rstrip("/")
+DATABASE_REQUIRED: bool = os.getenv("DATABASE_REQUIRED", "false").lower() == "true"
 
 # --- Hyper3D / Rodin ---
 HYPER3D_API_KEY: str = _clean_secret(os.getenv("HYPER3D_API_KEY", ""))
@@ -47,7 +76,6 @@ GCS_RAW_BUCKET: str = os.getenv("GCS_RAW_BUCKET", "kidspark-raw-files")
 GCS_ASSETS_BUCKET: str = os.getenv("GCS_ASSETS_BUCKET", "kidspark-assets")
 
 # --- GCP Project ---
-GCP_PROJECT_ID: str = os.getenv("GCP_PROJECT_ID", "your-project-id")
 GCP_REGION: str = os.getenv("GCP_REGION", "us-central1")
 
 # --- Secret Manager (production only) ---
@@ -57,10 +85,3 @@ USE_SECRET_MANAGER: bool = os.getenv("USE_SECRET_MANAGER", "false").lower() == "
 API_VERSION: str = "v1"
 MAX_REFINEMENT_ITERATIONS: int = 3
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
-
-# --- Local fallback: read from root openai.key file if no env var ---
-if not OPENAI_API_KEY:
-    _key_file = Path(__file__).parent.parent / "openai.key"
-    if _key_file.exists():
-        OPENAI_API_KEY = _key_file.read_text().strip()
-        os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY

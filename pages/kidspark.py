@@ -14,7 +14,6 @@ import requests
 import streamlit as st
 
 BACKEND_URL = os.getenv("KIDSPARK_BACKEND_URL", "http://localhost:8001")
-OPENAI_KEY_FILE = Path(__file__).resolve().parents[1] / "openai.key"
 STATIC_DOWNLOAD_DIR = Path(__file__).resolve().parents[1] / "static" / "kidspark_downloads"
 DATA_URI_DOWNLOAD_LIMIT = 2_500_000
 
@@ -341,65 +340,26 @@ def render_pdf_downloads(kind: str, title: str, pdf_bytes: bytes) -> None:
         )
 
 
-def masked_key(value: str) -> str:
-    if not value:
-        return "Not configured"
-    return f"{value[:7]}...{value[-4:]}" if len(value) > 12 else "Configured"
-
-
-def local_openai_key() -> str:
-    if "ks_openai_api_key" in st.session_state:
-        return st.session_state["ks_openai_api_key"]
-    if OPENAI_KEY_FILE.exists():
-        try:
-            key = OPENAI_KEY_FILE.read_text(encoding="utf-8").strip()
-        except OSError:
-            key = ""
-        st.session_state["ks_openai_api_key"] = key
-        return key
-    return ""
-
-
-def backend_openai_status() -> dict[str, Any]:
+def backend_runtime_status() -> dict[str, Any]:
     try:
-        resp = requests.get(f"{BACKEND_URL}/api/v1/settings/openai-key", timeout=8)
+        resp = requests.get(f"{BACKEND_URL}/api/v1/settings/runtime", timeout=8)
         resp.raise_for_status()
         return resp.json()
     except requests.RequestException:
-        return {"configured": False, "masked": ""}
+        return {"configured": False, "provider": "vertex_ai"}
 
 
-def save_openai_key(api_key: str) -> None:
-    key = api_key.strip()
-    if not key:
-        st.warning("Paste an OpenAI API key before saving.")
-        return
-    OPENAI_KEY_FILE.write_text(key, encoding="utf-8")
-    st.session_state["ks_openai_api_key"] = key
-    try:
-        requests.post(f"{BACKEND_URL}/api/v1/settings/openai-key", json={"api_key": key}, timeout=15).raise_for_status()
-    except requests.RequestException:
-        st.warning("Saved locally. Restart or reconnect the backend to use the new key there.")
+def render_runtime_status() -> None:
+    runtime = backend_runtime_status()
+    if runtime.get("configured"):
+        st.success("Vertex AI connected", icon=":material/cloud_done:")
     else:
-        st.success("OpenAI key saved for this app.")
-
-
-def render_openai_key_box() -> None:
-    current = local_openai_key()
-    backend_status = backend_openai_status()
-    status_text = masked_key(current) if current else backend_status.get("masked") or "Not configured"
-    st.markdown("### OpenAI")
-    st.caption(f"Status: {status_text}")
-    entered = st.text_input(
-        "OpenAI API key",
-        value=current,
-        type="password",
-        key="ks_sidebar_openai_key_input",
-        label_visibility="collapsed",
-        placeholder="sk-...",
-    )
-    if st.button("Save OpenAI Key", use_container_width=True):
-        save_openai_key(entered)
+        st.warning("Vertex AI is using offline demo mode", icon=":material/cloud_off:")
+    with st.expander("Runtime details", expanded=False):
+        st.caption(f"Project: {runtime.get('project') or 'not reported'}")
+        st.caption(f"Model: {runtime.get('primary_model') or 'Gemini Flash'}")
+        rag_state = "enabled" if runtime.get("rag_enabled") else "disabled"
+        st.caption(f"Curriculum retrieval: {rag_state}")
 
 
 def reset_session() -> None:
@@ -474,10 +434,9 @@ def phase_position(phase: str) -> int:
 
 def render_sidebar() -> None:
     with st.sidebar:
-        render_openai_key_box()
-        st.divider()
         st.markdown("### KidSpark AI")
         st.caption("Story to BrickSmart lesson bundle")
+        render_runtime_status()
         if st.button("New Lesson Session", use_container_width=True):
             reset_session()
             st.rerun()
@@ -972,11 +931,23 @@ def field_complete(value: Any) -> bool:
 
 
 def planning_components_complete(state: dict[str, Any]) -> bool:
-    return all(field_complete(state.get(key)) for key, _ in COMPONENT_FIELDS)
+    return all(component_complete(state, key) for key, _ in COMPONENT_FIELDS)
 
 
 def missing_component_labels(state: dict[str, Any]) -> list[str]:
-    return [label for key, label in COMPONENT_FIELDS if not field_complete(state.get(key))]
+    return [label for key, label in COMPONENT_FIELDS if not component_complete(state, key)]
+
+
+def component_complete(state: dict[str, Any], key: str) -> bool:
+    if key == "moving_parts":
+        return bool(state.get("movement_confirmed"))
+    return field_complete(state.get(key))
+
+
+def component_value(state: dict[str, Any], key: str) -> str:
+    if key == "moving_parts" and state.get("movement_confirmed") and not state.get(key):
+        return "None - fully static build"
+    return format_value(state.get(key))
 
 
 def emphasize_planning_cues(text: str) -> str:
@@ -1032,10 +1003,10 @@ def render_component_panel(state: dict[str, Any]) -> None:
     st.markdown("#### Lesson Components")
     st.markdown("<div class='ks-panel'>", unsafe_allow_html=True)
     for key, label in COMPONENT_FIELDS:
-        done = field_complete(state.get(key))
+        done = component_complete(state, key)
         icon = "<span class='ks-check'>&#10003;</span>" if done else "<span class='ks-pending'>-</span>"
         st.markdown(
-            f"<div class='ks-component-row'><div>{icon}</div><div class='ks-label'>{label}</div><div class='ks-value'>{format_value(state.get(key))}</div></div>",
+            f"<div class='ks-component-row'><div>{icon}</div><div class='ks-label'>{label}</div><div class='ks-value'>{component_value(state, key)}</div></div>",
             unsafe_allow_html=True,
         )
     st.markdown("</div>", unsafe_allow_html=True)

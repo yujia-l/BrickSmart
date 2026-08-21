@@ -57,11 +57,42 @@ class StoryAnalysis(BaseModel):
 # Consultation Agent
 # ---------------------------------------------------------------------------
 
+class PlanningPart(BaseModel):
+    part_name: str
+    movement: str = "static"
+    notes: str = ""
+
+
+class PlanningStateUpdate(BaseModel):
+    """Teacher-confirmed planning values extracted from one conversation turn."""
+
+    target_grade: Optional[str] = None
+    duration_minutes: Optional[int] = None
+    core_concept: Optional[str] = None
+    learning_goals: Optional[list[str]] = None
+    build_object: Optional[str] = None
+    moving_parts: Optional[list[PlanningPart]] = None
+    movement_confirmed: Optional[bool] = None
+    static_parts: Optional[list[PlanningPart]] = None
+    static_parts_confirmed: Optional[bool] = None
+    constraints: Optional[list[str]] = None
+    literacy_focus: Optional[str] = None
+    sel_focus: Optional[str] = None
+
+
+class ConsultationTurn(BaseModel):
+    response: str
+    planning_update: PlanningStateUpdate = Field(default_factory=PlanningStateUpdate)
+
+
 class ConsultationResponse(BaseModel):
     response: str
+    planning_update: Optional[PlanningStateUpdate] = None
     areas_covered: list[str] = Field(default_factory=list)
     areas_remaining: list[str] = Field(default_factory=list)
     ready_to_approve: bool = False
+    rag_status: str = "not_requested"
+    rag_trace: list[dict] = Field(default_factory=list)
 
 
 class ConsultationSummary(BaseModel):
@@ -286,6 +317,10 @@ class SessionState(BaseModel):
     document_result: Optional[dict] = None
     planning_state: dict = Field(default_factory=dict)
     build_constraints: dict = Field(default_factory=dict)
+    rag_evidence: dict = Field(default_factory=dict)
+    rag_trace: list[dict] = Field(default_factory=list)
+    rag_query_signature: Optional[str] = None
+    rag_status: str = "not_requested"
     iteration: int = 0
 
 
@@ -305,6 +340,8 @@ class MessageResponse(BaseModel):
     ready_to_approve: bool = False
     ready_to_generate: bool = False
     planning_state: dict = Field(default_factory=dict)
+    rag_status: str = "not_requested"
+    rag_trace: list[dict] = Field(default_factory=list)
 
 
 class SessionCreatedResponse(BaseModel):

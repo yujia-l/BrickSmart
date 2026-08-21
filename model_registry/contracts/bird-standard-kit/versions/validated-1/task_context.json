@@ -118,8 +118,7 @@
     "family_priority_overrides": {}
   },
   "paths": {
-    "catalog_sheet": "Block Definitions",
-    "catalog_xlsx": "../block_catalog/block_definitions.xlsx",
+    "catalog_csv": "../block_catalog/block_definitions.csv",
     "relative_to": "pipeline_runtime"
   },
   "regression": {

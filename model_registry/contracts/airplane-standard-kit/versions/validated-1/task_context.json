@@ -609,8 +609,7 @@
     "segment_local_consolidation_mode": "meaningful_family_change_then_full_revalidation"
   },
   "paths": {
-    "catalog_sheet": "Block Definitions",
-    "catalog_xlsx": "../block_catalog/block_definitions.xlsx",
+    "catalog_csv": "../block_catalog/block_definitions.csv",
     "relative_to": "pipeline_runtime"
   },
   "planner_diagnostics": {

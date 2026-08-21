@@ -5,13 +5,13 @@ Owner: Developer B
 Automatic one-shot analysis of the uploaded storybook. Runs immediately
 after upload, before teacher consultation begins.
 
-When no OpenAI API key is configured, returns a mock analysis for the
-sample storybook so the pipeline is testable offline.
+When Vertex is unavailable, returns a mock analysis for the sample storybook
+so the pipeline is testable offline.
 """
 
 import logging
 
-from config import OPENAI_API_KEY, OPENAI_MODEL
+from llm.vertex_gemini import generate_json, provider_configured
 from models.schemas import StoryAnalysis
 
 logger = logging.getLogger(__name__)
@@ -53,22 +53,13 @@ MOCK_STORY_ANALYSIS = StoryAnalysis(
 
 async def analyze_storybook(storybook_text: str) -> StoryAnalysis:
     """Run one-shot storybook analysis and return a StoryAnalysis."""
-    if not OPENAI_API_KEY:
-        logger.warning("No OpenAI API key — returning mock StoryAnalysis")
+    if not provider_configured():
+        logger.warning("Vertex unavailable - returning mock StoryAnalysis")
         return MOCK_STORY_ANALYSIS
 
-    from openai import OpenAI
-
-    client = OpenAI(api_key=OPENAI_API_KEY)
-
-    response = client.beta.chat.completions.parse(
-        model=OPENAI_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": storybook_text},
-        ],
-        response_format=StoryAnalysis,
+    return generate_json(
+        SYSTEM_PROMPT,
+        storybook_text,
+        schema=StoryAnalysis,
         temperature=0.3,
     )
-
-    return response.choices[0].message.parsed

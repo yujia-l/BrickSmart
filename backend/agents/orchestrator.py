@@ -7,6 +7,7 @@ session storage for Phase 1 development.
 """
 
 import uuid
+from hashlib import sha256
 
 from models.schemas import (
     BlockRequirements,
@@ -34,6 +35,7 @@ from build3d.jobs import (
     start_segments_job,
 )
 from build3d.validated_planner_adapter import apply_catalog_constraints, semantic_segment_targets
+from retrieval.provider import retrieve_teacher_evidence
 
 # ---------------------------------------------------------------------------
 # In-memory session store (replaced by DB in production)
@@ -66,6 +68,7 @@ async def run_storybook_analysis(
     session.storybook_analysis = analysis
     session.phase = SessionPhase.lesson_planning
     session.planning_state = planning_state_snapshot(session)
+    _refresh_rag_evidence(session, teacher_message="")
     return analysis
 
 
@@ -78,19 +81,38 @@ async def route_message(session_id: str, message: str) -> MessageResponse:
     session = _sessions[session_id]
 
     if session.phase in (SessionPhase.consultation, SessionPhase.lesson_planning):
+        session.planning_state = planning_state_snapshot(session)
+        evidence = _refresh_rag_evidence(session, teacher_message=message)
         result: ConsultationResponse = await handle_consultation_message(
             message=message,
             story_analysis=session.storybook_analysis,
             chat_history=session.teacher_messages,
+            evidence=evidence,
+            planning_state=session.planning_state,
         )
         session.teacher_messages.append({"role": "user", "content": message})
         session.teacher_messages.append({"role": "assistant", "content": result.response})
-        session.planning_state = planning_state_snapshot(session)
+        derived_state = planning_state_snapshot(session)
+        update = (
+            result.planning_update.model_dump(exclude_none=True)
+            if result.planning_update is not None
+            else {}
+        )
+        session.planning_state = _merge_planning_state(
+            derived_state,
+            update,
+            teacher_messages=session.teacher_messages,
+        )
         checklist_ready = bool(session.planning_state.get("required_complete"))
         if not checklist_ready:
             missing = _missing_planning_fields(session.planning_state)
-            result.response = _append_missing_checklist_prompt(result.response, missing)
-            session.teacher_messages[-1]["content"] = result.response
+            result.response = _append_missing_checklist_prompt(
+                _strip_premature_readiness_claims(result.response),
+                missing,
+            )
+        else:
+            result.response = _strip_missing_checklist_prompt(result.response)
+        session.teacher_messages[-1]["content"] = result.response
 
         return MessageResponse(
             response=result.response,
@@ -99,6 +121,8 @@ async def route_message(session_id: str, message: str) -> MessageResponse:
             areas_remaining=result.areas_remaining,
             ready_to_approve=checklist_ready,
             planning_state=session.planning_state,
+            rag_status=session.rag_status,
+            rag_trace=session.rag_trace,
         )
 
     elif session.phase == SessionPhase.block_awareness:
@@ -125,7 +149,40 @@ async def route_message(session_id: str, message: str) -> MessageResponse:
     return MessageResponse(
         response="Session is not in an interactive phase.",
         phase=session.phase.value,
+        rag_status=session.rag_status,
+        rag_trace=session.rag_trace,
     )
+
+
+def _refresh_rag_evidence(
+    session: SessionState,
+    *,
+    teacher_message: str,
+) -> dict:
+    """Refresh bounded evidence only when the effective planning query changes."""
+    state = session.planning_state or planning_state_snapshot(session)
+    missing = _missing_planning_fields(state)
+    query_parts = [
+        session.storybook_analysis.title if session.storybook_analysis else "",
+        teacher_message,
+        str(state.get("core_concept", "")),
+        str(state.get("build_object", "")),
+        "Next planning needs: " + ", ".join(missing),
+    ]
+    query = " ".join(part for part in query_parts if part).strip()
+    grade = str(state.get("target_grade") or "1st Grade")
+    signature = sha256(
+        f"{grade}\n{' '.join(query.lower().split())}".encode("utf-8")
+    ).hexdigest()
+    if signature == session.rag_query_signature and session.rag_evidence:
+        return session.rag_evidence
+
+    evidence = retrieve_teacher_evidence(query, grade)
+    session.rag_evidence = evidence
+    session.rag_trace = list(evidence.get("trace", []))
+    session.rag_status = str(evidence.get("status", "unknown"))
+    session.rag_query_signature = signature
+    return evidence
 
 
 # ---------------------------------------------------------------------------
@@ -294,13 +351,14 @@ def planning_state_snapshot(session: SessionState) -> dict:
     analysis = session.storybook_analysis
     summary = session.consultation_summary
     reqs = session.block_requirements
-    chat_text = " ".join(
+    user_messages = [
         m.get("content", "") for m in session.teacher_messages if m.get("role") == "user"
-    ).lower()
+    ]
+    chat_text = " ".join(user_messages).lower()
 
-    grade = summary.grade_band if summary else _first_match(chat_text, ["pre-k", "kindergarten", "1st grade", "2nd grade", "grade 1", "grade 2"])
+    grade = summary.grade_band if summary else _grade_from_text(chat_text)
     duration = summary.duration_minutes if summary else _duration_from_text(chat_text)
-    theme = summary.agreed_theme if summary else ((analysis.themes[0] if analysis and analysis.themes else "") or _theme_from_text(chat_text))
+    theme = summary.agreed_theme if summary else (_theme_from_text(chat_text) or (analysis.themes[0] if analysis and analysis.themes else ""))
     artifact = ""
     if reqs:
         artifact = reqs.artifact_label
@@ -334,6 +392,7 @@ def planning_state_snapshot(session: SessionState) -> dict:
     if not learning_goals:
         learning_goals = _learning_goals_from_text(chat_text)
     vocabulary = analysis.vocabulary_opportunities if analysis else []
+    movement_confirmed = bool(moving_parts) or _movement_was_confirmed(user_messages)
     state = {
         "target_grade": grade or "",
         "duration_minutes": duration or "",
@@ -342,7 +401,9 @@ def planning_state_snapshot(session: SessionState) -> dict:
         "story_emphasis": theme or "",
         "build_object": artifact or "",
         "moving_parts": moving_parts,
+        "movement_confirmed": movement_confirmed,
         "static_parts": static_parts,
+        "static_parts_confirmed": bool(static_parts),
         "constraints": _constraints_from_text(chat_text),
         "literacy_focus": summary.literacy_focus if summary else (", ".join(vocabulary[:4]) if vocabulary else ""),
         "sel_focus": summary.sel_focus if summary else ((analysis.sel_angles[0] if analysis and analysis.sel_angles else "")),
@@ -354,19 +415,59 @@ def planning_state_snapshot(session: SessionState) -> dict:
             "Science of Reading vocabulary and sound awareness",
         ],
     }
-    state["required_complete"] = all([
-        state["target_grade"],
-        state["duration_minutes"],
-        state["core_concept"],
-        state["learning_goals"],
-        state["build_object"],
-        state["moving_parts"],
-        state["static_parts"],
-        state["constraints"],
-        state["literacy_focus"],
-        state["sel_focus"],
-    ])
-    return state
+    return _merge_planning_state(
+        state,
+        session.planning_state,
+        teacher_messages=session.teacher_messages,
+    )
+
+
+def _merge_planning_state(
+    base: dict,
+    update: dict | None,
+    *,
+    teacher_messages: list[dict[str, str]] | None = None,
+) -> dict:
+    """Merge confirmed values without letting empty inference erase prior work."""
+    merged = dict(base)
+    for key, value in (update or {}).items():
+        if key == "required_complete" or value is None:
+            continue
+        if value == "":
+            continue
+        if value == [] and key != "moving_parts":
+            continue
+        merged[key] = value
+
+    messages = [
+        item.get("content", "")
+        for item in (teacher_messages or [])
+        if item.get("role") == "user"
+    ]
+    if _latest_movement_decision(messages) == "none":
+        merged["moving_parts"] = []
+        merged["movement_confirmed"] = True
+    elif merged.get("moving_parts"):
+        merged["movement_confirmed"] = True
+
+    if merged.get("static_parts"):
+        merged["static_parts_confirmed"] = True
+
+    merged["required_complete"] = all(
+        [
+            merged.get("target_grade"),
+            merged.get("duration_minutes"),
+            merged.get("core_concept"),
+            merged.get("learning_goals"),
+            merged.get("build_object"),
+            merged.get("movement_confirmed"),
+            merged.get("static_parts"),
+            merged.get("constraints"),
+            merged.get("literacy_focus"),
+            merged.get("sel_focus"),
+        ]
+    )
+    return merged
 
 
 def planning_ready(session: SessionState, consultation_ready: bool) -> bool:
@@ -381,7 +482,6 @@ def _missing_planning_fields(state: dict) -> list[str]:
         ("core_concept", "core concept or story theme"),
         ("learning_goals", "learning goals"),
         ("build_object", "build object"),
-        ("moving_parts", "moving parts"),
         ("static_parts", "static parts"),
         ("constraints", "classroom constraints or grouping"),
         ("literacy_focus", "literacy focus"),
@@ -392,6 +492,8 @@ def _missing_planning_fields(state: dict) -> list[str]:
         value = state.get(key)
         if value is None or value == "" or value == []:
             missing.append(label)
+    if not state.get("movement_confirmed"):
+        missing.insert(5, "moving parts or confirmation that the build is fully static")
     return missing
 
 
@@ -418,10 +520,43 @@ def _strip_missing_checklist_prompt(response: str) -> str:
     return clean_response.rstrip()
 
 
+def _strip_premature_readiness_claims(response: str) -> str:
+    """Remove model-owned status claims; checklist readiness belongs to the app."""
+    blocked_phrases = (
+        "all checklist",
+        "checklist is complete",
+        "everything is complete",
+        "all lesson components are complete",
+        "ready to approve",
+        "ready to proceed",
+        "ready to move on",
+    )
+    paragraphs = response.split("\n\n")
+    kept = [
+        paragraph
+        for paragraph in paragraphs
+        if not any(phrase in paragraph.lower() for phrase in blocked_phrases)
+    ]
+    return "\n\n".join(kept).strip()
+
+
 def _first_match(text: str, options: list[str]) -> str:
     for option in options:
         if option in text:
             return option.title().replace("Grade 1", "1st Grade").replace("Grade 2", "2nd Grade")
+    return ""
+
+
+def _grade_from_text(text: str) -> str:
+    grade_terms = (
+        ("Pre-K", ("pre-k", "pre k", "preschool")),
+        ("Kindergarten", ("kindergarten",)),
+        ("1st Grade", ("1st grade", "first grade", "grade 1")),
+        ("2nd Grade", ("2nd grade", "second grade", "grade 2")),
+    )
+    for normalized, terms in grade_terms:
+        if any(term in text for term in terms):
+            return normalized
     return ""
 
 
@@ -466,9 +601,11 @@ def _learning_goals_from_text(text: str) -> list[str]:
 
 
 def _movement_mentions(text: str) -> list[dict]:
+    if _contains_no_movement(text):
+        return []
     candidates = [
-        ("propeller", "spinning", ["spin", "propeller", "rotate"]),
-        ("wheels", "rolling", ["wheel", "roll"]),
+        ("propeller", "spinning", ["spin", "spinning propeller", "rotate", "rotating propeller"]),
+        ("wheels", "rolling", ["wheels roll", "rolling wheels", "wheel should move"]),
         ("door", "pivoting", ["door", "open", "pivot", "hinge"]),
         ("flap", "pivoting", ["flap", "pivot", "hinge"]),
         ("wings", "static", ["wing", "fixed", "static"]),
@@ -480,6 +617,36 @@ def _movement_mentions(text: str) -> list[dict]:
     return found
 
 
+def _contains_no_movement(text: str) -> bool:
+    normalized = " ".join(text.lower().replace("-", " ").split())
+    return any(
+        phrase in normalized
+        for phrase in (
+            "no moving parts",
+            "nothing moves",
+            "nothing should move",
+            "fully static",
+            "entirely static",
+            "all parts are static",
+            "everything is static",
+        )
+    )
+
+
+def _latest_movement_decision(messages: list[str]) -> str | None:
+    for message in reversed(messages):
+        lowered = message.lower()
+        if _contains_no_movement(lowered):
+            return "none"
+        if _movement_mentions(lowered):
+            return "moving"
+    return None
+
+
+def _movement_was_confirmed(messages: list[str]) -> bool:
+    return _latest_movement_decision(messages) is not None
+
+
 def _static_mentions(text: str, moving_parts: list[dict] | None = None) -> list[dict]:
     moving_names = {
         str(item.get("part_name", "")).lower()
@@ -488,7 +655,20 @@ def _static_mentions(text: str, moving_parts: list[dict] | None = None) -> list[
     static_cues = ("static", "stay still", "fixed", "not move", "do not move", "stay in place")
     if not any(cue in text for cue in static_cues):
         return []
-    candidates = ["body", "wings", "cargo compartment", "compartment", "tail", "frame", "nose"]
+    candidates = [
+        "body",
+        "wings",
+        "cargo compartment",
+        "compartment",
+        "tail",
+        "frame",
+        "nose",
+        "traffic signal",
+        "signal body",
+        "signal lights",
+        "pole",
+        "base",
+    ]
     found = []
     for part in candidates:
         if part in text and part not in moving_names:

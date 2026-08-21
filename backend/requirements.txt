@@ -6,7 +6,9 @@ fastapi
 uvicorn[standard]
 
 # --- AI / LLM ---
-openai>=1.30
+google-genai>=1.46.0
+google-cloud-aiplatform>=1.121.0
+google-cloud-storage>=3.4.0
 
 # --- Data Validation ---
 pydantic>=2.0
@@ -29,6 +31,10 @@ reportlab
 # --- Utilities ---
 python-multipart
 python-dotenv
+pydantic-settings>=2.10
+SQLAlchemy>=2.0
+psycopg[binary]>=3.2
+pgvector>=0.4
 
 # --- Testing ---
 pytest
