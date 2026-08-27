@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<rect width="100%" height="100%" fill="white"/>
+<rect width="1600" height="92" fill="#17324D"/>
+<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">GCP Deployment</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="122" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="122" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
+<text x="142" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Browser</text>
+<circle cx="148" cy="227" r="4" fill="#EF5B54"/>
+<text x="164" y="233" font-family="Arial" font-size="18" fill="#243142">Streamlit /kidspark</text>
+<circle cx="148" cy="257" r="4" fill="#EF5B54"/>
+<text x="164" y="263" font-family="Arial" font-size="18" fill="#243142">HTTPS</text>
+<rect x="827" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="827" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
+<text x="847" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Cloud Run: kidspark</text>
+<circle cx="853" cy="227" r="4" fill="#EF5B54"/>
+<text x="869" y="233" font-family="Arial" font-size="18" fill="#243142">Port 8080 Streamlit</text>
+<circle cx="853" cy="257" r="4" fill="#EF5B54"/>
+<text x="869" y="263" font-family="Arial" font-size="18" fill="#243142">Port 8001 FastAPI (loopback)</text>
+<circle cx="853" cy="287" r="4" fill="#EF5B54"/>
+<text x="869" y="293" font-family="Arial" font-size="18" fill="#243142">Ephemeral work directory</text>
+<rect x="122" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="122" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
+<text x="142" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Managed Data</text>
+<circle cx="148" cy="497" r="4" fill="#EF5B54"/>
+<text x="164" y="503" font-family="Arial" font-size="18" fill="#243142">Cloud SQL PostgreSQL</text>
+<circle cx="148" cy="527" r="4" fill="#EF5B54"/>
+<text x="164" y="533" font-family="Arial" font-size="18" fill="#243142">pgvector</text>
+<circle cx="148" cy="557" r="4" fill="#EF5B54"/>
+<text x="164" y="563" font-family="Arial" font-size="18" fill="#243142">GCS raw + processed buckets</text>
+<rect x="827" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="827" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
+<text x="847" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Managed AI + Secrets</text>
+<circle cx="853" cy="497" r="4" fill="#EF5B54"/>
+<text x="869" y="503" font-family="Arial" font-size="18" fill="#243142">Vertex AI Gemini</text>
+<circle cx="853" cy="527" r="4" fill="#EF5B54"/>
+<text x="869" y="533" font-family="Arial" font-size="18" fill="#243142">Vertex embeddings</text>
+<circle cx="853" cy="557" r="4" fill="#EF5B54"/>
+<text x="869" y="563" font-family="Arial" font-size="18" fill="#243142">Secret Manager</text>
+<line x1="772" y1="242" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="745" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="799" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">HTTPS</text>
+<line x1="1152" y1="345" x2="447" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">SQL / objects</text>
+<line x1="1152" y1="345" x2="1152" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1098" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="1152" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">ADC / secrets</text>
+</svg>

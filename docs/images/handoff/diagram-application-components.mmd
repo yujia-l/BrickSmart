@@ -1,0 +1,10 @@
+flowchart LR
+  N0["Streamlit UI<br/>Step rail<br/>Teacher coach<br/>Review checkpoints<br/>Downloads"]
+  N1["FastAPI Orchestration<br/>Session API<br/>Readiness gates<br/>Background jobs<br/>File responses"]
+  N2["Domain Services<br/>Agents + prompts<br/>RAG adapter<br/>3D pipeline<br/>Document generator"]
+  N3["Validated Runtime<br/>Notebook port<br/>Inventory planner<br/>Model registry<br/>Instruction renderer"]
+  N0 -->|HTTP| N1
+  N1 -->|orchestrates| N2
+  N2 -->|physicalizes| N3
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

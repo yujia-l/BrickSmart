@@ -1,0 +1,11 @@
+flowchart LR
+  N0["Candidate<br/>OBJ + segments<br/>Initial voxel plan"]
+  N1["Feasibility Check<br/>Block budget<br/>Segment budget<br/>Preservation<br/>Inventory"]
+  N2["Bounded Auto-Recovery<br/>Tune voxel size<br/>Merge fragments<br/>Re-run planner<br/>Record attempts"]
+  N3["Outcome<br/>Valid plan<br/>Review-ready CSP fallback<br/>Teacher regeneration guidance"]
+  N0 -->|measure| N1
+  N1 -->|if recoverable| N2
+  N2 -->|retry| N1
+  N1 -->|resolve| N3
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

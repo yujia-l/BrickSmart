@@ -1,0 +1,12 @@
+flowchart LR
+  N0["Approved Intent<br/>Object<br/>Moving/static parts<br/>Kit limits"]
+  N1["Rodin<br/>Text-to-3D OBJ<br/>Teacher preview"]
+  N2["Bang<br/>Semantic segments<br/>OBJ parts"]
+  N3["Notebook Port<br/>Voxelize<br/>Merge/clean<br/>Contacts/connectors<br/>Step renders"]
+  N4["Validated Planner<br/>Catalog mapping<br/>Inventory feasibility<br/>Instruction status"]
+  N0 -->|prompt| N1
+  N1 -->|approved OBJ| N2
+  N2 -->|segments| N3
+  N3 -->|physical plan| N4
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<rect width="100%" height="100%" fill="white"/>
+<rect width="1600" height="92" fill="#17324D"/>
+<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">Rodin to Validated Build</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="40" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="40" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
+<text x="60" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Approved Intent</text>
+<circle cx="66" cy="227" r="4" fill="#EF5B54"/>
+<text x="82" y="233" font-family="Arial" font-size="18" fill="#243142">Object</text>
+<circle cx="66" cy="257" r="4" fill="#EF5B54"/>
+<text x="82" y="263" font-family="Arial" font-size="18" fill="#243142">Moving/static parts</text>
+<circle cx="66" cy="287" r="4" fill="#EF5B54"/>
+<text x="82" y="293" font-family="Arial" font-size="18" fill="#243142">Kit limits</text>
+<rect x="565" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="565" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
+<text x="585" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Rodin</text>
+<circle cx="591" cy="227" r="4" fill="#EF5B54"/>
+<text x="607" y="233" font-family="Arial" font-size="18" fill="#243142">Text-to-3D OBJ</text>
+<circle cx="591" cy="257" r="4" fill="#EF5B54"/>
+<text x="607" y="263" font-family="Arial" font-size="18" fill="#243142">Teacher preview</text>
+<rect x="1090" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="1090" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
+<text x="1110" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Bang</text>
+<circle cx="1116" cy="227" r="4" fill="#EF5B54"/>
+<text x="1132" y="233" font-family="Arial" font-size="18" fill="#243142">Semantic segments</text>
+<circle cx="1116" cy="257" r="4" fill="#EF5B54"/>
+<text x="1132" y="263" font-family="Arial" font-size="18" fill="#243142">OBJ parts</text>
+<rect x="40" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="40" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
+<text x="60" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Notebook Port</text>
+<circle cx="66" cy="497" r="4" fill="#EF5B54"/>
+<text x="82" y="503" font-family="Arial" font-size="18" fill="#243142">Voxelize</text>
+<circle cx="66" cy="527" r="4" fill="#EF5B54"/>
+<text x="82" y="533" font-family="Arial" font-size="18" fill="#243142">Merge/clean</text>
+<circle cx="66" cy="557" r="4" fill="#EF5B54"/>
+<text x="82" y="563" font-family="Arial" font-size="18" fill="#243142">Contacts/connectors</text>
+<circle cx="66" cy="587" r="4" fill="#EF5B54"/>
+<text x="82" y="593" font-family="Arial" font-size="18" fill="#243142">Step renders</text>
+<rect x="565" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
+<rect x="565" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
+<text x="585" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Validated Planner</text>
+<circle cx="591" cy="497" r="4" fill="#EF5B54"/>
+<text x="607" y="503" font-family="Arial" font-size="18" fill="#243142">Catalog mapping</text>
+<circle cx="591" cy="527" r="4" fill="#EF5B54"/>
+<text x="607" y="533" font-family="Arial" font-size="18" fill="#243142">Inventory feasibility</text>
+<circle cx="591" cy="557" r="4" fill="#EF5B54"/>
+<text x="607" y="563" font-family="Arial" font-size="18" fill="#243142">Instruction status</text>
+<line x1="510" y1="242" x2="565" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="483" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="537" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">prompt</text>
+<line x1="1035" y1="242" x2="1090" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1008" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="1062" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">approved OBJ</text>
+<line x1="1325" y1="345" x2="275" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="746" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="800" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">segments</text>
+<line x1="510" y1="512" x2="565" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="483" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
+<text x="537" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">physical plan</text>
+</svg>
