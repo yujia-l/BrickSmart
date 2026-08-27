@@ -1,0 +1,12 @@
+flowchart LR
+  N0["Source Corpus<br/>PDFs<br/>Lesson bundles<br/>Standards and policy"]
+  N1["Ingestion<br/>Extract nodes<br/>Caption selective visuals<br/>Normalize grade bands<br/>Embed"]
+  N2["Storage<br/>GCS artifacts<br/>document_bundle<br/>pdf_node + vectors<br/>standard_rules"]
+  N3["Teacher Query<br/>Grade-band filter<br/>Vector candidates<br/>Policy lookup<br/>Evidence trace"]
+  N4["Planning Agent<br/>Grounded suggestions<br/>Static fallback<br/>Citation lineage"]
+  N0 -->|process| N1
+  N1 -->|load| N2
+  N2 -->|retrieve| N3
+  N3 -->|ground| N4
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

@@ -1,279 +1,146 @@
-# Deploying BrickSmart to GCP Cloud Run from GitHub
+# KidSpark GCP Deployment
 
-This guide walks you through deploying the BrickSmart Streamlit app to Google Cloud Platform using Cloud Run with continuous deployment from GitHub.
+Target project: `kidspark-499901`
 
----
+The root container runs Streamlit on Cloud Run's public port and FastAPI on
+localhost port 8001. Gemini uses Vertex AI. Teacher-turn retrieval connects
+directly to Cloud SQL pgvector unless `KIDSPARK_RAG_SERVICE_URL` points at a
+separate ingestion/RAG service.
 
-## Prerequisites
-
-1. **Google Cloud Account** with billing enabled
-2. **GitHub Repository** with your BrickSmart code
-3. **gcloud CLI** installed (optional, for manual commands)
-
----
-
-## Step-by-Step Deployment
-
-### Step 1: Push Code to GitHub
-
-First, ensure your code is pushed to a GitHub repository:
+## One-Time Project Setup
 
 ```bash
-# Initialize git (if not already done)
-git init
-
-# Add all files
-git add .
-
-# Commit
-git commit -m "Initial commit for GCP deployment"
-
-# Add your GitHub remote
-git remote add origin https://github.com/YOUR_USERNAME/BrickSmart.git
-
-# Push to GitHub
-git push -u origin main
+gcloud config set project kidspark-499901
+gcloud services enable \
+  aiplatform.googleapis.com \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com \
+  apikeys.googleapis.com \
+  secretmanager.googleapis.com \
+  sqladmin.googleapis.com \
+  storage.googleapis.com
 ```
 
-**Important:** The `.gitignore` file excludes `.streamlit/secrets.toml` to prevent your API keys from being committed.
+The hosted service uses
+`kidspark-runtime@kidspark-499901.iam.gserviceaccount.com`. It needs these
+runtime roles:
 
----
+- Vertex AI User
+- Cloud SQL Client
+- Storage Object Viewer
+- Secret Manager Secret Accessor
+- Logs Writer
+- Monitoring Metric Writer
 
-### Step 2: Create a GCP Project
+Do not upload a service-account JSON key or set
+`GOOGLE_APPLICATION_CREDENTIALS` in Cloud Run.
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Click **Select a project** → **New Project**
-3. Name it `bricksmart` (or your preferred name)
-4. Click **Create**
+## Secrets
 
----
-
-### Step 3: Enable Required APIs
-
-In the Cloud Console, enable these APIs:
-
-1. Go to **APIs & Services** → **Enable APIs and Services**
-2. Search and enable:
-   - **Cloud Run API**
-   - **Cloud Build API**
-   - **Secret Manager API**
-   - **Artifact Registry API**
-
-Or use gcloud CLI:
+Create or update Secret Manager values without placing them on a command line
+or in Git:
 
 ```bash
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com secretmanager.googleapis.com artifactregistry.googleapis.com
+gcloud secrets create kidspark-db-url --replication-policy=automatic
+gcloud secrets create hyper3d-api-key --replication-policy=automatic
+gcloud secrets create gemini-api-key --replication-policy=automatic
 ```
 
----
+`gemini-api-key` contains an authorization key bound to the KidSpark runtime
+service account and restricted to `aiplatform.googleapis.com`. The application
+uses it when `GEMINI_API_KEY` is present and otherwise falls back to Application
+Default Credentials. Keep non-sensitive model names, locations, limits, and
+feature flags as Cloud Run environment variables rather than Secret Manager
+values.
 
-### Step 4: Store Your OpenAI Key in Secret Manager
+Cloud Run's database URL uses the Cloud SQL Unix socket:
 
-1. Go to **Security** → **Secret Manager**
-2. Click **Create Secret**
-3. Name: `OPENAI_KEY`
-4. Secret value: Your OpenAI API key (e.g., `sk-proj-...`)
-5. Click **Create**
-
-Or use gcloud CLI:
-
-```bash
-echo -n "sk-proj-YOUR_ACTUAL_KEY" | gcloud secrets create OPENAI_KEY --data-file=-
+```text
+postgresql+psycopg://USER:PASSWORD@/kidspark?host=/cloudsql/kidspark-499901:us-central1:kidspark-db
 ```
 
----
+## Database
 
-### Step 5: Set Up Cloud Run with GitHub Integration
+Apply:
 
-#### Option A: Using Cloud Console (Recommended for First-Time Setup)
+```text
+backend/ingestion/postgres/migrations/2026-07-vertex-rag-v1.sql
+```
 
-1. Go to **Cloud Run** in the Console
-2. Click **Create Service**
-3. Select **Continuously deploy from a repository**
-4. Click **Set up with Cloud Build**
-5. **Connect your GitHub repository:**
-   - Authenticate with GitHub
-   - Select your `BrickSmart` repository
-   - Branch: `main` (or your default branch)
-6. **Build Configuration:**
-   - Build Type: **Dockerfile**
-   - Source location: `/Dockerfile`
-7. Click **Save**
-8. **Configure the service:**
-   - Service name: `bricksmart`
-   - Region: Choose closest to your users (e.g., `us-central1`)
-   - **CPU allocation:** CPU is always allocated (for Streamlit's websockets)
-   - **Minimum instances:** 0 (or 1 for faster cold starts)
-   - **Maximum instances:** 10
-   - **Memory:** 1 GiB
-   - **CPU:** 1
-9. **Authentication:**
-   - Select **Allow unauthenticated invocations** (for public access)
-10. Click **Create**
-
-#### Option B: Using gcloud CLI
+Load rows first, then perform a resumable Vertex embedding backfill.
+Re-embedding is intentional; old OpenAI vectors are not part of the production
+contract:
 
 ```bash
-# Deploy from source (builds and deploys)
-gcloud run deploy bricksmart \
+set PYTHONPATH=backend/ingestion
+python -m app.services.ingest --no-embed
+python -m app.services.ingest --backfill-only --max-embeddings 100
+```
+
+The measured `gemini-embedding-001` online-prediction quota in `us-central1`
+is five requests per minute. The checked-in default uses four. A quota increase
+is required before the full 24,279-node corpus can be re-embedded in a
+reasonable production migration window. Backfill commits each batch, so jobs
+can be resumed safely.
+
+The processed bucket currently has no persisted image crops. Reprocess source
+PDFs with `SAVE_IMAGE_CROPS=true` to populate selective visual embeddings for
+parts diagrams, build steps, example builds, and instructional diagrams.
+
+Required verification:
+
+```sql
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+SELECT count(*) FROM document_bundle;
+SELECT count(*) FROM pdf_node;
+SELECT count(*) FROM pdf_node WHERE embedding IS NOT NULL;
+SELECT count(*) FROM standard_rules;
+SELECT DISTINCT grade_band FROM pdf_node ORDER BY grade_band;
+```
+
+## Deploy
+
+Replace the service name only if the team chooses a different canonical name:
+
+```bash
+gcloud run deploy kidspark \
   --source . \
+  --project kidspark-499901 \
   --region us-central1 \
   --allow-unauthenticated \
-  --memory 1Gi \
-  --cpu 1 \
+  --service-account kidspark-runtime@kidspark-499901.iam.gserviceaccount.com \
+  --port 8080 \
+  --memory 4Gi \
+  --cpu 2 \
+  --timeout 3600 \
   --min-instances 0 \
-  --max-instances 10 \
-  --port 8080
+  --max-instances 4 \
+  --add-cloudsql-instances kidspark-499901:us-central1:kidspark-db \
+  --set-env-vars GCP_PROJECT_ID=kidspark-499901,VERTEX_GENERATION_LOCATION=global,VERTEX_EMBEDDING_LOCATION=us-central1,GEMINI_PRIMARY_MODEL=gemini-3.6-flash,GEMINI_FALLBACK_MODEL=gemini-3.5-flash,KIDSPARK_RAG_ENABLED=true,KIDSPARK_RAG_TIMEOUT_SECONDS=10,RAG_QUERY_UNDERSTANDING_ENABLED=false,DATABASE_REQUIRED=true,GCS_BUCKET_NAME=kidspark-project-data,GCS_PROCESSED_BUCKET=kidspark-data-processed,EMBED_MODEL=gemini-embedding-001,EMBED_DIM=3072,EMBED_REQUESTS_PER_MINUTE=4 \
+  --set-secrets POSTGRESQL_DATABASE_URL=kidspark-db-url:latest,HYPER3D_API_KEY=hyper3d-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest
 ```
 
----
+Rodin/Bang/notebook processing can be CPU and memory intensive, which is why
+the initial deployment uses 2 CPU, 4 GiB, and a one-hour request timeout.
+Resource limits can be tuned after observing real traces.
 
-### Step 6: Configure Secrets for Cloud Run
-
-After the service is created, you need to mount the secret:
-
-1. Go to **Cloud Run** → Select your `bricksmart` service
-2. Click **Edit & Deploy New Revision**
-3. Go to the **Variables & Secrets** tab
-4. Under **Secrets**, click **Reference a Secret**
-5. Configure:
-   - **Name:** `OPENAI_KEY`
-   - **Secret:** Select `OPENAI_KEY` from dropdown
-   - **Reference method:** **Exposed as environment variable**
-   - **Environment variable name:** `OPENAI_KEY`
-6. Click **Done** → **Deploy**
-
-Or use gcloud CLI:
+## Validate
 
 ```bash
-gcloud run services update bricksmart \
+gcloud run services describe kidspark \
+  --project kidspark-499901 \
   --region us-central1 \
-  --set-secrets=OPENAI_KEY=OPENAI_KEY:latest
+  --format="value(status.url)"
+
+gcloud run services logs read kidspark \
+  --project kidspark-499901 \
+  --region us-central1 \
+  --limit 100
 ```
 
----
-
-### Step 7: Update Code to Read from Environment Variables
-
-For the secrets to work, update the code to read from environment variables. I recommend this small change:
-
-In `utils/utils.py`, the code already sets:
-```python
-os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_KEY']
-```
-
-For Cloud Run compatibility, update to support both:
-```python
-import os
-openai_key = os.environ.get('OPENAI_KEY') or st.secrets.get('OPENAI_KEY')
-os.environ['OPENAI_API_KEY'] = openai_key
-```
-
----
-
-### Step 8: Set Up Continuous Deployment (if not done in Step 5)
-
-To enable automatic deployments when you push to GitHub:
-
-1. Go to **Cloud Build** → **Triggers**
-2. Click **Create Trigger**
-3. Configure:
-   - **Name:** `bricksmart-deploy`
-   - **Event:** Push to a branch
-   - **Source:** Select your GitHub repo
-   - **Branch:** `^main$` (regex for main branch)
-   - **Build Configuration:** Dockerfile
-4. Click **Create**
-
----
-
-## Accessing Your Deployed App
-
-After deployment, Cloud Run provides a URL like:
-
-```
-https://bricksmart-XXXXXX-uc.a.run.app
-```
-
-Find it in:
-- Cloud Run Console → Your service → URL at the top
-- Or run: `gcloud run services describe bricksmart --region us-central1 --format='value(status.url)'`
-
----
-
-## Estimated Costs
-
-Cloud Run pricing (as of 2024):
-- **Free tier:** 2 million requests/month, 360,000 GB-seconds of memory
-- **Pay-per-use:** ~$0.00002400 per vCPU-second, ~$0.00000250 per GiB-second
-- **Minimum instances:** If set to 0, you only pay when the app is used
-
-For a low-traffic app, **costs should be minimal or free**.
-
----
-
-## Troubleshooting
-
-### View Logs
-
-```bash
-gcloud run logs read --service bricksmart --region us-central1
-```
-
-Or in Console: **Cloud Run** → **bricksmart** → **Logs**
-
-### Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| Build fails | Check Dockerfile syntax and requirements-gcp.txt |
-| Secret not found | Ensure secret exists and service account has access |
-| App crashes on start | Check logs for Python errors |
-| Cold start slow | Set minimum instances to 1 |
-
----
-
-## Quick Reference Commands
-
-```bash
-# Deploy latest code
-gcloud run deploy bricksmart --source . --region us-central1
-
-# View logs
-gcloud run logs read --service bricksmart --region us-central1
-
-# Get service URL
-gcloud run services describe bricksmart --region us-central1 --format='value(status.url)'
-
-# Delete service (cleanup)
-gcloud run services delete bricksmart --region us-central1
-```
-
----
-
-## Architecture Overview
-
-```
-┌──────────────┐     push      ┌──────────────┐
-│   GitHub     │──────────────▶│ Cloud Build  │
-│  Repository  │               │  (Trigger)   │
-└──────────────┘               └──────┬───────┘
-                                      │ build
-                                      ▼
-                               ┌──────────────┐
-                               │  Artifact    │
-                               │  Registry    │
-                               └──────┬───────┘
-                                      │ deploy
-                                      ▼
-┌──────────────┐               ┌──────────────┐
-│   Secret     │◀──────────────│  Cloud Run   │
-│   Manager    │   mount       │  (Service)   │
-│  (OPENAI_KEY)│               └──────────────┘
-└──────────────┘                      │
-                                      ▼
-                               ┌──────────────┐
-                               │   Users      │
-                               │   (HTTPS)    │
-                               └──────────────┘
-```
+Check `/health`, `/health/ready`, and `/api/v1/settings/runtime`. The runtime
+settings response must report `provider=vertex_ai`, `configured=true`, and the
+expected non-sensitive `auth_mode`. Then check `/kidspark`, one teacher planning turn, one
+model preview, one validated build, and all three PDF downloads before routing
+team demos to the revision.

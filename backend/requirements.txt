@@ -1,0 +1,54 @@
+# KidSpark AI Backend Dependencies
+# Install: pip install -r requirements.txt
+
+# --- Web Framework ---
+fastapi
+uvicorn[standard]
+
+# --- AI / LLM ---
+google-genai>=1.46.0
+google-cloud-aiplatform>=1.121.0
+google-cloud-storage>=3.4.0
+
+# --- Data Validation ---
+pydantic>=2.0
+
+# --- HTTP ---
+httpx
+requests
+pillow
+numpy
+matplotlib
+pandas>=2.0
+trimesh>=4.0
+plotly>=5.20
+scipy>=1.12
+openpyxl>=3.1
+PyYAML>=6.0
+pypdf
+reportlab
+
+# --- Utilities ---
+python-multipart
+python-dotenv
+pydantic-settings>=2.10
+SQLAlchemy>=2.0
+psycopg[binary]>=3.2
+pgvector>=0.4
+
+# --- Testing ---
+pytest
+pytest-asyncio
+
+# ---- Future (uncomment when needed) ----
+# pydantic-ai
+# langchain
+# langchain-openai
+# sqlalchemy[asyncio]
+# asyncpg
+# pgvector
+# alembic
+# docling
+# google-cloud-storage
+# google-cloud-secret-manager
+# google-cloud-logging

@@ -1,0 +1,226 @@
+{
+  "authoring_provenance": {
+    "llm": {}
+  },
+  "catalog": {
+    "connection_type_catalog_constraints": {
+      "structural_connector": {
+        "all": []
+      }
+    },
+    "required_columns": [
+      "block_family",
+      "color",
+      "category",
+      "geometry_size",
+      "primary_male_faces",
+      "primary_female_faces",
+      "current_solver_enabled",
+      "default_packing_priority"
+    ],
+    "selectors": {
+      "segment_connector": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "functional_role",
+            "op": "equals",
+            "value": "connector"
+          }
+        ]
+      },
+      "structural": {
+        "all": [
+          {
+            "field": "current_solver_enabled",
+            "op": "truthy"
+          },
+          {
+            "field": "category",
+            "op": "equals",
+            "value": "structural_block"
+          }
+        ]
+      }
+    }
+  },
+  "connector_rules": [],
+  "contract_id": "bird-standard-kit",
+  "contract_policy": {
+    "reject_provisional_metadata": false
+  },
+  "conversation_contract": {
+    "allow_catalog_role_query_without_exact_family": true,
+    "model_task_context_scope": "build_intent_catalog_queries_and_model_constraints",
+    "segment_confirmation_csv_scope": "source_segment_identity_and_semantics_only"
+  },
+  "coordinate_system": {
+    "planner_axis_flips": [
+      false,
+      false,
+      false
+    ],
+    "planner_axis_order": [
+      0,
+      2,
+      1
+    ]
+  },
+  "display_name": "bird_model",
+  "execution_policy": {
+    "allow_runtime_llm": false,
+    "final_claim_requires_deterministic_inputs": true,
+    "mode": "validated"
+  },
+  "functional_assemblies": [],
+  "functional_attachments": [],
+  "interface_reservations": {
+    "enabled": true
+  },
+  "inventory": {
+    "atomic_symmetry_pairs": true,
+    "enforce": true,
+    "final_recount_required": true,
+    "profile_path": "../config/inventory/standard_kit.yaml",
+    "violation_policy": "fail"
+  },
+  "llm": {
+    "llm2": {
+      "allowed_connection_types": [
+        "structural_connector",
+        "none"
+      ],
+      "catalog_requirement_fields": [
+        "functional_role",
+        "placement_mode",
+        "motion_type"
+      ],
+      "classify_structural_interfaces": false,
+      "enabled": false,
+      "fallback_on_error": true,
+      "role": "contract_authoring_only",
+      "runtime_reason": "Validated builds consume confirmed contract decisions and do not call an LLM.",
+      "save_raw_responses": false
+    }
+  },
+  "model_id": "bird-three-segment-build",
+  "model_source": {
+    "expected_sha256": "7d1b653780bdf4ca51a95bfd21af078ef5a71806271345df708a53a5ffe6b152",
+    "filename": "base.obj",
+    "model_id": "bird-base",
+    "uri": "model://bird-base"
+  },
+  "object_type_hint": "bird_model",
+  "packing_policy": {
+    "family_priority_overrides": {}
+  },
+  "paths": {
+    "catalog_csv": "../block_catalog/block_definitions.csv",
+    "relative_to": "pipeline_runtime"
+  },
+  "regression": {
+    "source_model_sha256": "7d1b653780bdf4ca51a95bfd21af078ef5a71806271345df708a53a5ffe6b152"
+  },
+  "runtime_logging": {
+    "show_assembly_step_table": false,
+    "show_catalog_details": false,
+    "show_debug_settings": false,
+    "show_environment": false,
+    "show_final_summary": true,
+    "show_gate_messages": true,
+    "show_inline_render_messages": false,
+    "show_intermediate_tables": false,
+    "show_output_paths": false,
+    "show_planner_configuration": false,
+    "show_planner_parents": false,
+    "show_planner_rows": false,
+    "show_planner_summary": true,
+    "show_visualization_paths": false
+  },
+  "schema_version": "bricksmart-model-contract-1.0",
+  "segment_assembly": {
+    "interface_detection": {
+      "minimum_contact_area": 1
+    },
+    "segment_packing": {
+      "stop_after_first_valid_build_axis": true
+    },
+    "structural_connector_policy": {
+      "catalog_selector": "segment_connector",
+      "join_mode": "direct_structural_lock",
+      "required_on_each_assembly_graph_edge": true,
+      "rigid_join_confirmation_status": "confirmed",
+      "rigid_join_decision_source": "model_task_context"
+    }
+  },
+  "segment_semantics": {
+    "allowed_labels": [
+      "left_wing",
+      "body",
+      "right_wing",
+      "unknown"
+    ],
+    "auto_confirm_from_obj_object_names": true,
+    "confirmation_policy": {
+      "labels_file_default_status": "confirmed",
+      "unconfirmed_labels_may_affect_backend": false
+    },
+    "fail_when_all_labels_unknown": true,
+    "labels_file": "segment_confirmations.csv",
+    "unknown_label": "unknown"
+  },
+  "semantic_preflight": {
+    "enabled": true,
+    "maximum_pair_voxel_ratio": 3.0,
+    "minimum_pair_mirror_iou": 0.5,
+    "minimum_target_voxels": 4
+  },
+  "structuralization": {
+    "enabled": true
+  },
+  "symmetry": {
+    "axis": "X",
+    "enabled": true,
+    "minimum_pair_iou": 0.75
+  },
+  "task_id": "bird-three-segment-build",
+  "visualization": {
+    "enabled": false,
+    "external_player_generated_by_runner": true,
+    "generate_final_state_interactive": false,
+    "generate_proper_complete_build_step_player": false,
+    "generate_proper_segment_build_step_players": false,
+    "interactive": false,
+    "interactive_include_plotlyjs": "cdn",
+    "save_interactive_html": false,
+    "save_static_segment_plan_png": false,
+    "save_static_validated_step_pngs": false,
+    "show_dedicated_inline_proper_segment_build_steps_cell": false,
+    "show_inline_assembly_assembly_player": false,
+    "show_inline_assembly_steps": false,
+    "show_inline_final": false,
+    "show_inline_final_state": false,
+    "show_inline_planning_layers": false,
+    "show_inline_reserved_faces": false,
+    "show_inline_segment_sequences": false,
+    "show_inline_segmentation": false,
+    "show_inline_subassembly_build_steps": false,
+    "show_inline_symmetry_pairs": false,
+    "show_reference_segment_panel": false
+  },
+  "voxelization": {
+    "grid_size": 16,
+    "preprocessing": {
+      "clean_vertical_columns": true,
+      "enforce_2x2_footprint": true,
+      "remap_segments_to_2x2_grid": true,
+      "split_disconnected_components": true,
+      "thicken_floor_and_ceiling": true
+    },
+    "random_seed": 0,
+    "samples_per_triangle": 30
+  }
+}

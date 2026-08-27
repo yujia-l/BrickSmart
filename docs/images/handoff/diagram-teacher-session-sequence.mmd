@@ -1,0 +1,14 @@
+flowchart LR
+  N0["1 Upload<br/>Extract story<br/>Analyze<br/>Retrieve evidence"]
+  N1["2 Plan<br/>Coach dialogue<br/>Fill readiness state<br/>Teacher confirms"]
+  N2["3 Preview<br/>Generate Rodin prompt<br/>Poll<br/>Teacher approves"]
+  N3["4 Physicalize<br/>Bang<br/>Voxelize<br/>Auto-simplify<br/>Teacher reviews"]
+  N4["5 Build<br/>Inventory validation<br/>Step images<br/>Approve plan"]
+  N5["6 Bundle<br/>Generate 3 PDFs<br/>Validate<br/>Download"]
+  N0 -->|gate| N1
+  N1 -->|gate| N2
+  N2 -->|gate| N3
+  N3 -->|gate| N4
+  N4 -->|gate| N5
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

@@ -1,0 +1,1537 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "KidSpark AI",
+    "description": "Sanitized OpenAPI snapshot for the KidSpark AI application API.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Create New Session",
+        "description": "Create a new teacher session.",
+        "operationId": "create_new_session_api_v1_sessions_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionCreatedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/upload": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Upload Storybook",
+        "description": "Upload storybook text and trigger automatic analysis.\n\nFor Phase 1 dev: pass ``text`` as a query param, or omit it to use the\nbuilt-in sample storybook (Milo's Flying Delivery).",
+        "operationId": "upload_storybook_api_v1_sessions__session_id__upload_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_storybook_api_v1_sessions__session_id__upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/message": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Send Message",
+        "description": "Send a teacher message; routed to the active agent for the session phase.",
+        "operationId": "send_message_api_v1_sessions__session_id__message_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/confirm-planning": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Confirm Planning",
+        "operationId": "confirm_planning_api_v1_sessions__session_id__confirm_planning_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/model-preview": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Start Model Preview",
+        "operationId": "start_model_preview_api_v1_sessions__session_id__model_preview_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Poll Model Preview",
+        "operationId": "poll_model_preview_api_v1_sessions__session_id__model_preview_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/model-preview/refine": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Refine Model Preview",
+        "operationId": "refine_model_preview_api_v1_sessions__session_id__model_preview_refine_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefineModelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/confirm-model": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Confirm Model",
+        "operationId": "confirm_model_api_v1_sessions__session_id__confirm_model_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/segments": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Start Segments",
+        "operationId": "start_segments_api_v1_sessions__session_id__segments_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Poll Segments",
+        "operationId": "poll_segments_api_v1_sessions__session_id__segments_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/segments/refine": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Refine Segments",
+        "operationId": "refine_segments_api_v1_sessions__session_id__segments_refine_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenericRefinementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/confirm-segments": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Confirm Segments",
+        "operationId": "confirm_segments_api_v1_sessions__session_id__confirm_segments_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/confirm-build-plan": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Confirm Build Plan",
+        "operationId": "confirm_build_plan_api_v1_sessions__session_id__confirm_build_plan_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/documents": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Start Documents",
+        "operationId": "start_documents_api_v1_sessions__session_id__documents_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Poll Documents",
+        "operationId": "poll_documents_api_v1_sessions__session_id__documents_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/documents/{kind}/refine": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Refine Document",
+        "operationId": "refine_document_api_v1_sessions__session_id__documents__kind__refine_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Kind"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenericRefinementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/documents/{kind}/download": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Download Document",
+        "operationId": "download_document_api_v1_sessions__session_id__documents__kind__download_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Kind"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/confirm-documents": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Confirm Documents",
+        "operationId": "confirm_documents_api_v1_sessions__session_id__confirm_documents_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/approve-plan": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Approve Plan",
+        "description": "Teacher approves the consultation direction \u2192 block_awareness phase.",
+        "operationId": "approve_plan_api_v1_sessions__session_id__approve_plan_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/approve-blocks": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Approve Blocks",
+        "description": "Finalize block requirements \u2192 generation phase.",
+        "operationId": "approve_blocks_api_v1_sessions__session_id__approve_blocks_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/build-plan": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Start Build Plan",
+        "description": "Start the Rodin/Bang-backed build plan for this teacher session.",
+        "operationId": "start_build_plan_api_v1_sessions__session_id__build_plan_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Get Build Plan",
+        "description": "Poll build plan status for this teacher session.",
+        "operationId": "get_build_plan_api_v1_sessions__session_id__build_plan_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/build-plan/restart": {
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Restart Build Plan",
+        "description": "Allow the teacher to restart generation after reviewing a bad output.",
+        "operationId": "restart_build_plan_api_v1_sessions__session_id__build_plan_restart_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Get Session Detail",
+        "description": "Inspect current session state.",
+        "operationId": "get_session_detail_api_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blocks/catalog": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Get Block Catalog",
+        "description": "Return the Kid Spark block catalog.",
+        "operationId": "get_block_catalog_api_v1_blocks_catalog_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/build-demo/health": {
+      "get": {
+        "tags": [
+          "build-demo"
+        ],
+        "summary": "Build Demo Health",
+        "operationId": "build_demo_health_api_v1_build_demo_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/build-demo/jobs": {
+      "post": {
+        "tags": [
+          "build-demo"
+        ],
+        "summary": "Create Build Job",
+        "operationId": "create_build_job_api_v1_build_demo_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildDemoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/build-demo/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "build-demo"
+        ],
+        "summary": "Get Build Job",
+        "operationId": "get_build_job_api_v1_build_demo_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/settings/runtime": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Get Runtime Status",
+        "operationId": "get_runtime_status_api_v1_settings_runtime_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_storybook_api_v1_sessions__session_id__upload_post": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "file": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "title": "Body_upload_storybook_api_v1_sessions__session_id__upload_post"
+      },
+      "BuildDemoRequest": {
+        "properties": {
+          "story_text": {
+            "type": "string",
+            "minLength": 50,
+            "title": "Story Text"
+          },
+          "teacher_connection_intent": {
+            "type": "string",
+            "title": "Teacher Connection Intent",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "story_text"
+        ],
+        "title": "BuildDemoRequest"
+      },
+      "GenericRefinementRequest": {
+        "properties": {
+          "refinement": {
+            "type": "string",
+            "title": "Refinement",
+            "default": ""
+          },
+          "updates": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Updates"
+          }
+        },
+        "type": "object",
+        "title": "GenericRefinementRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MessageRequest": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "MessageRequest"
+      },
+      "MessageResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "title": "Response"
+          },
+          "phase": {
+            "type": "string",
+            "title": "Phase"
+          },
+          "areas_covered": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Areas Covered"
+          },
+          "areas_remaining": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Areas Remaining"
+          },
+          "ready_to_approve": {
+            "type": "boolean",
+            "title": "Ready To Approve",
+            "default": false
+          },
+          "ready_to_generate": {
+            "type": "boolean",
+            "title": "Ready To Generate",
+            "default": false
+          },
+          "planning_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Planning State"
+          },
+          "rag_status": {
+            "type": "string",
+            "title": "Rag Status",
+            "default": "not_requested"
+          },
+          "rag_trace": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Rag Trace"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response",
+          "phase"
+        ],
+        "title": "MessageResponse"
+      },
+      "RefineModelRequest": {
+        "properties": {
+          "rodin_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rodin Prompt"
+          },
+          "refinement": {
+            "type": "string",
+            "title": "Refinement",
+            "default": ""
+          },
+          "build_constraints": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Build Constraints"
+          }
+        },
+        "type": "object",
+        "title": "RefineModelRequest"
+      },
+      "SessionCreatedResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "phase": {
+            "type": "string",
+            "title": "Phase"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "phase"
+        ],
+        "title": "SessionCreatedResponse"
+      },
+      "StoryAnalysis": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "characters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Characters"
+          },
+          "settings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Settings"
+          },
+          "key_events": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Key Events"
+          },
+          "themes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Themes"
+          },
+          "buildable_objects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Buildable Objects"
+          },
+          "vocabulary_opportunities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Vocabulary Opportunities"
+          },
+          "sel_angles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sel Angles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "characters",
+          "settings",
+          "key_events",
+          "themes",
+          "buildable_objects",
+          "vocabulary_opportunities",
+          "sel_angles"
+        ],
+        "title": "StoryAnalysis"
+      },
+      "UploadResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "story_analysis": {
+            "$ref": "#/components/schemas/StoryAnalysis"
+          },
+          "phase": {
+            "type": "string",
+            "title": "Phase"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "story_analysis",
+          "phase"
+        ],
+        "title": "UploadResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

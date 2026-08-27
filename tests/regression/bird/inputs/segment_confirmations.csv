@@ -1,0 +1,4 @@
+segment_id,confirmed_label,confirmed_name,confirmation_status,confirmation_source
+1,left_wing,Left Wing,confirmed,teacher_confirmation_fixture
+2,body,Central Body,confirmed,teacher_confirmation_fixture
+3,right_wing,Right Wing,confirmed,teacher_confirmation_fixture

@@ -1,0 +1,11 @@
+flowchart LR
+  N0["Teacher<br/>Story/PDF<br/>Planning decisions<br/>Approvals"]
+  N1["KidSpark AI<br/>Guided workflow<br/>Evidence-grounded coaching<br/>Validated outputs"]
+  N2["External Services<br/>Vertex AI<br/>Cloud SQL + pgvector<br/>Hyper3D Rodin / Bang"]
+  N3["Classroom<br/>BrickSmart build<br/>Lesson plan<br/>Activity guide<br/>Slide companion"]
+  N0 -->|plans| N1
+  N1 -->|calls| N2
+  N2 -->|returns| N1
+  N1 -->|publishes| N3
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

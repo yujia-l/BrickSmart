@@ -1,0 +1,13 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+SQLAlchemy>=2.0
+psycopg[binary]>=3.2
+pgvector>=0.4
+pydantic>=2.8
+pydantic-settings>=2.10
+python-dotenv>=1.0
+google-genai>=1.46.0
+google-cloud-aiplatform>=1.121.0
+google-cloud-storage>=3.4.0
+docling>=2.0
+sentence-transformers>=3.0

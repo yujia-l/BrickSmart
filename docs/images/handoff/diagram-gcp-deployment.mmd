@@ -1,0 +1,10 @@
+flowchart LR
+  N0["Browser<br/>Streamlit /kidspark<br/>HTTPS"]
+  N1["Cloud Run: kidspark<br/>Port 8080 Streamlit<br/>Port 8001 FastAPI (loopback)<br/>Ephemeral work directory"]
+  N2["Managed Data<br/>Cloud SQL PostgreSQL<br/>pgvector<br/>GCS raw + processed buckets"]
+  N3["Managed AI + Secrets<br/>Vertex AI Gemini<br/>Vertex embeddings<br/>Secret Manager"]
+  N0 -->|HTTPS| N1
+  N1 -->|SQL / objects| N2
+  N1 -->|ADC / secrets| N3
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

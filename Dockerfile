@@ -7,8 +7,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements-gcp.txt .
-RUN pip install --no-cache-dir -r requirements-gcp.txt
+COPY requirements.txt .
+RUN python -m pip install --no-cache-dir --upgrade pip && \
+    python -m pip install --no-cache-dir --retries 5 --timeout 120 -r requirements.txt
 
 COPY . .
 
@@ -16,4 +17,4 @@ EXPOSE 8080
 
 ENV PORT=8080
 
-CMD ["streamlit", "run", "home.py", "--server.port=8080", "--server.address=0.0.0.0", "--server.headless=true"]
+CMD ["python", "cloudrun_start.py"]

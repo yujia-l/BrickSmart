@@ -1,0 +1,10 @@
+flowchart LR
+  N0["Approved Session<br/>Story + framework<br/>Planning state<br/>Build plan"]
+  N1["Document Agents<br/>Teacher lesson plan<br/>Student activity guide<br/>Class slide companion"]
+  N2["Validation<br/>Required sections<br/>Audience tone<br/>No placeholders<br/>Notebook images"]
+  N3["Publication<br/>Markdown + JSON<br/>Three PDFs<br/>Teacher downloads"]
+  N0 -->|compose| N1
+  N1 -->|check| N2
+  N2 -->|publish| N3
+  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  class N0,N1,N2,N3,N4,N5 primary;

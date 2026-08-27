@@ -1,0 +1,81 @@
+<svg viewBox="0 0 960 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ttl desc" font-family="ui-sans-serif, system-ui, sans-serif">
+  <title id="ttl">KidSpark RAG architecture and data flow</title>
+  <desc id="desc">Three flows: processing raw PDFs into GCS artifacts, ingesting those artifacts from GCS into Postgres+pgvector, and retrieving from Postgres via the FastAPI endpoint.</desc>
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#52525b"/>
+    </marker>
+  </defs>
+  <style>
+    .box { fill: #f4f4f5; stroke: #d4d4d8; stroke-width: 1.5; }
+    .db  { fill: #e8f0fe; stroke: #5b7fc7; stroke-width: 1.5; }
+    .t   { fill: #18181b; font-size: 15px; font-weight: 600; }
+    .s   { fill: #52525b; font-size: 11.5px; }
+    .lane{ fill: #a1a1aa; font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+    .al  { fill: #52525b; font-size: 11px; }
+    .ln  { stroke: #52525b; stroke-width: 1.6; fill: none; }
+  </style>
+  <text x="24" y="42" class="lane">1 · PROCESSING  (offline · process.py)</text>
+  <rect class="box" x="24" y="58" width="230" height="70" rx="10"/>
+  <text x="139" y="88" text-anchor="middle" class="t">Raw PDFs</text>
+  <text x="139" y="108" text-anchor="middle" class="s">gs://…/Data (GCS)</text>
+  <line class="ln" x1="254" y1="93" x2="366" y2="93" marker-end="url(#arw)"/>
+  <text x="310" y="82" text-anchor="middle" class="al">docling ·</text>
+  <text x="310" y="110" text-anchor="middle" class="al">chunk · vision</text>
+  <rect class="box" x="366" y="58" width="250" height="70" rx="10"/>
+  <text x="491" y="82" text-anchor="middle" class="t">Assemble artifacts</text>
+  <text x="491" y="102" text-anchor="middle" class="s">knowledge.py → bundle/nodes/</text>
+  <text x="491" y="118" text-anchor="middle" class="s">relations/rules JSON</text>
+  <line class="ln" x1="616" y1="93" x2="728" y2="93" marker-end="url(#arw)"/>
+  <rect class="box" x="728" y="58" width="208" height="70" rx="10"/>
+  <text x="832" y="88" text-anchor="middle" class="t">Processed artifacts</text>
+  <text x="832" y="108" text-anchor="middle" class="s">gs://…/Knowledge_chunks</text>
+  <text x="24" y="196" class="lane">2 · INGESTION  (POST /api/v1/ingest · ingest.py)</text>
+  <rect class="box" x="24" y="212" width="230" height="70" rx="10"/>
+  <text x="139" y="242" text-anchor="middle" class="t">Knowledge_chunks</text>
+  <text x="139" y="262" text-anchor="middle" class="s">GCS (Google Cloud)</text>
+  <line class="ln" x1="254" y1="247" x2="470" y2="247" marker-end="url(#arw)"/>
+  <text x="362" y="236" text-anchor="middle" class="al">download tree ·</text>
+  <text x="362" y="264" text-anchor="middle" class="al">OpenAI embed each node</text>
+  <rect class="box" x="470" y="212" width="200" height="70" rx="10"/>
+  <text x="570" y="242" text-anchor="middle" class="t">repository.load_knowledge</text>
+  <text x="570" y="262" text-anchor="middle" class="s">upsert per bundle</text>
+  <line class="ln" x1="670" y1="247" x2="728" y2="247" marker-end="url(#arw)"/>
+  <rect class="db" x="728" y="212" width="208" height="70" rx="10"/>
+  <text x="832" y="242" text-anchor="middle" class="t">Postgres + pgvector</text>
+  <text x="832" y="262" text-anchor="middle" class="s">star schema (write)</text>
+  <text x="24" y="350" class="lane">3 · RETRIEVAL  (POST /api/v1/retrieve)</text>
+  <rect class="box" x="24" y="366" width="190" height="70" rx="10"/>
+  <text x="119" y="396" text-anchor="middle" class="t">Teacher UI / Swagger</text>
+  <text x="119" y="416" text-anchor="middle" class="s">grade_band + prompt</text>
+  <line class="ln" x1="214" y1="401" x2="300" y2="401" marker-end="url(#arw)"/>
+  <rect class="box" x="300" y="366" width="300" height="70" rx="10"/>
+  <text x="450" y="390" text-anchor="middle" class="t">retrieval + repository</text>
+  <text x="450" y="409" text-anchor="middle" class="s">understand query · halfvec KNN +</text>
+  <text x="450" y="425" text-anchor="middle" class="s">full-text · RRF · rerank · group by page</text>
+  <line class="ln" x1="600" y1="401" x2="728" y2="401" marker-end="url(#arw)"/>
+  <text x="664" y="392" text-anchor="middle" class="al">reads</text>
+  <rect class="db" x="728" y="366" width="208" height="70" rx="10"/>
+  <text x="832" y="396" text-anchor="middle" class="t">Postgres + pgvector</text>
+  <text x="832" y="416" text-anchor="middle" class="s">star schema (read)</text>
+  <rect x="24" y="474" width="912" height="176" rx="12" fill="#fafafa" stroke="#d4d4d8" stroke-width="1.2"/>
+  <text x="44" y="502" class="lane">POSTGRES + PGVECTOR  ·  star schema &amp; setup</text>
+  <rect class="db" x="44" y="516" width="270" height="112" rx="10"/>
+  <text x="60" y="542" class="t">document_bundle</text>
+  <text x="60" y="562" class="s">dimension — one row per bundle</text>
+  <text x="60" y="582" class="s">grade/lab/unit/lesson · policy refs</text>
+  <text x="60" y="606" class="s">FK ← pdf_node.bundle_id</text>
+  <rect class="db" x="345" y="516" width="290" height="112" rx="10"/>
+  <text x="361" y="542" class="t">pdf_node  (FACT)</text>
+  <text x="361" y="562" class="s">one row per chunk · embedding vector(3072)</text>
+  <text x="361" y="582" class="s">denormalized grade/lab/unit for filtering</text>
+  <text x="361" y="606" class="s">idx: halfvec HNSW (cosine) + GIN full-text</text>
+  <rect class="db" x="666" y="516" width="250" height="112" rx="10"/>
+  <text x="682" y="542" class="t">standard_rules</text>
+  <text x="682" y="562" class="s">unit policy (rules.json)</text>
+  <text x="682" y="582" class="s">FK ← bundle_name</text>
+  <text x="682" y="606" class="s">docker pgvector/pgvector:pg16</text>
+  <text x="682" y="624" class="s">localhost:5433 · CREATE EXTENSION vector</text>
+  <rect x="770" y="40" width="14" height="14" rx="3" class="db"/>
+  <text x="790" y="52" class="s">= database</text>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "contract_id": "bird-standard-kit",
+  "version_id": "validated-1",
+  "canonical_uri": "contract://bird-standard-kit@validated-1",
+  "context_path": "task_context.json",
+  "confirmations_path": "segment_confirmations.csv",
+  "context_sha256": "ab8bc1704338be94d569dbb1e5b42676d8f2cd881e8310f2fa564920e7961cc6",
+  "confirmations_sha256": "e7a2f955e4e2122b6574aae73cef25275a48580bd49a2d0b05f8789f605247c1",
+  "model_id": "bird-three-segment-build",
+  "model_uri": "model://bird-base",
+  "created_at": "2026-07-02T00:00:00Z",
+  "metadata": {
+    "purpose": "regression_example",
+    "execution_mode": "validated",
+    "runtime_llm": false,
+    "supersedes": "contract://bird-standard-kit@baseline"
+  }
+}

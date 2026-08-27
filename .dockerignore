@@ -4,6 +4,10 @@ __pycache__/
 venv/
 env/
 .env
+.env.*
+*service-account*.json
+*credentials*.json
+kidspark-*.json
 .git/
 .gitignore
 *.md
@@ -12,3 +16,27 @@ env/
 .DS_Store
 Thumbs.db
 *.log
+.pytest_cache/
+tests/
+backend - Copy/
+bricksmart_final_1.1.2/
+bricksmart_v1.2.5/
+Brick Smart/
+Block_Instructions (pre-connection)/
+toy_airplane_30k/
+work/
+runs/
+backend/generated/
+static/kidspark_downloads/
+tmp/
+block_catalog/block_definitions.xlsx
+model_registry/contracts/session-*/
+model_registry/contracts/trace-*/
+model_store/manifests/flying-delivery-*.json
+model_store/objects/sha256/*
+!model_store/objects/sha256/7d/
+!model_store/objects/sha256/7d/7d1b653780bdf4ca51a95bfd21af078ef5a71806271345df708a53a5ffe6b152.obj
+!model_store/objects/sha256/8e/
+!model_store/objects/sha256/8e/8efb5241b300fa4cc2427ee46212818ad4873ef4382bfe6e2d0523deec8ff062.obj
+!model_store/objects/sha256/ea/
+!model_store/objects/sha256/ea/ea0c7441cb1904533391fde7b02a5df28266ec26ea5631ec0f9c8abfce519faa.obj
