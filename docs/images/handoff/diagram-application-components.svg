@@ -1,59 +1,226 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1536" viewBox="0 0 2000 1536">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">Application Components</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="122" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Streamlit UI</text>
-<circle cx="148" cy="227" r="4" fill="#EF5B54"/>
-<text x="164" y="233" font-family="Arial" font-size="18" fill="#243142">Step rail</text>
-<circle cx="148" cy="257" r="4" fill="#EF5B54"/>
-<text x="164" y="263" font-family="Arial" font-size="18" fill="#243142">Teacher coach</text>
-<circle cx="148" cy="287" r="4" fill="#EF5B54"/>
-<text x="164" y="293" font-family="Arial" font-size="18" fill="#243142">Review checkpoints</text>
-<circle cx="148" cy="317" r="4" fill="#EF5B54"/>
-<text x="164" y="323" font-family="Arial" font-size="18" fill="#243142">Downloads</text>
-<rect x="827" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">FastAPI Orchestration</text>
-<circle cx="853" cy="227" r="4" fill="#EF5B54"/>
-<text x="869" y="233" font-family="Arial" font-size="18" fill="#243142">Session API</text>
-<circle cx="853" cy="257" r="4" fill="#EF5B54"/>
-<text x="869" y="263" font-family="Arial" font-size="18" fill="#243142">Readiness gates</text>
-<circle cx="853" cy="287" r="4" fill="#EF5B54"/>
-<text x="869" y="293" font-family="Arial" font-size="18" fill="#243142">Background jobs</text>
-<circle cx="853" cy="317" r="4" fill="#EF5B54"/>
-<text x="869" y="323" font-family="Arial" font-size="18" fill="#243142">File responses</text>
-<rect x="122" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Domain Services</text>
-<circle cx="148" cy="497" r="4" fill="#EF5B54"/>
-<text x="164" y="503" font-family="Arial" font-size="18" fill="#243142">Agents + prompts</text>
-<circle cx="148" cy="527" r="4" fill="#EF5B54"/>
-<text x="164" y="533" font-family="Arial" font-size="18" fill="#243142">RAG adapter</text>
-<circle cx="148" cy="557" r="4" fill="#EF5B54"/>
-<text x="164" y="563" font-family="Arial" font-size="18" fill="#243142">3D pipeline</text>
-<circle cx="148" cy="587" r="4" fill="#EF5B54"/>
-<text x="164" y="593" font-family="Arial" font-size="18" fill="#243142">Document generator</text>
-<rect x="827" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Validated Runtime</text>
-<circle cx="853" cy="497" r="4" fill="#EF5B54"/>
-<text x="869" y="503" font-family="Arial" font-size="18" fill="#243142">Notebook port</text>
-<circle cx="853" cy="527" r="4" fill="#EF5B54"/>
-<text x="869" y="533" font-family="Arial" font-size="18" fill="#243142">Inventory planner</text>
-<circle cx="853" cy="557" r="4" fill="#EF5B54"/>
-<text x="869" y="563" font-family="Arial" font-size="18" fill="#243142">Model registry</text>
-<circle cx="853" cy="587" r="4" fill="#EF5B54"/>
-<text x="869" y="593" font-family="Arial" font-size="18" fill="#243142">Instruction renderer</text>
-<line x1="772" y1="242" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">HTTP</text>
-<line x1="1152" y1="345" x2="447" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">orchestrates</text>
-<line x1="772" y1="512" x2="827" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">physicalizes</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">C4 Level 2 - Application Containers and Components</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">The deployable application boundary and the responsibility of each major runtime component.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="461" height="1180" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Presentation container</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Streamlit web application</text>
+<rect x="527" y="180" width="461" height="1180" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="527" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="545" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Application container</text>
+<text x="545" y="248" font-family="Arial" font-size="15" fill="#667085">FastAPI orchestration and authority</text>
+<rect x="1012" y="180" width="461" height="1180" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1012" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1030" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Domain and adapter layer</text>
+<text x="1030" y="248" font-family="Arial" font-size="15" fill="#667085">Focused services behind stable interfaces</text>
+<rect x="1497" y="180" width="461" height="1180" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1497" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1515" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">State and artifacts</text>
+<text x="1515" y="248" font-family="Arial" font-size="15" fill="#667085">Runtime persistence boundaries</text>
+<line x1="272" y1="478" x2="272" y2="500" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="212" y="469" width="120" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="272" y="491" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">user actions</text>
+<line x1="485" y1="600" x2="545" y2="370" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="431" y="465" width="168" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="487" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">loopback HTTP/JSON</text>
+<line x1="757" y1="471" x2="757" y2="493" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="669" y="462" width="176" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="484" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">read/write workflow</text>
+<line x1="757" y1="471" x2="757" y2="723" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="685" y="577" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="599" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">submit and poll</text>
+<line x1="970" y1="597" x2="1515" y2="357" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1178" y="457" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="479" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">session state</text>
+<line x1="970" y1="810" x2="1515" y2="553" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1142" y="661" width="200" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="683" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">artifacts and progress</text>
+<line x1="757" y1="919" x2="1242" y2="471" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="927" y="675" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="999" y="697" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">grounding query</text>
+<line x1="970" y1="1019" x2="1030" y2="580" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="779" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="801" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">generation</text>
+<line x1="970" y1="810" x2="1030" y2="789" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="779" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="801" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">3D stages</text>
+<line x1="1242" y1="890" x2="1242" y2="912" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1178" y="881" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="903" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">physical plan</text>
+<line x1="970" y1="810" x2="1030" y2="1235" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="896" y="1002" width="208" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="1024" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approved bundle context</text>
+<line x1="1455" y1="370" x2="1515" y2="762" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1377" y="546" width="216" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1485" y="568" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">vector and policy lookup</text>
+<rect x="60" y="270" width="425" height="208" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Teacher workflow UI</text>
+<rect x="401" y="280" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="437" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="81" cy="342" r="4" fill="#2F7F8D"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">Six-step rail and checkpoints</text>
+<circle cx="81" cy="376" r="4" fill="#2F7F8D"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Planning conversation</text>
+<circle cx="81" cy="410" r="4" fill="#2F7F8D"/>
+<text x="94" y="417" font-family="Arial" font-size="18" fill="#243142">Visual model and segment review</text>
+<circle cx="81" cy="444" r="4" fill="#2F7F8D"/>
+<text x="94" y="451" font-family="Arial" font-size="18" fill="#243142">Document preview and download</text>
+<rect x="60" y="500" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="76" y="532" font-family="Arial" font-size="22" font-weight="700" fill="#243142">API client and poller</text>
+<rect x="392" y="510" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="433" y="529" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="81" cy="572" r="4" fill="#7A9E9F"/>
+<text x="94" y="579" font-family="Arial" font-size="18" fill="#243142">Session-scoped HTTP calls</text>
+<circle cx="81" cy="606" r="4" fill="#7A9E9F"/>
+<text x="94" y="613" font-family="Arial" font-size="18" fill="#243142">Long-job progress polling</text>
+<circle cx="81" cy="640" r="4" fill="#7A9E9F"/>
+<text x="94" y="647" font-family="Arial" font-size="18" fill="#243142">Renders API state; does not own</text>
+<text x="94" y="674" font-family="Arial" font-size="18" fill="#243142">gates</text>
+<rect x="545" y="270" width="425" height="201" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="561" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Session API routers</text>
+<rect x="886" y="280" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="922" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="566" cy="342" r="4" fill="#2F7F8D"/>
+<text x="579" y="349" font-family="Arial" font-size="18" fill="#243142">Upload, message, confirm</text>
+<circle cx="566" cy="376" r="4" fill="#2F7F8D"/>
+<text x="579" y="383" font-family="Arial" font-size="18" fill="#243142">Model, segments, build,</text>
+<text x="579" y="410" font-family="Arial" font-size="18" fill="#243142">documents</text>
+<circle cx="566" cy="437" r="4" fill="#2F7F8D"/>
+<text x="579" y="444" font-family="Arial" font-size="18" fill="#243142">Download and runtime endpoints</text>
+<rect x="545" y="493" width="425" height="208" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="525" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Session and readiness service</text>
+<rect x="877" y="503" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="522" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="565" r="4" fill="#7A9E9F"/>
+<text x="579" y="572" font-family="Arial" font-size="18" fill="#243142">Planning contract</text>
+<circle cx="566" cy="599" r="4" fill="#7A9E9F"/>
+<text x="579" y="606" font-family="Arial" font-size="18" fill="#243142">Confirmation gates</text>
+<circle cx="566" cy="633" r="4" fill="#7A9E9F"/>
+<text x="579" y="640" font-family="Arial" font-size="18" fill="#243142">Artifact generation IDs</text>
+<circle cx="566" cy="667" r="4" fill="#7A9E9F"/>
+<text x="579" y="674" font-family="Arial" font-size="18" fill="#243142">Stale-output invalidation</text>
+<rect x="545" y="723" width="425" height="174" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="755" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Background job manager</text>
+<rect x="877" y="733" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="752" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="795" r="4" fill="#7A9E9F"/>
+<text x="579" y="802" font-family="Arial" font-size="18" fill="#243142">Threaded long-running jobs</text>
+<circle cx="566" cy="829" r="4" fill="#7A9E9F"/>
+<text x="579" y="836" font-family="Arial" font-size="18" fill="#243142">Progress events and status</text>
+<circle cx="566" cy="863" r="4" fill="#7A9E9F"/>
+<text x="579" y="870" font-family="Arial" font-size="18" fill="#243142">Normalized provider errors</text>
+<rect x="545" y="919" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="951" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Agent orchestration</text>
+<rect x="877" y="929" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="948" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="991" r="4" fill="#7A9E9F"/>
+<text x="579" y="998" font-family="Arial" font-size="18" fill="#243142">Story analysis</text>
+<circle cx="566" cy="1025" r="4" fill="#7A9E9F"/>
+<text x="579" y="1032" font-family="Arial" font-size="18" fill="#243142">Planning coach and readiness</text>
+<text x="579" y="1059" font-family="Arial" font-size="18" fill="#243142">guard</text>
+<circle cx="566" cy="1086" r="4" fill="#7A9E9F"/>
+<text x="579" y="1093" font-family="Arial" font-size="18" fill="#243142">Prompt and document agents</text>
+<rect x="1030" y="270" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1046" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Retrieval adapter</text>
+<rect x="1362" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1403" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1051" cy="342" r="4" fill="#7A9E9F"/>
+<text x="1064" y="349" font-family="Arial" font-size="18" fill="#243142">Grade-band normalization</text>
+<circle cx="1051" cy="376" r="4" fill="#7A9E9F"/>
+<text x="1064" y="383" font-family="Arial" font-size="18" fill="#243142">Cloud SQL or service retrieval</text>
+<circle cx="1051" cy="410" r="4" fill="#7A9E9F"/>
+<text x="1064" y="417" font-family="Arial" font-size="18" fill="#243142">Evidence trace and static</text>
+<text x="1064" y="444" font-family="Arial" font-size="18" fill="#243142">fallback</text>
+<rect x="1030" y="493" width="425" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="525" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Vertex Gemini adapter</text>
+<rect x="1353" y="503" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="522" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="565" r="4" fill="#EF5B54"/>
+<text x="1064" y="572" font-family="Arial" font-size="18" fill="#243142">Structured text/JSON generation</text>
+<circle cx="1051" cy="599" r="4" fill="#EF5B54"/>
+<text x="1064" y="606" font-family="Arial" font-size="18" fill="#243142">Primary/fallback models</text>
+<circle cx="1051" cy="633" r="4" fill="#EF5B54"/>
+<text x="1064" y="640" font-family="Arial" font-size="18" fill="#243142">ADC or approved key auth</text>
+<rect x="1030" y="689" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1046" y="721" font-family="Arial" font-size="22" font-weight="700" fill="#243142">3D orchestration</text>
+<rect x="1362" y="699" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1403" y="718" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1051" cy="761" r="4" fill="#7A9E9F"/>
+<text x="1064" y="768" font-family="Arial" font-size="18" fill="#243142">Rodin and Bang clients</text>
+<circle cx="1051" cy="795" r="4" fill="#7A9E9F"/>
+<text x="1064" y="802" font-family="Arial" font-size="18" fill="#243142">Notebook physicalization</text>
+<circle cx="1051" cy="829" r="4" fill="#7A9E9F"/>
+<text x="1064" y="836" font-family="Arial" font-size="18" fill="#243142">Bounded automatic</text>
+<text x="1064" y="863" font-family="Arial" font-size="18" fill="#243142">simplification</text>
+<rect x="1030" y="912" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1046" y="944" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Validated BrickSmart runtime</text>
+<rect x="1362" y="922" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1403" y="941" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1051" cy="984" r="4" fill="#7A9E9F"/>
+<text x="1064" y="991" font-family="Arial" font-size="18" fill="#243142">Catalog and geometry mapping</text>
+<circle cx="1051" cy="1018" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1025" font-family="Arial" font-size="18" fill="#243142">Inventory-aware planning</text>
+<circle cx="1051" cy="1052" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1059" font-family="Arial" font-size="18" fill="#243142">True step renderer and</text>
+<text x="1064" y="1086" font-family="Arial" font-size="18" fill="#243142">validation</text>
+<rect x="1030" y="1135" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1046" y="1167" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Publication service</text>
+<rect x="1362" y="1145" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1403" y="1164" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1051" cy="1207" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1214" font-family="Arial" font-size="18" fill="#243142">Three audience-specific</text>
+<text x="1064" y="1241" font-family="Arial" font-size="18" fill="#243142">documents</text>
+<circle cx="1051" cy="1268" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1275" font-family="Arial" font-size="18" fill="#243142">Content/image validation</text>
+<circle cx="1051" cy="1302" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1309" font-family="Arial" font-size="18" fill="#243142">PDF and source artifacts</text>
+<rect x="1515" y="270" width="425" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1531" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">In-memory session store</text>
+<rect x="1829" y="280" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1879" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1536" cy="342" r="4" fill="#7C5AA6"/>
+<text x="1549" y="349" font-family="Arial" font-size="18" fill="#243142">Teacher workflow state</text>
+<circle cx="1536" cy="376" r="4" fill="#7C5AA6"/>
+<text x="1549" y="383" font-family="Arial" font-size="18" fill="#243142">Job status and approvals</text>
+<circle cx="1536" cy="410" r="4" fill="#7C5AA6"/>
+<text x="1549" y="417" font-family="Arial" font-size="18" fill="#243142">Lost on instance replacement</text>
+<rect x="1515" y="466" width="425" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1531" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Ephemeral work directory</text>
+<rect x="1829" y="476" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1879" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1536" cy="538" r="4" fill="#7C5AA6"/>
+<text x="1549" y="545" font-family="Arial" font-size="18" fill="#243142">OBJ and segmented assets</text>
+<circle cx="1536" cy="572" r="4" fill="#7C5AA6"/>
+<text x="1549" y="579" font-family="Arial" font-size="18" fill="#243142">Notebook images and CSVs</text>
+<circle cx="1536" cy="606" r="4" fill="#7C5AA6"/>
+<text x="1549" y="613" font-family="Arial" font-size="18" fill="#243142">Generated PDFs</text>
+<rect x="1515" y="662" width="425" height="201" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1531" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Durable corpus stores</text>
+<rect x="1829" y="672" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1879" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1536" cy="734" r="4" fill="#7C5AA6"/>
+<text x="1549" y="741" font-family="Arial" font-size="18" fill="#243142">Cloud SQL pgvector</text>
+<circle cx="1536" cy="768" r="4" fill="#7C5AA6"/>
+<text x="1549" y="775" font-family="Arial" font-size="18" fill="#243142">GCS source and processed assets</text>
+<circle cx="1536" cy="802" r="4" fill="#7C5AA6"/>
+<text x="1549" y="809" font-family="Arial" font-size="18" fill="#243142">Not the session system of</text>
+<text x="1549" y="836" font-family="Arial" font-size="18" fill="#243142">record</text>
+<rect x="150" y="1394" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1413" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1394" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1413" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1394" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1413" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1394" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1413" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1394" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1413" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1394" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1413" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1394" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1413" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1465" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>

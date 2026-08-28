@@ -1,12 +1,43 @@
 flowchart LR
-  N0["Approved Intent<br/>Object<br/>Moving/static parts<br/>Kit limits"]
-  N1["Rodin<br/>Text-to-3D OBJ<br/>Teacher preview"]
-  N2["Bang<br/>Semantic segments<br/>OBJ parts"]
-  N3["Notebook Port<br/>Voxelize<br/>Merge/clean<br/>Contacts/connectors<br/>Step renders"]
-  N4["Validated Planner<br/>Catalog mapping<br/>Inventory feasibility<br/>Instruction status"]
-  N0 -->|prompt| N1
-  N1 -->|approved OBJ| N2
-  N2 -->|segments| N3
-  N3 -->|physical plan| N4
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% The geometry, semantic, connector, inventory, and teacher-review path from approved intent to true build steps.
+  subgraph S0["Approved design intent - Teacher-approved semantic contract"]
+    direction TB
+    intent["model_task_context.json<br/>Object type and broad required parts<br/>One or more explicit movement intents<br/>Static parts and connector intent<br/>Inventory basis and build budgets"]:::artifact
+    guard["Pre-generation build guard<br/>Chunky 2x2-compatible geometry<br/>Max semantic and moving parts<br/>Broad contacts; no micro-details<br/>Rodin prompt length and safety checks"]:::decision
+  end
+  subgraph S1["External geometry services - Probabilistic 3D generation"]
+    direction TB
+    rodin["Rodin generation<br/>Submit visual prompt<br/>Poll asynchronous task<br/>Download preview and OBJ<br/>Teacher approves or regenerates"]:::external
+    bang["Bang segmentation<br/>Runs only on current approved OBJ<br/>Returns semantic OBJ regions<br/>Source-segment count measured early<br/>Task ID tied to model generation"]:::external
+  end
+  subgraph S2["Notebook-derived physicalization - Deterministic geometry processing with bounded tuning"]
+    direction TB
+    voxel["Voxelize and consolidate<br/>Sample occupancy at candidate sizes<br/>Protect moving/required regions<br/>Merge compatible static fragments<br/>Track preservation and budgets"]:::service
+    contacts["Interfaces and connectors<br/>Detect adjacent segment contacts<br/>Map teacher movement intent<br/>Infer axle/pivot/static candidates<br/>Emit editable CSV tables"]:::service
+    renders["Review artifacts<br/>Color-coded segment visualization<br/>Eight-view placement sheet<br/>Final block approximation<br/>Per-step isometric/multiview images"]:::artifact
+  end
+  subgraph S3["Validated BrickSmart planner - Catalog and finite-kit authority"]
+    direction TB
+    catalog["Catalog and inventory mapping<br/>Map regions to allowed block types<br/>Compile standard-kit ledger<br/>Apply symmetry and functional rules"]:::service
+    plan["Placement and sequence planning<br/>Allocate rows/columns and segments<br/>Validate geometry and inventory<br/>Generate true construction order"]:::service
+    status["Planner outcome<br/>VALIDATED or review-ready status<br/>INFEASIBLE/INCOMPLETE diagnostics<br/>Inventory, shortages, steps, HTML<br/>Teacher approval only if approvable"]:::decision
+  end
+  intent -->|validate| guard
+  guard -->|constrained prompt| rodin
+  rodin -->|approved current OBJ| bang
+  bang -->|segmented geometry| voxel
+  voxel -->|physical regions| contacts
+  contacts -->|tables + mappings| renders
+  voxel -->|voxel plan| catalog
+  contacts -->|functional interfaces| catalog
+  catalog -->|allowed parts + ledger| plan
+  plan -->|validated result| status
+  status -.->|true steps / diagnostics| renders
+  status -.->|bounded regeneration guidance| guard
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

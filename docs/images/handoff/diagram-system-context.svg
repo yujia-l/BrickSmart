@@ -1,56 +1,134 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1036" viewBox="0 0 2000 1036">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">System Context</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="122" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Teacher</text>
-<circle cx="148" cy="227" r="4" fill="#EF5B54"/>
-<text x="164" y="233" font-family="Arial" font-size="18" fill="#243142">Story/PDF</text>
-<circle cx="148" cy="257" r="4" fill="#EF5B54"/>
-<text x="164" y="263" font-family="Arial" font-size="18" fill="#243142">Planning decisions</text>
-<circle cx="148" cy="287" r="4" fill="#EF5B54"/>
-<text x="164" y="293" font-family="Arial" font-size="18" fill="#243142">Approvals</text>
-<rect x="827" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">KidSpark AI</text>
-<circle cx="853" cy="227" r="4" fill="#EF5B54"/>
-<text x="869" y="233" font-family="Arial" font-size="18" fill="#243142">Guided workflow</text>
-<circle cx="853" cy="257" r="4" fill="#EF5B54"/>
-<text x="869" y="263" font-family="Arial" font-size="18" fill="#243142">Evidence-grounded coaching</text>
-<circle cx="853" cy="287" r="4" fill="#EF5B54"/>
-<text x="869" y="293" font-family="Arial" font-size="18" fill="#243142">Validated outputs</text>
-<rect x="122" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">External Services</text>
-<circle cx="148" cy="497" r="4" fill="#EF5B54"/>
-<text x="164" y="503" font-family="Arial" font-size="18" fill="#243142">Vertex AI</text>
-<circle cx="148" cy="527" r="4" fill="#EF5B54"/>
-<text x="164" y="533" font-family="Arial" font-size="18" fill="#243142">Cloud SQL + pgvector</text>
-<circle cx="148" cy="557" r="4" fill="#EF5B54"/>
-<text x="164" y="563" font-family="Arial" font-size="18" fill="#243142">Hyper3D Rodin / Bang</text>
-<rect x="827" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Classroom</text>
-<circle cx="853" cy="497" r="4" fill="#EF5B54"/>
-<text x="869" y="503" font-family="Arial" font-size="18" fill="#243142">BrickSmart build</text>
-<circle cx="853" cy="527" r="4" fill="#EF5B54"/>
-<text x="869" y="533" font-family="Arial" font-size="18" fill="#243142">Lesson plan</text>
-<circle cx="853" cy="557" r="4" fill="#EF5B54"/>
-<text x="869" y="563" font-family="Arial" font-size="18" fill="#243142">Activity guide</text>
-<circle cx="853" cy="587" r="4" fill="#EF5B54"/>
-<text x="869" y="593" font-family="Arial" font-size="18" fill="#243142">Slide companion</text>
-<line x1="772" y1="242" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">plans</text>
-<line x1="1152" y1="345" x2="447" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">calls</text>
-<line x1="772" y1="512" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">returns</text>
-<line x1="1152" y1="345" x2="1152" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="1098" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="1152" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">publishes</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">C4 Level 1 - System Context</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">Who uses KidSpark AI, what value crosses the system boundary, and which external platforms it depends on.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="622" height="680" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">People and classroom</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Primary users and beneficiaries</text>
+<rect x="688" y="180" width="622" height="680" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="688" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="706" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">System of interest</text>
+<text x="706" y="248" font-family="Arial" font-size="15" fill="#667085">KidSpark AI / BrickSmart</text>
+<rect x="1334" y="180" width="622" height="680" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1334" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="1352" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">External systems</text>
+<text x="1352" y="248" font-family="Arial" font-size="15" fill="#667085">Managed platforms and specialist services</text>
+<line x1="646" y1="357" x2="706" y2="391" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="596" y="345" width="160" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="367" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">story, decisions,</text>
+<text x="676" y="384" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approvals</text>
+<line x1="706" y1="391" x2="646" y2="357" stroke="#667085" stroke-width="3" stroke-dasharray="12 8" marker-end="url(#arrow)"/>
+<rect x="588" y="345" width="176" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="367" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">previews, evidence,</text>
+<text x="676" y="384" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">documents</text>
+<line x1="706" y1="391" x2="646" y2="553" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="584" y="443" width="184" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="465" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">classroom lesson and</text>
+<text x="676" y="482" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">build</text>
+<line x1="646" y1="749" x2="706" y2="391" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="580" y="550" width="192" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="572" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">corpus and operations</text>
+<line x1="1292" y1="391" x2="1352" y2="357" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1254" y="345" width="136" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="367" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">generation and</text>
+<text x="1322" y="384" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">embeddings</text>
+<line x1="1292" y1="391" x2="1352" y2="553" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1222" y="443" width="200" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="465" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">SQL, objects, secrets,</text>
+<text x="1322" y="482" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">logs</text>
+<line x1="1292" y1="391" x2="1352" y2="749" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1226" y="550" width="192" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="572" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">3D jobs and artifacts</text>
+<rect x="60" y="270" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Teacher</text>
+<rect x="570" y="280" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="342" r="4" fill="#E8B84C"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">Uploads or types a story</text>
+<circle cx="81" cy="376" r="4" fill="#E8B84C"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Plans and approves each checkpoint</text>
+<circle cx="81" cy="410" r="4" fill="#E8B84C"/>
+<text x="94" y="417" font-family="Arial" font-size="18" fill="#243142">Downloads the lesson bundle</text>
+<rect x="60" y="466" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Students and classroom</text>
+<rect x="570" y="476" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="538" r="4" fill="#E8B84C"/>
+<text x="94" y="545" font-family="Arial" font-size="18" fill="#243142">Read, discuss, build, test</text>
+<circle cx="81" cy="572" r="4" fill="#E8B84C"/>
+<text x="94" y="579" font-family="Arial" font-size="18" fill="#243142">Use the activity guide and slides</text>
+<circle cx="81" cy="606" r="4" fill="#E8B84C"/>
+<text x="94" y="613" font-family="Arial" font-size="18" fill="#243142">Assemble validated BrickSmart model</text>
+<rect x="60" y="662" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Jacobs research and operations team</text>
+<rect x="570" y="672" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="734" r="4" fill="#E8B84C"/>
+<text x="94" y="741" font-family="Arial" font-size="18" fill="#243142">Maintains curriculum corpus</text>
+<circle cx="81" cy="768" r="4" fill="#E8B84C"/>
+<text x="94" y="775" font-family="Arial" font-size="18" fill="#243142">Operates deployment and ingestion</text>
+<circle cx="81" cy="802" r="4" fill="#E8B84C"/>
+<text x="94" y="809" font-family="Arial" font-size="18" fill="#243142">Reviews outcomes and limitations</text>
+<rect x="706" y="270" width="586" height="242" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="722" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">KidSpark AI</text>
+<rect x="1208" y="280" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="1244" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="727" cy="342" r="4" fill="#2F7F8D"/>
+<text x="740" y="349" font-family="Arial" font-size="18" fill="#243142">Teacher-guided six-step workflow</text>
+<circle cx="727" cy="376" r="4" fill="#2F7F8D"/>
+<text x="740" y="383" font-family="Arial" font-size="18" fill="#243142">Evidence-grounded lesson coaching</text>
+<circle cx="727" cy="410" r="4" fill="#2F7F8D"/>
+<text x="740" y="417" font-family="Arial" font-size="18" fill="#243142">3D-to-physical build planning</text>
+<circle cx="727" cy="444" r="4" fill="#2F7F8D"/>
+<text x="740" y="451" font-family="Arial" font-size="18" fill="#243142">Three coordinated classroom PDFs</text>
+<circle cx="727" cy="478" r="4" fill="#2F7F8D"/>
+<text x="740" y="485" font-family="Arial" font-size="18" fill="#243142">Human approval before consequential stages</text>
+<rect x="1352" y="270" width="586" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1368" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Google Vertex AI</text>
+<rect x="1836" y="280" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1881" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1373" cy="342" r="4" fill="#EF5B54"/>
+<text x="1386" y="349" font-family="Arial" font-size="18" fill="#243142">Gemini generation</text>
+<circle cx="1373" cy="376" r="4" fill="#EF5B54"/>
+<text x="1386" y="383" font-family="Arial" font-size="18" fill="#243142">Text embeddings</text>
+<circle cx="1373" cy="410" r="4" fill="#EF5B54"/>
+<text x="1386" y="417" font-family="Arial" font-size="18" fill="#243142">Primary and fallback model routing</text>
+<rect x="1352" y="466" width="586" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1368" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">GCP data platform</text>
+<rect x="1827" y="476" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1877" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1373" cy="538" r="4" fill="#7C5AA6"/>
+<text x="1386" y="545" font-family="Arial" font-size="18" fill="#243142">Cloud SQL PostgreSQL + pgvector</text>
+<circle cx="1373" cy="572" r="4" fill="#7C5AA6"/>
+<text x="1386" y="579" font-family="Arial" font-size="18" fill="#243142">GCS raw and processed corpus</text>
+<circle cx="1373" cy="606" r="4" fill="#7C5AA6"/>
+<text x="1386" y="613" font-family="Arial" font-size="18" fill="#243142">Secret Manager and Cloud Logging</text>
+<rect x="1352" y="662" width="586" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1368" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Hyper3D platform</text>
+<rect x="1836" y="672" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1881" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1373" cy="734" r="4" fill="#EF5B54"/>
+<text x="1386" y="741" font-family="Arial" font-size="18" fill="#243142">Rodin text-to-3D generation</text>
+<circle cx="1373" cy="768" r="4" fill="#EF5B54"/>
+<text x="1386" y="775" font-family="Arial" font-size="18" fill="#243142">Bang semantic segmentation</text>
+<circle cx="1373" cy="802" r="4" fill="#EF5B54"/>
+<text x="1386" y="809" font-family="Arial" font-size="18" fill="#243142">Asynchronous task polling</text>
+<rect x="150" y="894" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="913" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="894" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="913" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="894" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="913" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="894" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="913" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="894" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="913" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="894" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="913" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="894" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="913" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="965" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>

@@ -9,6 +9,7 @@ env/
 .env
 .env.*
 !.env.example
+example.env
 *service-account*.json
 *credentials*.json
 kidspark-*.json

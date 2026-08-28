@@ -1,0 +1,47 @@
+flowchart LR
+  %% The main durable and ephemeral records that connect teacher intent, evidence, 3D generations, validated steps, and documents.
+  subgraph S0["Teacher workflow domain - Ephemeral session authority"]
+    direction TB
+    session["Session<br/>session_id, stage, timestamps<br/>current generation IDs<br/>progress and approvals"]:::datastore
+    planning["PlanningState<br/>grade, duration, concept, goals<br/>build object and constraints<br/>moving/static parts, literacy, SEL"]:::datastore
+    evidencepack["EvidenceTrace<br/>document/node identity<br/>grade band and relevance<br/>retrieval mode and excerpt"]:::artifact
+  end
+  subgraph S1["Knowledge domain - Durable Cloud SQL and GCS corpus"]
+    direction TB
+    dbbundle["document_bundle<br/>bundle identity and metadata<br/>source/processed GCS URIs<br/>processing version/status"]:::datastore
+    dbnode["pdf_node<br/>page/node content and role<br/>grade_band<br/>embedding vector(3072)<br/>bundle foreign key"]:::datastore
+    dbrule["standard_rules<br/>framework/policy statement<br/>grade/applicability metadata<br/>source lineage"]:::datastore
+  end
+  subgraph S2["3D and physical build domain - Generation-scoped artifacts"]
+    direction TB
+    modelgen["ModelGeneration<br/>Rodin prompt and task ID<br/>preview/model artifact<br/>approval and generation number"]:::artifact
+    segmentgen["SegmentGeneration<br/>Bang task and segment assets<br/>labels, interfaces, movement map<br/>voxel attempts and diagnostics"]:::artifact
+    buildplan["ValidatedBuildPlan<br/>status and inventory feasibility<br/>catalog-mapped parts<br/>true instruction steps<br/>rendered step images"]:::artifact
+  end
+  subgraph S3["Publication domain - Teacher-downloadable outputs"]
+    direction TB
+    bundleout["LessonBundle<br/>approved context snapshot<br/>generation/version state<br/>three document records"]:::artifact
+    doc["GeneratedDocument<br/>lesson_plan | activity_guide | slide_companion<br/>markdown/JSON/PDF paths<br/>validation and teacher approval"]:::artifact
+    files["Artifact files<br/>OBJ/GLB and segmented models<br/>PNGs, CSVs, JSON<br/>PDFs in ephemeral work directory"]:::datastore
+  end
+  session -->|1 owns 1| planning
+  planning -->|references many| evidencepack
+  evidencepack -->|traces to| dbnode
+  dbbundle -->|1 contains many| dbnode
+  dbrule -->|grounds| evidencepack
+  session -->|creates versions| modelgen
+  modelgen -->|approved model only| segmentgen
+  segmentgen -->|physical plan| buildplan
+  buildplan -->|approved source| bundleout
+  bundleout -->|contains three| doc
+  modelgen -->|writes| files
+  segmentgen -->|writes| files
+  buildplan -->|writes| files
+  doc -->|writes| files
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

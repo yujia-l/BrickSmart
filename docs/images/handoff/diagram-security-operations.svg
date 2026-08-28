@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1273" viewBox="0 0 2000 1273">
+<rect width="100%" height="100%" fill="white"/>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">Security, Observability, and Recovery Architecture</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">Cross-cutting controls for identity, secrets, untrusted content, monitoring, ephemeral state, and operator recovery.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="461" height="917" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Identity and trust</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Who may call what</text>
+<rect x="527" y="180" width="461" height="917" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="527" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="545" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Application controls</text>
+<text x="545" y="248" font-family="Arial" font-size="15" fill="#667085">Prevent unsafe state or content transitions</text>
+<rect x="1012" y="180" width="461" height="917" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1012" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1030" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Telemetry and operations</text>
+<text x="1030" y="248" font-family="Arial" font-size="15" fill="#667085">Diagnose without leaking content</text>
+<rect x="1497" y="180" width="461" height="917" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1497" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1515" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Backup and recovery</text>
+<text x="1515" y="248" font-family="Arial" font-size="15" fill="#667085">Current posture and hardening path</text>
+<line x1="272" y1="498" x2="272" y2="520" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="188" y="489" width="168" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="272" y="511" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">deploys/configures</text>
+<line x1="272" y1="728" x2="272" y2="750" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="180" y="719" width="184" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="272" y="741" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">authorized API calls</text>
+<line x1="485" y1="624" x2="545" y2="843" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="439" y="713" width="152" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="735" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">runtime identity</text>
+<line x1="970" y1="370" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="372" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="394" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">safe events</text>
+<line x1="970" y1="607" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="912" y="490" width="176" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="512" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">validation outcomes</text>
+<line x1="970" y1="843" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="908" y="608" width="184" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="630" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">access metadata only</text>
+<line x1="1242" y1="559" x2="1242" y2="581" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="550" width="184" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="572" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">metrics and patterns</text>
+<line x1="1242" y1="838" x2="1242" y2="816" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1158" y="807" width="168" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="829" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">readiness failures</text>
+<line x1="1727" y1="525" x2="1727" y2="770" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1668" y="627" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1727" y="649" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">restore</text>
+<line x1="1727" y1="748" x2="1727" y2="770" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1655" y="739" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1727" y="761" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">recreate / warn</text>
+<rect x="60" y="270" width="425" height="228" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Human access</text>
+<rect x="409" y="280" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="441" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="342" r="4" fill="#E8B84C"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">Research-team GCP IAM</text>
+<circle cx="81" cy="376" r="4" fill="#E8B84C"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Optional future institutional</text>
+<text x="94" y="410" font-family="Arial" font-size="18" fill="#243142">sign-in</text>
+<circle cx="81" cy="437" r="4" fill="#E8B84C"/>
+<text x="94" y="444" font-family="Arial" font-size="18" fill="#243142">Separate admin ingestion from</text>
+<text x="94" y="471" font-family="Arial" font-size="18" fill="#243142">classroom use</text>
+<rect x="60" y="520" width="425" height="208" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="76" y="552" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Cloud Run service account</text>
+<rect x="401" y="530" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="437" y="549" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="81" cy="592" r="4" fill="#2F7F8D"/>
+<text x="94" y="599" font-family="Arial" font-size="18" fill="#243142">Vertex AI User</text>
+<circle cx="81" cy="626" r="4" fill="#2F7F8D"/>
+<text x="94" y="633" font-family="Arial" font-size="18" fill="#243142">Cloud SQL Client</text>
+<circle cx="81" cy="660" r="4" fill="#2F7F8D"/>
+<text x="94" y="667" font-family="Arial" font-size="18" fill="#243142">GCS object access</text>
+<circle cx="81" cy="694" r="4" fill="#2F7F8D"/>
+<text x="94" y="701" font-family="Arial" font-size="18" fill="#243142">Secret accessor and log writer</text>
+<rect x="60" y="750" width="425" height="201" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="76" y="782" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Third-party boundary</text>
+<rect x="383" y="760" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="428" y="779" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="81" cy="822" r="4" fill="#EF5B54"/>
+<text x="94" y="829" font-family="Arial" font-size="18" fill="#243142">Hyper3D credential only</text>
+<circle cx="81" cy="856" r="4" fill="#EF5B54"/>
+<text x="94" y="863" font-family="Arial" font-size="18" fill="#243142">No student PII in 3D prompts</text>
+<circle cx="81" cy="890" r="4" fill="#EF5B54"/>
+<text x="94" y="897" font-family="Arial" font-size="18" fill="#243142">Review processing and retention</text>
+<text x="94" y="924" font-family="Arial" font-size="18" fill="#243142">terms</text>
+<rect x="545" y="270" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">File and path controls</text>
+<rect x="877" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="342" r="4" fill="#7A9E9F"/>
+<text x="579" y="349" font-family="Arial" font-size="18" fill="#243142">MIME/extension and size checks</text>
+<circle cx="566" cy="376" r="4" fill="#7A9E9F"/>
+<text x="579" y="383" font-family="Arial" font-size="18" fill="#243142">Safe filenames and isolated job</text>
+<text x="579" y="410" font-family="Arial" font-size="18" fill="#243142">dirs</text>
+<circle cx="566" cy="437" r="4" fill="#7A9E9F"/>
+<text x="579" y="444" font-family="Arial" font-size="18" fill="#243142">Known-artifact download mapping</text>
+<rect x="545" y="493" width="425" height="228" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="525" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Prompt and evidence controls</text>
+<rect x="877" y="503" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="522" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="565" r="4" fill="#7A9E9F"/>
+<text x="579" y="572" font-family="Arial" font-size="18" fill="#243142">Retrieved text treated as</text>
+<text x="579" y="599" font-family="Arial" font-size="18" fill="#243142">untrusted</text>
+<circle cx="566" cy="626" r="4" fill="#7A9E9F"/>
+<text x="579" y="633" font-family="Arial" font-size="18" fill="#243142">Structured output validation</text>
+<circle cx="566" cy="660" r="4" fill="#7A9E9F"/>
+<text x="579" y="667" font-family="Arial" font-size="18" fill="#243142">Deterministic readiness and</text>
+<text x="579" y="694" font-family="Arial" font-size="18" fill="#243142">stage gates</text>
+<rect x="545" y="743" width="425" height="201" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="775" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Secret handling</text>
+<rect x="877" y="753" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="772" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="815" r="4" fill="#7A9E9F"/>
+<text x="579" y="822" font-family="Arial" font-size="18" fill="#243142">Secret Manager references</text>
+<circle cx="566" cy="849" r="4" fill="#7A9E9F"/>
+<text x="579" y="856" font-family="Arial" font-size="18" fill="#243142">No secrets in Git, logs,</text>
+<text x="579" y="883" font-family="Arial" font-size="18" fill="#243142">screenshots</text>
+<circle cx="566" cy="910" r="4" fill="#7A9E9F"/>
+<text x="579" y="917" font-family="Arial" font-size="18" fill="#243142">ADC preferred over key files</text>
+<rect x="1030" y="270" width="425" height="289" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Structured logs</text>
+<rect x="1353" y="280" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="342" r="4" fill="#EF5B54"/>
+<text x="1064" y="349" font-family="Arial" font-size="18" fill="#243142">request/session correlation</text>
+<circle cx="1051" cy="376" r="4" fill="#EF5B54"/>
+<text x="1064" y="383" font-family="Arial" font-size="18" fill="#243142">stage, provider, duration,</text>
+<text x="1064" y="410" font-family="Arial" font-size="18" fill="#243142">fallback</text>
+<circle cx="1051" cy="437" r="4" fill="#EF5B54"/>
+<text x="1064" y="444" font-family="Arial" font-size="18" fill="#243142">auto-recovery and planner</text>
+<text x="1064" y="471" font-family="Arial" font-size="18" fill="#243142">status</text>
+<circle cx="1051" cy="498" r="4" fill="#EF5B54"/>
+<text x="1064" y="505" font-family="Arial" font-size="18" fill="#243142">exception class; no</text>
+<text x="1064" y="532" font-family="Arial" font-size="18" fill="#243142">story/prompt bodies</text>
+<rect x="1030" y="581" width="425" height="235" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="613" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Operational signals</text>
+<rect x="1353" y="591" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="610" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="653" r="4" fill="#EF5B54"/>
+<text x="1064" y="660" font-family="Arial" font-size="18" fill="#243142">5xx and startup failures</text>
+<circle cx="1051" cy="687" r="4" fill="#EF5B54"/>
+<text x="1064" y="694" font-family="Arial" font-size="18" fill="#243142">DB/retrieval degradation</text>
+<circle cx="1051" cy="721" r="4" fill="#EF5B54"/>
+<text x="1064" y="728" font-family="Arial" font-size="18" fill="#243142">Long model/segment jobs</text>
+<circle cx="1051" cy="755" r="4" fill="#EF5B54"/>
+<text x="1064" y="762" font-family="Arial" font-size="18" fill="#243142">Planner incomplete and download</text>
+<text x="1064" y="789" font-family="Arial" font-size="18" fill="#243142">errors</text>
+<rect x="1030" y="838" width="425" height="235" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1046" y="870" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Health and readiness</text>
+<rect x="1362" y="848" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1403" y="867" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1051" cy="910" r="4" fill="#7A9E9F"/>
+<text x="1064" y="917" font-family="Arial" font-size="18" fill="#243142">Process liveness</text>
+<circle cx="1051" cy="944" r="4" fill="#7A9E9F"/>
+<text x="1064" y="951" font-family="Arial" font-size="18" fill="#243142">Model and database</text>
+<text x="1064" y="978" font-family="Arial" font-size="18" fill="#243142">configuration</text>
+<circle cx="1051" cy="1005" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1012" font-family="Arial" font-size="18" fill="#243142">Retrieval fallback mode</text>
+<circle cx="1051" cy="1039" r="4" fill="#7A9E9F"/>
+<text x="1064" y="1046" font-family="Arial" font-size="18" fill="#243142">Catalog/runtime availability</text>
+<rect x="1515" y="270" width="425" height="255" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1531" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Durable data</text>
+<rect x="1829" y="280" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1879" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1536" cy="342" r="4" fill="#7C5AA6"/>
+<text x="1549" y="349" font-family="Arial" font-size="18" fill="#243142">Cloud SQL backups and PITR</text>
+<text x="1549" y="376" font-family="Arial" font-size="18" fill="#243142">policy</text>
+<circle cx="1536" cy="403" r="4" fill="#7C5AA6"/>
+<text x="1549" y="410" font-family="Arial" font-size="18" fill="#243142">GCS versioning/lifecycle as</text>
+<text x="1549" y="437" font-family="Arial" font-size="18" fill="#243142">configured</text>
+<circle cx="1536" cy="464" r="4" fill="#7C5AA6"/>
+<text x="1549" y="471" font-family="Arial" font-size="18" fill="#243142">Corpus re-ingestion is</text>
+<text x="1549" y="498" font-family="Arial" font-size="18" fill="#243142">reproducible</text>
+<rect x="1515" y="547" width="425" height="201" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1531" y="579" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Ephemeral state risk</text>
+<rect x="1829" y="557" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1879" y="576" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1536" cy="619" r="4" fill="#7C5AA6"/>
+<text x="1549" y="626" font-family="Arial" font-size="18" fill="#243142">In-memory sessions</text>
+<circle cx="1536" cy="653" r="4" fill="#7C5AA6"/>
+<text x="1549" y="660" font-family="Arial" font-size="18" fill="#243142">Container-local 3D and PDFs</text>
+<circle cx="1536" cy="687" r="4" fill="#7C5AA6"/>
+<text x="1549" y="694" font-family="Arial" font-size="18" fill="#243142">Lost when Cloud Run instance is</text>
+<text x="1549" y="721" font-family="Arial" font-size="18" fill="#243142">replaced</text>
+<rect x="1515" y="770" width="425" height="235" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="1531" y="802" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Operator recovery</text>
+<rect x="1838" y="780" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="1883" y="799" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="1536" cy="842" r="4" fill="#3A7D44"/>
+<text x="1549" y="849" font-family="Arial" font-size="18" fill="#243142">Check readiness and logs</text>
+<circle cx="1536" cy="876" r="4" fill="#3A7D44"/>
+<text x="1549" y="883" font-family="Arial" font-size="18" fill="#243142">Rollback Cloud Run revision</text>
+<circle cx="1536" cy="910" r="4" fill="#3A7D44"/>
+<text x="1549" y="917" font-family="Arial" font-size="18" fill="#243142">Restore/reload corpus</text>
+<circle cx="1536" cy="944" r="4" fill="#3A7D44"/>
+<text x="1549" y="951" font-family="Arial" font-size="18" fill="#243142">Future: durable</text>
+<text x="1549" y="978" font-family="Arial" font-size="18" fill="#243142">session/artifact store</text>
+<rect x="150" y="1131" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1150" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1131" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1150" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1131" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1150" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1131" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1150" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1131" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1150" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1131" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1150" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1131" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1150" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1202" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
+</svg>

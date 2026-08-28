@@ -64,105 +64,380 @@ GREEN = "#3A7D44"
 
 
 @dataclass(frozen=True)
+class DiagramNode:
+    key: str
+    title: str
+    items: list[str]
+    kind: str = "service"
+
+
+@dataclass(frozen=True)
+class DiagramSection:
+    title: str
+    subtitle: str
+    nodes: list[DiagramNode]
+
+
+@dataclass(frozen=True)
+class DiagramEdge:
+    source: str
+    target: str
+    label: str
+    dashed: bool = False
+
+
+@dataclass(frozen=True)
 class Diagram:
     slug: str
     title: str
-    lanes: list[tuple[str, list[str]]]
-    arrows: list[tuple[int, int, str]]
+    purpose: str
+    sections: list[DiagramSection]
+    edges: list[DiagramEdge]
 
 
 DIAGRAMS = [
     Diagram(
         "system-context",
-        "System Context",
+        "C4 Level 1 - System Context",
+        "Who uses KidSpark AI, what value crosses the system boundary, and which external platforms it depends on.",
         [
-            ("Teacher", ["Story/PDF", "Planning decisions", "Approvals"]),
-            ("KidSpark AI", ["Guided workflow", "Evidence-grounded coaching", "Validated outputs"]),
-            ("External Services", ["Vertex AI", "Cloud SQL + pgvector", "Hyper3D Rodin / Bang"]),
-            ("Classroom", ["BrickSmart build", "Lesson plan", "Activity guide", "Slide companion"]),
+            DiagramSection("People and classroom", "Primary users and beneficiaries", [
+                DiagramNode("teacher", "Teacher", ["Uploads or types a story", "Plans and approves each checkpoint", "Downloads the lesson bundle"], "actor"),
+                DiagramNode("students", "Students and classroom", ["Read, discuss, build, test", "Use the activity guide and slides", "Assemble validated BrickSmart model"], "actor"),
+                DiagramNode("team", "Jacobs research and operations team", ["Maintains curriculum corpus", "Operates deployment and ingestion", "Reviews outcomes and limitations"], "actor"),
+            ]),
+            DiagramSection("System of interest", "KidSpark AI / BrickSmart", [
+                DiagramNode("kidspark", "KidSpark AI", ["Teacher-guided six-step workflow", "Evidence-grounded lesson coaching", "3D-to-physical build planning", "Three coordinated classroom PDFs", "Human approval before consequential stages"], "system"),
+            ]),
+            DiagramSection("External systems", "Managed platforms and specialist services", [
+                DiagramNode("vertex", "Google Vertex AI", ["Gemini generation", "Text embeddings", "Primary and fallback model routing"], "external"),
+                DiagramNode("data", "GCP data platform", ["Cloud SQL PostgreSQL + pgvector", "GCS raw and processed corpus", "Secret Manager and Cloud Logging"], "datastore"),
+                DiagramNode("hyper3d", "Hyper3D platform", ["Rodin text-to-3D generation", "Bang semantic segmentation", "Asynchronous task polling"], "external"),
+            ]),
         ],
-        [(0, 1, "plans"), (1, 2, "calls"), (2, 1, "returns"), (1, 3, "publishes")],
-    ),
-    Diagram(
-        "gcp-deployment",
-        "GCP Deployment",
         [
-            ("Browser", ["Streamlit /kidspark", "HTTPS"]),
-            ("Cloud Run: kidspark", ["Port 8080 Streamlit", "Port 8001 FastAPI (loopback)", "Ephemeral work directory"]),
-            ("Managed Data", ["Cloud SQL PostgreSQL", "pgvector", "GCS raw + processed buckets"]),
-            ("Managed AI + Secrets", ["Vertex AI Gemini", "Vertex embeddings", "Secret Manager"]),
+            DiagramEdge("teacher", "kidspark", "story, decisions, approvals"),
+            DiagramEdge("kidspark", "teacher", "previews, evidence, documents", True),
+            DiagramEdge("kidspark", "students", "classroom lesson and build"),
+            DiagramEdge("team", "kidspark", "corpus and operations"),
+            DiagramEdge("kidspark", "vertex", "generation and embeddings"),
+            DiagramEdge("kidspark", "data", "SQL, objects, secrets, logs"),
+            DiagramEdge("kidspark", "hyper3d", "3D jobs and artifacts"),
         ],
-        [(0, 1, "HTTPS"), (1, 2, "SQL / objects"), (1, 3, "ADC / secrets")],
     ),
     Diagram(
         "application-components",
-        "Application Components",
+        "C4 Level 2 - Application Containers and Components",
+        "The deployable application boundary and the responsibility of each major runtime component.",
         [
-            ("Streamlit UI", ["Step rail", "Teacher coach", "Review checkpoints", "Downloads"]),
-            ("FastAPI Orchestration", ["Session API", "Readiness gates", "Background jobs", "File responses"]),
-            ("Domain Services", ["Agents + prompts", "RAG adapter", "3D pipeline", "Document generator"]),
-            ("Validated Runtime", ["Notebook port", "Inventory planner", "Model registry", "Instruction renderer"]),
+            DiagramSection("Presentation container", "Streamlit web application", [
+                DiagramNode("ui", "Teacher workflow UI", ["Six-step rail and checkpoints", "Planning conversation", "Visual model and segment review", "Document preview and download"], "system"),
+                DiagramNode("client", "API client and poller", ["Session-scoped HTTP calls", "Long-job progress polling", "Renders API state; does not own gates"], "service"),
+            ]),
+            DiagramSection("Application container", "FastAPI orchestration and authority", [
+                DiagramNode("api", "Session API routers", ["Upload, message, confirm", "Model, segments, build, documents", "Download and runtime endpoints"], "system"),
+                DiagramNode("state", "Session and readiness service", ["Planning contract", "Confirmation gates", "Artifact generation IDs", "Stale-output invalidation"], "service"),
+                DiagramNode("jobs", "Background job manager", ["Threaded long-running jobs", "Progress events and status", "Normalized provider errors"], "service"),
+                DiagramNode("agents", "Agent orchestration", ["Story analysis", "Planning coach and readiness guard", "Prompt and document agents"], "service"),
+            ]),
+            DiagramSection("Domain and adapter layer", "Focused services behind stable interfaces", [
+                DiagramNode("retrieval", "Retrieval adapter", ["Grade-band normalization", "Cloud SQL or service retrieval", "Evidence trace and static fallback"], "service"),
+                DiagramNode("llm", "Vertex Gemini adapter", ["Structured text/JSON generation", "Primary/fallback models", "ADC or approved key auth"], "external"),
+                DiagramNode("build3d", "3D orchestration", ["Rodin and Bang clients", "Notebook physicalization", "Bounded automatic simplification"], "service"),
+                DiagramNode("planner", "Validated BrickSmart runtime", ["Catalog and geometry mapping", "Inventory-aware planning", "True step renderer and validation"], "service"),
+                DiagramNode("documents", "Publication service", ["Three audience-specific documents", "Content/image validation", "PDF and source artifacts"], "service"),
+            ]),
+            DiagramSection("State and artifacts", "Runtime persistence boundaries", [
+                DiagramNode("memory", "In-memory session store", ["Teacher workflow state", "Job status and approvals", "Lost on instance replacement"], "datastore"),
+                DiagramNode("work", "Ephemeral work directory", ["OBJ and segmented assets", "Notebook images and CSVs", "Generated PDFs"], "datastore"),
+                DiagramNode("corpus", "Durable corpus stores", ["Cloud SQL pgvector", "GCS source and processed assets", "Not the session system of record"], "datastore"),
+            ]),
         ],
-        [(0, 1, "HTTP"), (1, 2, "orchestrates"), (2, 3, "physicalizes")],
+        [
+            DiagramEdge("ui", "client", "user actions"), DiagramEdge("client", "api", "loopback HTTP/JSON"),
+            DiagramEdge("api", "state", "read/write workflow"), DiagramEdge("api", "jobs", "submit and poll"),
+            DiagramEdge("state", "memory", "session state"), DiagramEdge("jobs", "work", "artifacts and progress"),
+            DiagramEdge("agents", "retrieval", "grounding query"), DiagramEdge("agents", "llm", "generation"),
+            DiagramEdge("jobs", "build3d", "3D stages"), DiagramEdge("build3d", "planner", "physical plan"),
+            DiagramEdge("jobs", "documents", "approved bundle context"), DiagramEdge("retrieval", "corpus", "vector and policy lookup"),
+        ],
+    ),
+    Diagram(
+        "gcp-deployment",
+        "GCP Deployment, Network, and Trust Boundaries",
+        "How the single Cloud Run service reaches managed GCP resources and the external Hyper3D boundary.",
+        [
+            DiagramSection("Public client", "Internet-facing boundary", [
+                DiagramNode("browser", "Teacher browser", ["HTTPS to /kidspark", "Receives Streamlit UI and downloads", "No direct access to internal API port"], "actor"),
+            ]),
+            DiagramSection("Cloud Run service: kidspark", "Project kidspark-499901, us-central1", [
+                DiagramNode("launcher", "cloudrun_start.py", ["Starts and supervises two processes", "Propagates child failures"], "service"),
+                DiagramNode("streamlit", "Streamlit process", ["0.0.0.0:$PORT (normally 8080)", "Public /kidspark route", "Calls FastAPI over loopback"], "system"),
+                DiagramNode("fastapi", "FastAPI process", ["127.0.0.1:8001 only", "Session orchestration and downloads", "Health, readiness, runtime settings"], "system"),
+                DiagramNode("runtime", "Runtime identity and local disk", ["Cloud Run service account", "Application Default Credentials", "Ephemeral /work and generated files", "2 CPU / 4 GiB / 3600s baseline"], "datastore"),
+            ]),
+            DiagramSection("Managed GCP services", "Private project resources and Google APIs", [
+                DiagramNode("sql", "Cloud SQL PostgreSQL", ["pgvector extension", "document_bundle, pdf_node", "standard_rules and vector search"], "datastore"),
+                DiagramNode("gcs", "Cloud Storage", ["kidspark-project-data", "kidspark-data-processed", "Corpus lineage and page assets"], "datastore"),
+                DiagramNode("vertex", "Vertex AI", ["Gemini 3.6 Flash primary", "Gemini 3.5 Flash fallback", "gemini-embedding-001 (3072d)"], "external"),
+                DiagramNode("secrets", "Secret Manager", ["Database URL", "Hyper3D credential", "Optional Gemini API key"], "external"),
+                DiagramNode("ops", "Cloud Logging and Monitoring", ["Request/stage correlation", "Provider duration and fallback", "Failures without sensitive payloads"], "external"),
+            ]),
+            DiagramSection("External processor", "Third-party trust boundary", [
+                DiagramNode("hyper3d", "Hyper3D API", ["Rodin generation endpoint", "Bang segmentation endpoint", "Bearer credential", "Asynchronous task IDs and downloads"], "external"),
+            ]),
+        ],
+        [
+            DiagramEdge("browser", "streamlit", "HTTPS :443"), DiagramEdge("launcher", "streamlit", "starts"),
+            DiagramEdge("launcher", "fastapi", "starts"), DiagramEdge("streamlit", "fastapi", "HTTP 127.0.0.1:8001"),
+            DiagramEdge("fastapi", "runtime", "state and artifacts"), DiagramEdge("fastapi", "sql", "Cloud SQL socket / psycopg"),
+            DiagramEdge("fastapi", "gcs", "Google Storage API"), DiagramEdge("fastapi", "vertex", "Vertex API via ADC"),
+            DiagramEdge("runtime", "secrets", "secret injection"), DiagramEdge("fastapi", "ops", "structured stdout/stderr"),
+            DiagramEdge("fastapi", "hyper3d", "HTTPS REST + polling"),
+        ],
     ),
     Diagram(
         "teacher-session-sequence",
-        "Teacher Session Sequence",
+        "Teacher Session Orchestration and Confirmation Gates",
+        "The six teacher-visible stages, authoritative gates, long-running jobs, and invalidation paths.",
         [
-            ("1 Upload", ["Extract story", "Analyze", "Retrieve evidence"]),
-            ("2 Plan", ["Coach dialogue", "Fill readiness state", "Teacher confirms"]),
-            ("3 Preview", ["Generate Rodin prompt", "Poll", "Teacher approves"]),
-            ("4 Physicalize", ["Bang", "Voxelize", "Auto-simplify", "Teacher reviews"]),
-            ("5 Build", ["Inventory validation", "Step images", "Approve plan"]),
-            ("6 Bundle", ["Generate 3 PDFs", "Validate", "Download"]),
+            DiagramSection("Teacher and UI", "Explicit human decisions", [
+                DiagramNode("s1", "1. Upload story", ["PDF or typed story", "Review extraction and framework anchors", "Confirm source"], "actor"),
+                DiagramNode("s2", "2. Plan with coach", ["Iterative guided conversation", "Watch lesson-component checklist", "Confirm only when all required fields exist"], "actor"),
+                DiagramNode("s3", "3. Approve model preview", ["Edit visual/build constraints", "Wait for Rodin job", "Approve model or regenerate"], "actor"),
+                DiagramNode("s4", "4. Review segments/connectors", ["Inspect Bang and voxel views", "Edit labels and connector intent", "Approve or accept recovery guidance"], "actor"),
+                DiagramNode("s5", "5. Approve build plan", ["Review inventory and every true step", "Approve all or individual steps"], "actor"),
+                DiagramNode("s6", "6. Validate lesson bundle", ["Preview three documents", "Refine independently", "Approve and download"], "actor"),
+            ]),
+            DiagramSection("FastAPI state machine", "Backend authority", [
+                DiagramNode("g1", "Story gate", ["Extraction non-empty", "Analysis and evidence available"], "decision"),
+                DiagramNode("g2", "Planning readiness gate", ["Grade, duration, concept, goals", "Build object, movement, literacy/SEL", "Constraints and framework matches"], "decision"),
+                DiagramNode("g3", "Model gate", ["Current model generation ID", "Rodin artifact complete", "Teacher confirmation"], "decision"),
+                DiagramNode("g4", "Physicalization gate", ["Current segment generation ID", "Block and segment budgets", "Review-ready validated status"], "decision"),
+                DiagramNode("g5", "Build gate", ["Inventory feasible", "True steps and images available", "Teacher step approvals"], "decision"),
+                DiagramNode("g6", "Document gate", ["All three documents valid", "Required images and sections", "Teacher document approvals"], "decision"),
+            ]),
+            DiagramSection("Asynchronous work", "Polled jobs and generated evidence", [
+                DiagramNode("storyjob", "Story analysis + RAG", ["Extract, analyze, retrieve", "Return evidence trace"], "service"),
+                DiagramNode("rodinjob", "Rodin job", ["Submit once", "Poll provider status", "Download preview and OBJ"], "external"),
+                DiagramNode("segmentjob", "Bang + notebook job", ["Segment approved OBJ", "Voxelize and auto-simplify", "Render multiview and connector tables"], "external"),
+                DiagramNode("planjob", "Validated planner job", ["Map catalog and inventory", "Validate placement and sequence", "Render true build steps"], "service"),
+                DiagramNode("docjob", "Document bundle job", ["Compose three audiences", "Validate content and images", "Publish PDFs and sources"], "service"),
+            ]),
         ],
-        [(0, 1, "gate"), (1, 2, "gate"), (2, 3, "gate"), (3, 4, "gate"), (4, 5, "gate")],
+        [
+            DiagramEdge("s1", "g1", "confirm"), DiagramEdge("g1", "storyjob", "analyze"),
+            DiagramEdge("s2", "g2", "message / confirm"), DiagramEdge("g2", "s3", "ready"),
+            DiagramEdge("s3", "g3", "approve"), DiagramEdge("g3", "rodinjob", "submit / poll"),
+            DiagramEdge("s4", "g4", "approve"), DiagramEdge("g4", "segmentjob", "submit / poll"),
+            DiagramEdge("s5", "g5", "approve steps"), DiagramEdge("g5", "planjob", "validate"),
+            DiagramEdge("s6", "g6", "approve documents"), DiagramEdge("g6", "docjob", "generate / refine"),
+            DiagramEdge("g4", "s3", "model regeneration required", True),
+            DiagramEdge("g3", "s4", "invalidate old segments", True),
+        ],
     ),
     Diagram(
         "rag-ingestion-retrieval",
-        "RAG Ingestion and Retrieval",
+        "RAG Offline Ingestion and Online Retrieval",
+        "How curriculum evidence becomes traceable pgvector records and then grounds each teacher-planning turn.",
         [
-            ("Source Corpus", ["PDFs", "Lesson bundles", "Standards and policy"]),
-            ("Ingestion", ["Extract nodes", "Caption selective visuals", "Normalize grade bands", "Embed"]),
-            ("Storage", ["GCS artifacts", "document_bundle", "pdf_node + vectors", "standard_rules"]),
-            ("Teacher Query", ["Grade-band filter", "Vector candidates", "Policy lookup", "Evidence trace"]),
-            ("Planning Agent", ["Grounded suggestions", "Static fallback", "Citation lineage"]),
+            DiagramSection("Offline corpus ingestion", "Administrative/research workflow", [
+                DiagramNode("sources", "Source documents", ["Framework and standards PDFs", "Teacher lesson plans", "Activity guides and slide companions", "Catalog and policy data"], "artifact"),
+                DiagramNode("extract", "Docling extraction", ["Page-aware text and tables", "Document/node identity", "Image and page-crop references"], "service"),
+                DiagramNode("enrich", "Normalize and enrich", ["Canonical grade_band", "Bundle and content roles", "Selective visual captions", "Provenance and checksums"], "service"),
+                DiagramNode("embed", "Embedding pipeline", ["gemini-embedding-001", "3072-dimensional text vectors", "Batched, quota-aware writes", "Selective visual embeddings only"], "external"),
+            ]),
+            DiagramSection("Durable knowledge stores", "Shared production data", [
+                DiagramNode("rawgcs", "GCS source bucket", ["Original PDFs", "Immutable source lineage"], "datastore"),
+                DiagramNode("processed", "GCS processed bucket", ["Knowledge_chunks bundles", "Page crops and extracted artifacts", "Stable gs:// URIs"], "datastore"),
+                DiagramNode("bundle", "document_bundle", ["Document identity and metadata", "Processing/version status", "GCS lineage"], "datastore"),
+                DiagramNode("nodes", "pdf_node", ["Normalized content", "grade_band and role", "embedding vector(3072)", "Bundle/page provenance"], "datastore"),
+                DiagramNode("rules", "standard_rules", ["Framework and policy anchors", "Structured grade/applicability filters"], "datastore"),
+            ]),
+            DiagramSection("Online teacher-turn retrieval", "Read-only classroom path", [
+                DiagramNode("query", "Retrieval request", ["Teacher turn + planning state", "Canonical grade band", "Seed k and timeout"], "service"),
+                DiagramNode("qembed", "Query understanding", ["Optional expansion", "Gemini query embedding", "No model instructions from corpus"], "external"),
+                DiagramNode("search", "Hybrid evidence selection", ["Exact grade filter", "Vector nearest neighbors", "Policy lookup", "Deduplicate and rank"], "service"),
+                DiagramNode("trace", "Evidence pack", ["Source and node IDs", "Excerpt/summary and relevance", "Retrieval mode and lineage", "Bounded prompt context"], "artifact"),
+                DiagramNode("coach", "Planning coach", ["Grounded recommendations", "Deterministic readiness guard", "Static evidence fallback if degraded"], "system"),
+            ]),
         ],
-        [(0, 1, "process"), (1, 2, "load"), (2, 3, "retrieve"), (3, 4, "ground")],
+        [
+            DiagramEdge("sources", "extract", "parse"), DiagramEdge("extract", "enrich", "nodes + assets"),
+            DiagramEdge("enrich", "embed", "text/caption batches"), DiagramEdge("sources", "rawgcs", "store originals"),
+            DiagramEdge("enrich", "processed", "write artifacts"), DiagramEdge("enrich", "bundle", "upsert metadata"),
+            DiagramEdge("embed", "nodes", "upsert vectors"), DiagramEdge("enrich", "rules", "load policies"),
+            DiagramEdge("query", "qembed", "normalize + embed"), DiagramEdge("qembed", "search", "query vector"),
+            DiagramEdge("nodes", "search", "filtered vector candidates"), DiagramEdge("rules", "search", "policy anchors"),
+            DiagramEdge("search", "trace", "ranked evidence"), DiagramEdge("trace", "coach", "untrusted reference context"),
+        ],
+    ),
+    Diagram(
+        "logical-data-model",
+        "Logical Data and Artifact Model",
+        "The main durable and ephemeral records that connect teacher intent, evidence, 3D generations, validated steps, and documents.",
+        [
+            DiagramSection("Teacher workflow domain", "Ephemeral session authority", [
+                DiagramNode("session", "Session", ["session_id, stage, timestamps", "current generation IDs", "progress and approvals"], "datastore"),
+                DiagramNode("planning", "PlanningState", ["grade, duration, concept, goals", "build object and constraints", "moving/static parts, literacy, SEL"], "datastore"),
+                DiagramNode("evidencepack", "EvidenceTrace", ["document/node identity", "grade band and relevance", "retrieval mode and excerpt"], "artifact"),
+            ]),
+            DiagramSection("Knowledge domain", "Durable Cloud SQL and GCS corpus", [
+                DiagramNode("dbbundle", "document_bundle", ["bundle identity and metadata", "source/processed GCS URIs", "processing version/status"], "datastore"),
+                DiagramNode("dbnode", "pdf_node", ["page/node content and role", "grade_band", "embedding vector(3072)", "bundle foreign key"], "datastore"),
+                DiagramNode("dbrule", "standard_rules", ["framework/policy statement", "grade/applicability metadata", "source lineage"], "datastore"),
+            ]),
+            DiagramSection("3D and physical build domain", "Generation-scoped artifacts", [
+                DiagramNode("modelgen", "ModelGeneration", ["Rodin prompt and task ID", "preview/model artifact", "approval and generation number"], "artifact"),
+                DiagramNode("segmentgen", "SegmentGeneration", ["Bang task and segment assets", "labels, interfaces, movement map", "voxel attempts and diagnostics"], "artifact"),
+                DiagramNode("buildplan", "ValidatedBuildPlan", ["status and inventory feasibility", "catalog-mapped parts", "true instruction steps", "rendered step images"], "artifact"),
+            ]),
+            DiagramSection("Publication domain", "Teacher-downloadable outputs", [
+                DiagramNode("bundleout", "LessonBundle", ["approved context snapshot", "generation/version state", "three document records"], "artifact"),
+                DiagramNode("doc", "GeneratedDocument", ["lesson_plan | activity_guide | slide_companion", "markdown/JSON/PDF paths", "validation and teacher approval"], "artifact"),
+                DiagramNode("files", "Artifact files", ["OBJ/GLB and segmented models", "PNGs, CSVs, JSON", "PDFs in ephemeral work directory"], "datastore"),
+            ]),
+        ],
+        [
+            DiagramEdge("session", "planning", "1 owns 1"), DiagramEdge("planning", "evidencepack", "references many"),
+            DiagramEdge("evidencepack", "dbnode", "traces to"), DiagramEdge("dbbundle", "dbnode", "1 contains many"),
+            DiagramEdge("dbrule", "evidencepack", "grounds"), DiagramEdge("session", "modelgen", "creates versions"),
+            DiagramEdge("modelgen", "segmentgen", "approved model only"), DiagramEdge("segmentgen", "buildplan", "physical plan"),
+            DiagramEdge("buildplan", "bundleout", "approved source"), DiagramEdge("bundleout", "doc", "contains three"),
+            DiagramEdge("modelgen", "files", "writes"), DiagramEdge("segmentgen", "files", "writes"),
+            DiagramEdge("buildplan", "files", "writes"), DiagramEdge("doc", "files", "writes"),
+        ],
     ),
     Diagram(
         "rodin-validated-build",
-        "Rodin to Validated Build",
+        "Rodin-to-Validated BrickSmart Physicalization",
+        "The geometry, semantic, connector, inventory, and teacher-review path from approved intent to true build steps.",
         [
-            ("Approved Intent", ["Object", "Moving/static parts", "Kit limits"]),
-            ("Rodin", ["Text-to-3D OBJ", "Teacher preview"]),
-            ("Bang", ["Semantic segments", "OBJ parts"]),
-            ("Notebook Port", ["Voxelize", "Merge/clean", "Contacts/connectors", "Step renders"]),
-            ("Validated Planner", ["Catalog mapping", "Inventory feasibility", "Instruction status"]),
+            DiagramSection("Approved design intent", "Teacher-approved semantic contract", [
+                DiagramNode("intent", "model_task_context.json", ["Object type and broad required parts", "One or more explicit movement intents", "Static parts and connector intent", "Inventory basis and build budgets"], "artifact"),
+                DiagramNode("guard", "Pre-generation build guard", ["Chunky 2x2-compatible geometry", "Max semantic and moving parts", "Broad contacts; no micro-details", "Rodin prompt length and safety checks"], "decision"),
+            ]),
+            DiagramSection("External geometry services", "Probabilistic 3D generation", [
+                DiagramNode("rodin", "Rodin generation", ["Submit visual prompt", "Poll asynchronous task", "Download preview and OBJ", "Teacher approves or regenerates"], "external"),
+                DiagramNode("bang", "Bang segmentation", ["Runs only on current approved OBJ", "Returns semantic OBJ regions", "Source-segment count measured early", "Task ID tied to model generation"], "external"),
+            ]),
+            DiagramSection("Notebook-derived physicalization", "Deterministic geometry processing with bounded tuning", [
+                DiagramNode("voxel", "Voxelize and consolidate", ["Sample occupancy at candidate sizes", "Protect moving/required regions", "Merge compatible static fragments", "Track preservation and budgets"], "service"),
+                DiagramNode("contacts", "Interfaces and connectors", ["Detect adjacent segment contacts", "Map teacher movement intent", "Infer axle/pivot/static candidates", "Emit editable CSV tables"], "service"),
+                DiagramNode("renders", "Review artifacts", ["Color-coded segment visualization", "Eight-view placement sheet", "Final block approximation", "Per-step isometric/multiview images"], "artifact"),
+            ]),
+            DiagramSection("Validated BrickSmart planner", "Catalog and finite-kit authority", [
+                DiagramNode("catalog", "Catalog and inventory mapping", ["Map regions to allowed block types", "Compile standard-kit ledger", "Apply symmetry and functional rules"], "service"),
+                DiagramNode("plan", "Placement and sequence planning", ["Allocate rows/columns and segments", "Validate geometry and inventory", "Generate true construction order"], "service"),
+                DiagramNode("status", "Planner outcome", ["VALIDATED or review-ready status", "INFEASIBLE/INCOMPLETE diagnostics", "Inventory, shortages, steps, HTML", "Teacher approval only if approvable"], "decision"),
+            ]),
         ],
-        [(0, 1, "prompt"), (1, 2, "approved OBJ"), (2, 3, "segments"), (3, 4, "physical plan")],
+        [
+            DiagramEdge("intent", "guard", "validate"), DiagramEdge("guard", "rodin", "constrained prompt"),
+            DiagramEdge("rodin", "bang", "approved current OBJ"), DiagramEdge("bang", "voxel", "segmented geometry"),
+            DiagramEdge("voxel", "contacts", "physical regions"), DiagramEdge("contacts", "renders", "tables + mappings"),
+            DiagramEdge("voxel", "catalog", "voxel plan"), DiagramEdge("contacts", "catalog", "functional interfaces"),
+            DiagramEdge("catalog", "plan", "allowed parts + ledger"), DiagramEdge("plan", "status", "validated result"),
+            DiagramEdge("status", "renders", "true steps / diagnostics", True), DiagramEdge("status", "guard", "bounded regeneration guidance", True),
+        ],
     ),
     Diagram(
         "document-generation",
-        "Document Generation",
+        "Lesson Bundle Composition, Validation, and Publication",
+        "How one approved source of truth becomes three audience-specific documents without changing build facts.",
         [
-            ("Approved Session", ["Story + framework", "Planning state", "Build plan"]),
-            ("Document Agents", ["Teacher lesson plan", "Student activity guide", "Class slide companion"]),
-            ("Validation", ["Required sections", "Audience tone", "No placeholders", "Notebook images"]),
-            ("Publication", ["Markdown + JSON", "Three PDFs", "Teacher downloads"]),
+            DiagramSection("Approved source package", "Immutable facts for this generation", [
+                DiagramNode("doccontext", "Document context", ["Story analysis and teacher planning", "Framework/RAG evidence", "Approved object and movement map", "Validated inventory and true build plan"], "artifact"),
+                DiagramNode("images", "Validated visual assets", ["Final build reference", "Segment and multiview images", "True step isometric and placement sheets", "No placeholder/demo art"], "artifact"),
+            ]),
+            DiagramSection("Audience-specific composition", "Shared facts, different instructional purpose", [
+                DiagramNode("lesson", "Teacher lesson-plan agent", ["Read / Learn & Explore / Invent", "Objectives, timing, prompts, standards", "Final-build and multiview overview"], "service"),
+                DiagramNode("activity", "Student activity-guide agent", ["Concise classroom directions", "Vocabulary, phonics, real-world links", "Reflection and final-build overview"], "service"),
+                DiagramNode("slides", "Slide-companion agent", ["Classroom-facing sequence", "Kid-friendly prompts and vocabulary", "All validated build steps and images"], "service"),
+            ]),
+            DiagramSection("Deterministic quality gates", "Per-document validation before publication", [
+                DiagramNode("schema", "Structure and content checks", ["Required sections and minimum depth", "Audience-appropriate tone", "Framework anchors where expected", "No placeholders or missing values"], "decision"),
+                DiagramNode("visual", "Image and build checks", ["Files exist and decode", "Notebook/build images included", "Step count agrees with build plan", "No stale generation references"], "decision"),
+                DiagramNode("approval", "Teacher document review", ["Preview each document", "Refine independently", "All three must be valid and approved"], "actor"),
+            ]),
+            DiagramSection("Publication outputs", "Download and maintenance artifacts", [
+                DiagramNode("sourcesout", "Editable/debug sources", ["Markdown content", "Structured JSON context", "Validation report"], "artifact"),
+                DiagramNode("pdfs", "Classroom PDFs", ["lesson_plan.pdf", "activity_guide.pdf", "slide_companion.pdf"], "artifact"),
+                DiagramNode("download", "FastAPI download responses", ["Stable filenames and media type", "Streams bytes, never local paths", "Future: persist to GCS with lifecycle"], "system"),
+            ]),
         ],
-        [(0, 1, "compose"), (1, 2, "check"), (2, 3, "publish")],
+        [
+            DiagramEdge("doccontext", "lesson", "compose"), DiagramEdge("doccontext", "activity", "compose"),
+            DiagramEdge("doccontext", "slides", "compose"), DiagramEdge("images", "lesson", "selected visuals"),
+            DiagramEdge("images", "activity", "final overview"), DiagramEdge("images", "slides", "all build visuals"),
+            DiagramEdge("lesson", "schema", "draft"), DiagramEdge("activity", "schema", "draft"),
+            DiagramEdge("slides", "schema", "draft"), DiagramEdge("schema", "visual", "content valid"),
+            DiagramEdge("visual", "approval", "preview"), DiagramEdge("approval", "sourcesout", "approve"),
+            DiagramEdge("approval", "pdfs", "publish"), DiagramEdge("sourcesout", "download", "serve"),
+            DiagramEdge("pdfs", "download", "serve"),
+        ],
     ),
     Diagram(
         "automatic-recovery",
-        "Automatic Simplification and Exception Recovery",
+        "Bounded Automatic Simplification and Exception Recovery",
+        "How the happy path self-corrects block and segment excess before asking the teacher to regenerate the model.",
         [
-            ("Candidate", ["OBJ + segments", "Initial voxel plan"]),
-            ("Feasibility Check", ["Block budget", "Segment budget", "Preservation", "Inventory"]),
-            ("Bounded Auto-Recovery", ["Tune voxel size", "Merge fragments", "Re-run planner", "Record attempts"]),
-            ("Outcome", ["Valid plan", "Review-ready CSP fallback", "Teacher regeneration guidance"]),
+            DiagramSection("Measure candidate", "Every Bang/notebook generation", [
+                DiagramNode("candidate", "Current candidate", ["Approved OBJ generation", "Bang source segments", "Voxelized physical regions", "Initial block approximation"], "artifact"),
+                DiagramNode("measure", "Constraint evaluator", ["Block count vs max_validated_blocks", "Source/physical segments vs max_semantic_parts", "Required/moving-part preservation", "Inventory and planner status"], "decision"),
+            ]),
+            DiagramSection("Bounded internal recovery", "No teacher action while safe options remain", [
+                DiagramNode("tune", "Attempt policy", ["Try configured voxel-size candidates", "Consolidate adjacent static fragments", "Protect moving and required regions", "Never invent unsupported catalog parts"], "service"),
+                DiagramNode("score", "Attempt scoring", ["Feasibility first", "Then semantic preservation", "Then block/segment margin", "Record diagnostics and selected attempt"], "decision"),
+                DiagramNode("retry", "Bounded retry controller", ["Small fixed attempt budget", "No repeated paid Rodin calls", "May rerun local physicalization/planner", "Stops on valid or no improvement"], "service"),
+            ]),
+            DiagramSection("Outcome and user path", "Only actionable states reach the teacher", [
+                DiagramNode("valid", "Approachable result", ["Validated or CSP review-ready", "Inventory feasible", "True steps and images available", "Teacher can inspect and approve"], "artifact"),
+                DiagramNode("recoverable", "Local exception result", ["Best candidate retained", "Clear blocking measurements", "Label/connector refinement if sufficient"], "artifact"),
+                DiagramNode("regen", "Model regeneration required", ["Specific Rodin prompt update", "Prefilled build constraints", "Old segment/build generations invalidated", "One prominent return action"], "artifact"),
+            ]),
         ],
-        [(0, 1, "measure"), (1, 2, "if recoverable"), (2, 1, "retry"), (1, 3, "resolve")],
+        [
+            DiagramEdge("candidate", "measure", "evaluate"), DiagramEdge("measure", "valid", "all gates pass"),
+            DiagramEdge("measure", "tune", "safe recovery exists"), DiagramEdge("tune", "score", "candidate attempt"),
+            DiagramEdge("score", "retry", "rank"), DiagramEdge("retry", "measure", "next local attempt", True),
+            DiagramEdge("score", "recoverable", "best local result"), DiagramEdge("recoverable", "regen", "still blocked"),
+            DiagramEdge("regen", "candidate", "new model generation", True),
+        ],
+    ),
+    Diagram(
+        "security-operations",
+        "Security, Observability, and Recovery Architecture",
+        "Cross-cutting controls for identity, secrets, untrusted content, monitoring, ephemeral state, and operator recovery.",
+        [
+            DiagramSection("Identity and trust", "Who may call what", [
+                DiagramNode("human", "Human access", ["Research-team GCP IAM", "Optional future institutional sign-in", "Separate admin ingestion from classroom use"], "actor"),
+                DiagramNode("sa", "Cloud Run service account", ["Vertex AI User", "Cloud SQL Client", "GCS object access", "Secret accessor and log writer"], "system"),
+                DiagramNode("third", "Third-party boundary", ["Hyper3D credential only", "No student PII in 3D prompts", "Review processing and retention terms"], "external"),
+            ]),
+            DiagramSection("Application controls", "Prevent unsafe state or content transitions", [
+                DiagramNode("filesec", "File and path controls", ["MIME/extension and size checks", "Safe filenames and isolated job dirs", "Known-artifact download mapping"], "service"),
+                DiagramNode("promptsec", "Prompt and evidence controls", ["Retrieved text treated as untrusted", "Structured output validation", "Deterministic readiness and stage gates"], "service"),
+                DiagramNode("secretsec", "Secret handling", ["Secret Manager references", "No secrets in Git, logs, screenshots", "ADC preferred over key files"], "service"),
+            ]),
+            DiagramSection("Telemetry and operations", "Diagnose without leaking content", [
+                DiagramNode("logs", "Structured logs", ["request/session correlation", "stage, provider, duration, fallback", "auto-recovery and planner status", "exception class; no story/prompt bodies"], "external"),
+                DiagramNode("alerts", "Operational signals", ["5xx and startup failures", "DB/retrieval degradation", "Long model/segment jobs", "Planner incomplete and download errors"], "external"),
+                DiagramNode("health", "Health and readiness", ["Process liveness", "Model and database configuration", "Retrieval fallback mode", "Catalog/runtime availability"], "service"),
+            ]),
+            DiagramSection("Backup and recovery", "Current posture and hardening path", [
+                DiagramNode("durable", "Durable data", ["Cloud SQL backups and PITR policy", "GCS versioning/lifecycle as configured", "Corpus re-ingestion is reproducible"], "datastore"),
+                DiagramNode("ephemeral", "Ephemeral state risk", ["In-memory sessions", "Container-local 3D and PDFs", "Lost when Cloud Run instance is replaced"], "datastore"),
+                DiagramNode("runbook", "Operator recovery", ["Check readiness and logs", "Rollback Cloud Run revision", "Restore/reload corpus", "Future: durable session/artifact store"], "artifact"),
+            ]),
+        ],
+        [
+            DiagramEdge("human", "sa", "deploys/configures"), DiagramEdge("sa", "third", "authorized API calls"),
+            DiagramEdge("sa", "secretsec", "runtime identity"), DiagramEdge("filesec", "logs", "safe events"),
+            DiagramEdge("promptsec", "logs", "validation outcomes"), DiagramEdge("secretsec", "logs", "access metadata only"),
+            DiagramEdge("logs", "alerts", "metrics and patterns"), DiagramEdge("health", "alerts", "readiness failures"),
+            DiagramEdge("durable", "runbook", "restore"), DiagramEdge("ephemeral", "runbook", "recreate / warn"),
+        ],
     ),
 ]
 
@@ -185,79 +460,179 @@ def _xml_escape(value: str) -> str:
     return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+NODE_STYLES = {
+    "actor": ("#FFF7E3", GOLD, NAVY),
+    "system": (SKY, TEAL, NAVY),
+    "service": ("#F6F8FA", "#7A9E9F", INK),
+    "datastore": ("#F1ECFA", "#7C5AA6", NAVY),
+    "external": ("#FFF0ED", CORAL, NAVY),
+    "decision": ("#FFF8D8", "#B88413", NAVY),
+    "artifact": ("#ECF7EE", GREEN, NAVY),
+}
+
+
+def _wrapped_lines(value: str, width: int) -> list[str]:
+    return textwrap.wrap(value, width=max(18, width), break_long_words=False, break_on_hyphens=False) or [value]
+
+
+def _edge_anchor(source: tuple[int, int, int, int], target: tuple[int, int, int, int]) -> tuple[tuple[int, int], tuple[int, int]]:
+    sx1, sy1, sx2, sy2 = source
+    tx1, ty1, tx2, ty2 = target
+    scx, scy = (sx1 + sx2) // 2, (sy1 + sy2) // 2
+    tcx, tcy = (tx1 + tx2) // 2, (ty1 + ty2) // 2
+    if abs(tcx - scx) >= abs(tcy - scy):
+        if tcx >= scx:
+            return (sx2, scy), (tx1, tcy)
+        return (sx1, scy), (tx2, tcy)
+    if tcy >= scy:
+        return (scx, sy2), (tcx, ty1)
+    return (scx, sy1), (tcx, ty2)
+
+
 def export_diagram(diagram: Diagram) -> None:
-    width = 1600
-    lane_count = len(diagram.lanes)
-    columns = 3 if lane_count > 4 else 2
-    rows = (lane_count + columns - 1) // columns
-    height = 210 + rows * 270
+    width = 2000
+    section_count = len(diagram.sections)
+    margin_x = 42
+    gap_x = 24
+    section_w = (width - margin_x * 2 - gap_x * (section_count - 1)) // section_count
+    node_gap = 22
+    node_top = 270
+    node_specs: dict[str, tuple[DiagramNode, tuple[int, int, int, int], int]] = {}
+    section_heights: list[int] = []
+    for section_index, section in enumerate(diagram.sections):
+        x = margin_x + section_index * (section_w + gap_x)
+        y = node_top
+        for node in section.nodes:
+            wrap_width = 43 if section_count <= 3 else 31
+            line_count = sum(len(_wrapped_lines(item, wrap_width)) for item in node.items)
+            node_h = max(142, 72 + line_count * 27 + len(node.items) * 7)
+            node_specs[node.key] = (node, (x + 18, y, x + section_w - 18, y + node_h), section_index)
+            y += node_h + node_gap
+        section_heights.append(y - node_gap + 24)
+    diagram_bottom = max(section_heights, default=700)
+    height = diagram_bottom + 176
     png = Image.new("RGB", (width, height), "white")
     draw = ImageDraw.Draw(png)
-    draw.rectangle((0, 0, width, 92), fill=NAVY)
-    draw.text((54, 26), diagram.title, font=_font(34, True), fill="white")
-
-    cell_w = 470 if columns == 3 else 650
-    gap_x = 55
-    start_x = (width - (columns * cell_w + (columns - 1) * gap_x)) // 2
-    boxes: list[tuple[int, int, int, int]] = []
+    draw.rectangle((0, 0, width, 104), fill=NAVY)
+    draw.text((54, 26), diagram.title, font=_font(38, True), fill="white")
+    draw.text((54, 126), diagram.purpose, font=_font(22), fill=INK)
     svg_parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
         '<rect width="100%" height="100%" fill="white"/>',
-        f'<rect width="{width}" height="92" fill="{NAVY}"/>',
-        f'<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">{_xml_escape(diagram.title)}</text>',
-        '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>',
+        f'<rect width="{width}" height="104" fill="{NAVY}"/>',
+        f'<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">{_xml_escape(diagram.title)}</text>',
+        f'<text x="54" y="148" font-family="Arial" font-size="22" fill="{INK}">{_xml_escape(diagram.purpose)}</text>',
+        '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>',
     ]
-    for index, (heading, items) in enumerate(diagram.lanes):
-        row, col = divmod(index, columns)
-        x = start_x + col * (cell_w + gap_x)
-        y = 140 + row * 270
-        box = (x, y, x + cell_w, y + 205)
-        boxes.append(box)
-        draw.rounded_rectangle(box, radius=12, fill=LIGHT, outline=TEAL, width=3)
-        draw.rectangle((x, y, x + cell_w, y + 52), fill=SKY)
-        draw.text((x + 20, y + 12), heading, font=_font(24, True), fill=NAVY)
+    section_bottom = diagram_bottom
+    for section_index, section in enumerate(diagram.sections):
+        x = margin_x + section_index * (section_w + gap_x)
+        boundary = (x, 180, x + section_w, section_bottom)
+        draw.rounded_rectangle(boundary, radius=16, fill="#FBFCFD", outline="#B8C2CC", width=2)
+        draw.rectangle((x, 180, x + section_w, 228), fill="#E9EEF3")
+        draw.text((x + 18, 190), section.title, font=_font(24, True), fill=NAVY)
+        draw.text((x + 18, 232), section.subtitle, font=_font(15), fill=MUTED)
         svg_parts.extend([
-            f'<rect x="{x}" y="{y}" width="{cell_w}" height="205" rx="12" fill="{LIGHT}" stroke="{TEAL}" stroke-width="3"/>',
-            f'<rect x="{x}" y="{y}" width="{cell_w}" height="52" rx="12" fill="{SKY}"/>',
-            f'<text x="{x+20}" y="{y+35}" font-family="Arial" font-size="24" font-weight="700" fill="{NAVY}">{_xml_escape(heading)}</text>',
+            f'<rect x="{x}" y="180" width="{section_w}" height="{section_bottom-180}" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>',
+            f'<rect x="{x}" y="180" width="{section_w}" height="48" fill="#E9EEF3"/>',
+            f'<text x="{x+18}" y="213" font-family="Arial" font-size="24" font-weight="700" fill="{NAVY}">{_xml_escape(section.title)}</text>',
+            f'<text x="{x+18}" y="248" font-family="Arial" font-size="15" fill="{MUTED}">{_xml_escape(section.subtitle)}</text>',
         ])
-        yy = y + 76
-        for item in items:
-            wrapped = textwrap.wrap(item, 44 if columns == 2 else 31) or [item]
-            draw.ellipse((x + 22, yy + 7, x + 30, yy + 15), fill=CORAL)
-            svg_parts.append(f'<circle cx="{x+26}" cy="{yy+11}" r="4" fill="{CORAL}"/>')
-            for line_no, line in enumerate(wrapped):
-                draw.text((x + 42, yy + line_no * 25), line, font=_font(18), fill=INK)
-                svg_parts.append(f'<text x="{x+42}" y="{yy+17+line_no*25}" font-family="Arial" font-size="18" fill="{INK}">{_xml_escape(line)}</text>')
-            yy += max(30, len(wrapped) * 25 + 5)
 
-    for src, dst, label in diagram.arrows:
-        if src >= len(boxes) or dst >= len(boxes):
+    for edge in diagram.edges:
+        if edge.source not in node_specs or edge.target not in node_specs:
             continue
-        a, b = boxes[src], boxes[dst]
-        x1, y1 = (a[2], (a[1] + a[3]) // 2) if a[0] < b[0] else ((a[0] + a[2]) // 2, a[3])
-        x2, y2 = (b[0], (b[1] + b[3]) // 2) if a[0] < b[0] else ((b[0] + b[2]) // 2, b[1])
-        draw.line((x1, y1, x2, y2), fill=MUTED, width=3)
+        _, source_box, _ = node_specs[edge.source]
+        _, target_box, _ = node_specs[edge.target]
+        (x1, y1), (x2, y2) = _edge_anchor(source_box, target_box)
+        dash = (12, 8) if edge.dashed else None
+        if dash:
+            total = max(1, int(((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5))
+            for offset in range(0, total, sum(dash)):
+                start = offset / total
+                end = min(1.0, (offset + dash[0]) / total)
+                draw.line((x1 + (x2-x1)*start, y1 + (y2-y1)*start, x1 + (x2-x1)*end, y1 + (y2-y1)*end), fill=MUTED, width=3)
+        else:
+            draw.line((x1, y1, x2, y2), fill=MUTED, width=3)
+        angle_x, angle_y = x2 - x1, y2 - y1
+        mag = max(1.0, (angle_x * angle_x + angle_y * angle_y) ** 0.5)
+        ux, uy = angle_x / mag, angle_y / mag
+        left = (x2 - ux * 18 - uy * 8, y2 - uy * 18 + ux * 8)
+        right = (x2 - ux * 18 + uy * 8, y2 - uy * 18 - ux * 8)
+        draw.polygon([(x2, y2), left, right], fill=MUTED)
         midx, midy = (x1 + x2) // 2, (y1 + y2) // 2
-        draw.rounded_rectangle((midx - 54, midy - 17, midx + 54, midy + 17), radius=8, fill="white", outline="#D0D5DD")
-        draw.text((midx - 45, midy - 10), label, font=_font(14), fill=MUTED)
+        label_lines = _wrapped_lines(edge.label, 24)
+        label_w = min(250, max(118, max(len(line) for line in label_lines) * 8 + 24))
+        label_h = 24 + len(label_lines) * 17
+        draw.rounded_rectangle((midx - label_w//2, midy - label_h//2, midx + label_w//2, midy + label_h//2), radius=7, fill="white", outline="#D0D5DD")
+        for line_no, line in enumerate(label_lines):
+            draw.text((midx - label_w//2 + 12, midy - label_h//2 + 9 + line_no*17), line, font=_font(13), fill=MUTED)
+        dash_attr = ' stroke-dasharray="12 8"' if edge.dashed else ""
         svg_parts.extend([
-            f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{MUTED}" stroke-width="3" marker-end="url(#arrow)"/>',
-            f'<rect x="{midx-54}" y="{midy-17}" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>',
-            f'<text x="{midx}" y="{midy+5}" text-anchor="middle" font-family="Arial" font-size="14" fill="{MUTED}">{_xml_escape(label)}</text>',
+            f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{MUTED}" stroke-width="3"{dash_attr} marker-end="url(#arrow)"/>',
+            f'<rect x="{midx-label_w//2}" y="{midy-label_h//2}" width="{label_w}" height="{label_h}" rx="7" fill="white" stroke="#D0D5DD"/>',
         ])
+        for line_no, line in enumerate(label_lines):
+            svg_parts.append(f'<text x="{midx}" y="{midy-label_h//2+22+line_no*17}" text-anchor="middle" font-family="Arial" font-size="13" fill="{MUTED}">{_xml_escape(line)}</text>')
+
+    for node, box, _ in node_specs.values():
+        x1, y1, x2, y2 = box
+        fill, border, text_color = NODE_STYLES.get(node.kind, NODE_STYLES["service"])
+        draw.rounded_rectangle(box, radius=12, fill=fill, outline=border, width=3)
+        draw.rectangle((x1, y1, x2, y1 + 48), fill=fill)
+        draw.text((x1 + 16, y1 + 11), node.title, font=_font(22, True), fill=text_color)
+        kind_label = node.kind.upper()
+        badge_w = max(64, len(kind_label) * 9 + 18)
+        draw.rounded_rectangle((x2 - badge_w - 12, y1 + 10, x2 - 12, y1 + 38), radius=9, fill="white", outline=border)
+        draw.text((x2 - badge_w, y1 + 16), kind_label, font=_font(11, True), fill=border)
+        svg_parts.extend([
+            f'<rect x="{x1}" y="{y1}" width="{x2-x1}" height="{y2-y1}" rx="12" fill="{fill}" stroke="{border}" stroke-width="3"/>',
+            f'<text x="{x1+16}" y="{y1+32}" font-family="Arial" font-size="22" font-weight="700" fill="{text_color}">{_xml_escape(node.title)}</text>',
+            f'<rect x="{x2-badge_w-12}" y="{y1+10}" width="{badge_w}" height="28" rx="9" fill="white" stroke="{border}"/>',
+            f'<text x="{x2-badge_w//2-12}" y="{y1+29}" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="{border}">{kind_label}</text>',
+        ])
+        yy = y1 + 61
+        wrap_width = 43 if section_count <= 3 else 31
+        for item in node.items:
+            wrapped = _wrapped_lines(item, wrap_width)
+            draw.ellipse((x1 + 17, yy + 7, x1 + 25, yy + 15), fill=border)
+            svg_parts.append(f'<circle cx="{x1+21}" cy="{yy+11}" r="4" fill="{border}"/>')
+            for line_no, line in enumerate(wrapped):
+                draw.text((x1 + 34, yy + line_no * 27), line, font=_font(18), fill=INK)
+                svg_parts.append(f'<text x="{x1+34}" y="{yy+18+line_no*27}" font-family="Arial" font-size="18" fill="{INK}">{_xml_escape(line)}</text>')
+            yy += len(wrapped) * 27 + 7
+
+    legend_y = section_bottom + 36
+    draw.text((54, legend_y), "Legend", font=_font(18, True), fill=NAVY)
+    legend_x = 150
+    for kind in ["actor", "system", "service", "datastore", "external", "decision", "artifact"]:
+        fill, border, _ = NODE_STYLES[kind]
+        draw.rounded_rectangle((legend_x, legend_y - 2, legend_x + 24, legend_y + 22), radius=5, fill=fill, outline=border, width=2)
+        draw.text((legend_x + 32, legend_y), kind.title(), font=_font(14), fill=MUTED)
+        svg_parts.extend([
+            f'<rect x="{legend_x}" y="{legend_y-2}" width="24" height="24" rx="5" fill="{fill}" stroke="{border}" stroke-width="2"/>',
+            f'<text x="{legend_x+32}" y="{legend_y+17}" font-family="Arial" font-size="14" fill="{MUTED}">{kind.title()}</text>',
+        ])
+        legend_x += 210
+    draw.text((54, legend_y + 52), "Solid arrow: primary runtime/data flow   |   Dashed arrow: feedback, invalidation, fallback, or recovery path", font=_font(15), fill=MUTED)
+    svg_parts.append(f'<text x="54" y="{legend_y+69}" font-family="Arial" font-size="15" fill="{MUTED}">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>')
 
     png.save(IMAGES / f"diagram-{diagram.slug}.png", optimize=True)
     svg_parts.append("</svg>")
     (IMAGES / f"diagram-{diagram.slug}.svg").write_text("\n".join(svg_parts), encoding="utf-8")
-    mermaid = ["flowchart LR"]
-    for i, (heading, items) in enumerate(diagram.lanes):
-        label = f"{heading}<br/>" + "<br/>".join(items)
-        mermaid.append(f'  N{i}["{label}"]')
-    for src, dst, label in diagram.arrows:
-        mermaid.append(f"  N{src} -->|{label}| N{dst}")
-    mermaid.append("  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;")
-    mermaid.append("  class N0,N1,N2,N3,N4,N5 primary;")
+    mermaid = ["flowchart LR", f"  %% {diagram.purpose}"]
+    for section_index, section in enumerate(diagram.sections):
+        mermaid.append(f'  subgraph S{section_index}["{section.title} - {section.subtitle}"]')
+        mermaid.append("    direction TB")
+        for node in section.nodes:
+            label = f"{node.title}<br/>" + "<br/>".join(node.items)
+            mermaid.append(f'    {node.key}["{label}"]:::{node.kind}')
+        mermaid.append("  end")
+    for edge in diagram.edges:
+        operator = "-.->" if edge.dashed else "-->"
+        mermaid.append(f"  {edge.source} {operator}|{edge.label}| {edge.target}")
+    for kind, (fill, border, color) in NODE_STYLES.items():
+        mermaid.append(f"  classDef {kind} fill:{fill},stroke:{border},color:{color},stroke-width:2px;")
     (IMAGES / f"diagram-{diagram.slug}.mmd").write_text("\n".join(mermaid) + "\n", encoding="utf-8")
 
 
@@ -505,8 +880,10 @@ def markdown_to_docx(source: Path, destination: Path, preset: str) -> None:
             p.paragraph_format.left_indent = Inches(0.38)
             p.paragraph_format.first_line_indent = Inches(-0.18)
         elif re.match(r"^\d+\. ", line):
-            body = re.sub(r"^\d+\. ", "", line)
-            p = _docx_rich_paragraph(doc, body, style="List Number")
+            number_match = re.match(r"^(\d+)\. (.*)$", line)
+            number = number_match.group(1) if number_match else "1"
+            body = number_match.group(2) if number_match else line
+            p = _docx_rich_paragraph(doc, f"{number}.  {body}")
             p.paragraph_format.left_indent = Inches(0.38)
             p.paragraph_format.first_line_indent = Inches(-0.18)
         elif line.startswith("> "):
@@ -546,6 +923,7 @@ def _rl_styles(preset: str):
     base.add(ParagraphStyle(name="KSCode", fontName="Courier", fontSize=6.8, leading=8.5, backColor=colors.HexColor("#F2F4F7"), leftIndent=8, rightIndent=8, borderPadding=5, spaceAfter=7))
     base.add(ParagraphStyle(name="KSCaption", fontName="Helvetica-Oblique", fontSize=7.2, leading=9, textColor=colors.HexColor(MUTED), alignment=TA_CENTER, spaceAfter=8))
     base.add(ParagraphStyle(name="KSQuote", fontName="Helvetica-Oblique", fontSize=9, leading=12, textColor=colors.HexColor(NAVY), leftIndent=18, rightIndent=18, backColor=colors.HexColor(SKY), borderPadding=8, spaceAfter=8))
+    base.add(ParagraphStyle(name="KSNumbered", parent=base["KSBody"], leftIndent=18, firstLineIndent=-18))
     return base
 
 
@@ -625,7 +1003,14 @@ def markdown_to_pdf(source: Path, destination: Path, preset: str) -> None:
         elif re.match(r"^[-*] ", line):
             story.append(ListFlowable([ListItem(Paragraph(_xml_escape(_strip_inline(line[2:])), styles["KSBody"]))], bulletType="bullet", leftIndent=18, bulletFontSize=6))
         elif re.match(r"^\d+\. ", line):
-            story.append(ListFlowable([ListItem(Paragraph(_xml_escape(_strip_inline(re.sub(r"^\d+\. ", "", line))), styles["KSBody"]))], bulletType="1", leftIndent=18))
+            number_match = re.match(r"^(\d+)\. (.*)$", line)
+            number = number_match.group(1) if number_match else "1"
+            body = number_match.group(2) if number_match else line
+            numbered = Paragraph(
+                f"<b>{number}.</b>&nbsp;&nbsp;{_xml_escape(_strip_inline(body))}",
+                styles["KSNumbered"],
+            )
+            story.append(numbered)
         elif line.startswith("> "):
             story.append(Paragraph(_xml_escape(_strip_inline(line[2:])), styles["KSQuote"]))
         elif line.strip() == "---":
@@ -694,6 +1079,10 @@ def export_openapi() -> None:
 
 
 def main() -> int:
+    technical_only = "--technical-only" in sys.argv[1:]
+    unknown_args = [arg for arg in sys.argv[1:] if arg != "--technical-only"]
+    if unknown_args:
+        raise SystemExit(f"Unknown arguments: {', '.join(unknown_args)}")
     HANDOFF.mkdir(parents=True, exist_ok=True)
     IMAGES.mkdir(parents=True, exist_ok=True)
     OPENAPI.mkdir(parents=True, exist_ok=True)
@@ -704,8 +1093,11 @@ def main() -> int:
     export_openapi()
     pairs = [
         (DOCS / "KIDSPARK_TECHNICAL_DESIGN.md", HANDOFF / "KidSpark_Technical_Design.docx", HANDOFF / "KidSpark_Technical_Design.pdf", "compact"),
-        (DOCS / "KIDSPARK_PROJECT_OVERVIEW.md", HANDOFF / "KidSpark_Project_Overview.docx", HANDOFF / "KidSpark_Project_Overview.pdf", "narrative"),
     ]
+    if not technical_only:
+        pairs.append(
+            (DOCS / "KIDSPARK_PROJECT_OVERVIEW.md", HANDOFF / "KidSpark_Project_Overview.docx", HANDOFF / "KidSpark_Project_Overview.pdf", "narrative")
+        )
     for source, docx, pdf, preset in pairs:
         if not source.exists():
             raise FileNotFoundError(source)

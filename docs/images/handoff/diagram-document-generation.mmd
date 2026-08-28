@@ -1,10 +1,47 @@
 flowchart LR
-  N0["Approved Session<br/>Story + framework<br/>Planning state<br/>Build plan"]
-  N1["Document Agents<br/>Teacher lesson plan<br/>Student activity guide<br/>Class slide companion"]
-  N2["Validation<br/>Required sections<br/>Audience tone<br/>No placeholders<br/>Notebook images"]
-  N3["Publication<br/>Markdown + JSON<br/>Three PDFs<br/>Teacher downloads"]
-  N0 -->|compose| N1
-  N1 -->|check| N2
-  N2 -->|publish| N3
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% How one approved source of truth becomes three audience-specific documents without changing build facts.
+  subgraph S0["Approved source package - Immutable facts for this generation"]
+    direction TB
+    doccontext["Document context<br/>Story analysis and teacher planning<br/>Framework/RAG evidence<br/>Approved object and movement map<br/>Validated inventory and true build plan"]:::artifact
+    images["Validated visual assets<br/>Final build reference<br/>Segment and multiview images<br/>True step isometric and placement sheets<br/>No placeholder/demo art"]:::artifact
+  end
+  subgraph S1["Audience-specific composition - Shared facts, different instructional purpose"]
+    direction TB
+    lesson["Teacher lesson-plan agent<br/>Read / Learn & Explore / Invent<br/>Objectives, timing, prompts, standards<br/>Final-build and multiview overview"]:::service
+    activity["Student activity-guide agent<br/>Concise classroom directions<br/>Vocabulary, phonics, real-world links<br/>Reflection and final-build overview"]:::service
+    slides["Slide-companion agent<br/>Classroom-facing sequence<br/>Kid-friendly prompts and vocabulary<br/>All validated build steps and images"]:::service
+  end
+  subgraph S2["Deterministic quality gates - Per-document validation before publication"]
+    direction TB
+    schema["Structure and content checks<br/>Required sections and minimum depth<br/>Audience-appropriate tone<br/>Framework anchors where expected<br/>No placeholders or missing values"]:::decision
+    visual["Image and build checks<br/>Files exist and decode<br/>Notebook/build images included<br/>Step count agrees with build plan<br/>No stale generation references"]:::decision
+    approval["Teacher document review<br/>Preview each document<br/>Refine independently<br/>All three must be valid and approved"]:::actor
+  end
+  subgraph S3["Publication outputs - Download and maintenance artifacts"]
+    direction TB
+    sourcesout["Editable/debug sources<br/>Markdown content<br/>Structured JSON context<br/>Validation report"]:::artifact
+    pdfs["Classroom PDFs<br/>lesson_plan.pdf<br/>activity_guide.pdf<br/>slide_companion.pdf"]:::artifact
+    download["FastAPI download responses<br/>Stable filenames and media type<br/>Streams bytes, never local paths<br/>Future: persist to GCS with lifecycle"]:::system
+  end
+  doccontext -->|compose| lesson
+  doccontext -->|compose| activity
+  doccontext -->|compose| slides
+  images -->|selected visuals| lesson
+  images -->|final overview| activity
+  images -->|all build visuals| slides
+  lesson -->|draft| schema
+  activity -->|draft| schema
+  slides -->|draft| schema
+  schema -->|content valid| visual
+  visual -->|preview| approval
+  approval -->|approve| sourcesout
+  approval -->|publish| pdfs
+  sourcesout -->|serve| download
+  pdfs -->|serve| download
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

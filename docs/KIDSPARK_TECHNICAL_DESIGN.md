@@ -1,11 +1,14 @@
 # KidSpark AI / BrickSmart Technical Design
 
-**Document status:** Final handoff baseline<br>
-**Audience:** Jacobs Institute technical team, maintainers, researchers, and deployment operators<br>
-**Project period:** February-August 2026<br>
-**Authoritative source:** This Markdown file<br>
+**Document status:** Final handoff baseline
+
+**Audience:** Jacobs Institute technical team, maintainers, researchers, and deployment operators
+
+**Project period:** February-August 2026
+
+**Authoritative source:** This Markdown file
 **Deployment baseline:** `kidspark-499901`, `us-central1`
-**Last verified:** August 2026
+**Last verified:** August 27, 2026
 
 ## Document Control
 
@@ -17,6 +20,7 @@
 | Orchestration API | FastAPI |
 | Deployed service baseline | Cloud Run service `kidspark` |
 | Production project baseline | `kidspark-499901` |
+| Diagram method | C4-aligned context/container views plus deployment, sequence, data, pipeline, and operations views |
 | Change policy | Runtime changes require tests, review, and an explicit deployment action |
 
 This document describes the repository as handed off. It combines source inspection, generated artifact inspection, route enumeration, local regression evidence, and a sanitized browser validation of the deployed application. Infrastructure values are marked as a **repository/deployment baseline** where an interactive Google Cloud reauthentication was unavailable during final publication. Secrets and sensitive connection values are intentionally omitted.
@@ -31,9 +35,6 @@ The application is a Python monolith at deployment time but is internally separa
 
 The primary operational risks are external-job duration, ephemeral generated artifacts, in-memory session state, corpus completeness, and the inherent variability of text-to-3D geometry. These risks are mitigated by polling, saved-output regression tests, bounded automatic simplification, explicit validation statuses, teacher checkpoints, model fallback, and clear recovery guidance. Durable session/artifact storage and automated deployment remain recommended production-hardening work.
 
-![System context](images/handoff/diagram-system-context.png)
-
-\pagebreak
 
 ## 2. Goals, Requirements, and Non-Goals
 
@@ -72,17 +73,47 @@ The build pipeline must not produce instructions that exceed the configured kit 
 
 KidSpark is not a general CAD system, a substitute for teacher review, or a guarantee of structural safety under every classroom condition. It does not currently provide durable multi-tenant project storage, a complete learning-management-system integration, or automatic PowerPoint output. The slide companion is a PDF in the current release. The system can selectively use visual embeddings, but visual retrieval is not a required dependency for the baseline RAG path.
 
-\pagebreak
 
 ## 3. Architecture Overview
 
-### 3.1 System context
+### 3.1 Diagram method, notation, and reading order
+
+The architecture package uses multiple purpose-built views instead of one overloaded diagram. The first two views follow the [C4 model](https://c4model.com/) at system-context and container/component depth. The remaining views apply the same boundary-first discipline to deployment, state, data, security, and processing concerns. This is consistent with [Microsoft's architecture-diagram guidance](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/design-diagrams): show explicit boundaries, label directional relationships, keep notation consistent, and use several diagrams when different audiences need different answers.
+
+Read the diagrams in this order:
+
+| View | Primary question answered | Main audience |
+|---|---|---|
+| System context | Who uses KidSpark, and which external systems does it depend on? | All readers |
+| Application components | What runs inside the application, and which component owns each responsibility? | Developers and maintainers |
+| GCP deployment | Where do processes, identities, data stores, secrets, and external trust boundaries live? | Operators and security reviewers |
+| Teacher-session sequence | How do confirmation gates and asynchronous jobs control the six-step workflow? | Product, frontend, and API engineers |
+| RAG ingestion and retrieval | How does source material become searchable evidence for a planning turn? | Data and AI engineers |
+| Logical data model | Which records and artifacts connect a teacher session to retrieval, generation, validation, and publication? | Backend and data engineers |
+| Rodin-to-build pipeline | How does an approved prompt become inventory-valid build instructions? | 3D and physicalization engineers |
+| Document generation | How does one approved source of truth become three audience-specific documents? | Agent and publication engineers |
+| Automatic recovery | What happens when geometry exceeds block or segment limits? | 3D, API, and UX engineers |
+| Security and operations | Which controls, telemetry, and recovery mechanisms span the system? | Operators, security, and maintainers |
+
+Diagram notation is intentionally consistent:
+
+- shaded outer panels are deployment, trust, data, or responsibility boundaries;
+- solid arrows are primary request, data, or artifact flows;
+- dashed arrows are feedback, invalidation, retry, or fallback paths;
+- blue nodes are application services, green nodes are data stores, purple nodes are external services, yellow nodes are human actors, orange nodes are decisions, and gray nodes are durable or generated artifacts;
+- arrow labels describe the payload or protocol rather than only saying that two components are connected.
+
+Every diagram is a logical view unless its title explicitly says **deployment**. It does not imply a separate Cloud Run service for every internal component.
+
+### 3.2 System context
 
 The teacher interacts with one guided application. KidSpark coordinates four classes of external capability: managed AI, managed data, third-party 3D generation, and classroom publication. The teacher is both the source of pedagogical intent and the final approval authority.
 
 ![System context diagram](images/handoff/diagram-system-context.png)
 
-### 3.2 Application components
+*Figure 1. C4 Level 1 context. The KidSpark product boundary is centered between its human users and managed/external dependencies.*
+
+### 3.3 Application components
 
 The Streamlit interface renders the six stages and writes no authoritative domain state directly. It calls FastAPI endpoints, reflects the returned session status, and renders artifacts. FastAPI owns session transitions, readiness gates, background jobs, retrieval calls, 3D orchestration, validated-planner calls, and document downloads.
 
@@ -90,7 +121,9 @@ Domain services are structured around responsibilities rather than UI screens. A
 
 ![Application components](images/handoff/diagram-application-components.png)
 
-### 3.3 Deployment topology
+*Figure 2. C4 Level 2 plus selected components. The deployment is a monolith, while responsibility boundaries remain explicit in code.*
+
+### 3.4 Deployment topology
 
 Cloud Run executes `cloudrun_start.py`, which launches FastAPI on `127.0.0.1:8001` and Streamlit on Cloud Run's externally exposed port, normally `8080`. This preserves one browser origin while preventing direct public exposure of the internal API port. Streamlit talks to FastAPI over loopback.
 
@@ -98,7 +131,9 @@ Cloud SQL is attached through the Cloud SQL connection configured for the servic
 
 ![GCP deployment](images/handoff/diagram-gcp-deployment.png)
 
-### 3.4 Technology choices
+*Figure 3. Runtime and trust-boundary view. Streamlit is public, FastAPI is loopback-only, managed GCP services use the runtime identity, and Hyper3D remains an external processor.*
+
+### 3.5 Technology choices
 
 | Layer | Technology | Rationale |
 |---|---|---|
@@ -114,7 +149,6 @@ Cloud SQL is attached through the Cloud SQL connection configured for the servic
 | Physicalization | Notebook-derived Python + validated planner | Preserves research logic while adding callable, tested interfaces |
 | Publication | Markdown/JSON + PDF generation | Editable source and classroom-ready output |
 
-\pagebreak
 
 ## 4. Repository Design
 
@@ -150,7 +184,6 @@ The code maintains a distinction between **source segments** from Bang, **physic
 
 `block_catalog`, `config/inventory`, `model_store`, and `model_registry` are runtime data, not incidental examples. Inventory profiles define finite kit availability. The model registry and store support validated fixtures and reusable model references. Generated `work/build_jobs` contents are runtime artifacts and must not be treated as source-controlled durable records.
 
-\pagebreak
 
 ## 5. Teacher Session State Machine
 
@@ -171,6 +204,8 @@ story_upload
 Stages are teacher-visible checkpoints, not merely progress labels. A stage transition is accepted only by its confirmation endpoint after domain checks pass.
 
 ![Teacher session sequence](images/handoff/diagram-teacher-session-sequence.png)
+
+*Figure 4. Teacher-visible state and orchestration sequence. Confirmation gates separate human decisions from asynchronous generation work.*
 
 ### 5.2 Session state
 
@@ -211,7 +246,16 @@ Going back is not a visual-only navigation action. Regenerating a Rodin model mu
 
 Long-running endpoints should reject or reuse duplicate active work for the same stage and input fingerprint. The result should retain an input hash or artifact generation identifier so polling cannot accidentally combine old and new attempts. A production extension should persist this state outside process memory and use a task queue; the current implementation keeps the interface ready for that separation.
 
-\pagebreak
+### 5.6 Logical data and artifact model
+
+The session identifier is the root correlation key for the teacher workflow. A planning state references retrieved evidence, which in turn points to corpus nodes and durable source objects. Each approved generation creates a new generation identity; downstream segment, notebook, planner, and document artifacts belong to that generation. Regenerating an upstream artifact invalidates descendants rather than silently reusing them.
+
+Cloud SQL and GCS contain durable retrieval data. The current teacher-session record, local model files, notebook images, and generated PDFs can be process-local or container-local and are therefore operationally ephemeral. The diagram distinguishes these lifetimes so maintainers do not mistake a filesystem path for a durable client contract.
+
+![Logical data and artifact model](images/handoff/diagram-logical-data-model.png)
+
+*Figure 5. Logical entities and lineage. Generation identifiers prevent old segment or document results from being attached to a newly approved model.*
+
 
 ## 6. Planning Coach and Agent Orchestration
 
@@ -251,7 +295,6 @@ The generation baseline is Gemini 3.6 Flash, with Gemini 3.5 Flash as fallback. 
 
 Model failure should leave the current stage and approved state intact. The user receives a retryable message, while logs capture exception type and model path. A fallback call should occur only for provider/model failures appropriate for retry; schema-validation failures can use a constrained repair call or deterministic default, but must not silently invent teacher choices.
 
-\pagebreak
 
 ## 7. Story Ingestion and Framework Matching
 
@@ -279,7 +322,6 @@ The retrieval/evidence interface returns normalized evidence records containing 
 
 Fallback is visible in state/logging. It should not be represented as a successful vector lookup.
 
-\pagebreak
 
 ## 8. RAG Ingestion, Storage, and Retrieval
 
@@ -288,6 +330,8 @@ Fallback is visible in state/logging. It should not be represented as a successf
 Corpus ingestion reads source PDFs and lesson bundles, extracts semantically useful nodes, normalizes metadata, applies grade-band classification, creates embeddings, and writes durable artifacts. Standards/policy content is stored so retrieval and deterministic rules can both use it.
 
 ![RAG ingestion and retrieval](images/handoff/diagram-rag-ingestion-retrieval.png)
+
+*Figure 6. Offline and online RAG paths. Durable corpus preparation is separated from low-latency evidence retrieval during a teacher turn.*
 
 ### 8.2 Storage schema
 
@@ -330,7 +374,6 @@ Database errors, empty results, or unavailable embeddings should not stop basic 
 
 Raw and processed GCS paths should be versioned by bundle and processing run. Re-ingestion should be idempotent or create a new version before replacing the active corpus. Deletion of a source must account for extracted nodes, embeddings, visual crops, and derived indexes. A formal retention policy remains production-hardening work.
 
-\pagebreak
 
 ## 9. Rodin Model Generation
 
@@ -356,7 +399,6 @@ The teacher confirms broad recognizability, required components, and visible sep
 
 Timeouts, unavailable quotas, malformed downloads, and provider errors remain retryable at Step 3. The app must not advance with an unavailable OBJ. External tasks are cost-bearing; repeated button clicks should be deduplicated.
 
-\pagebreak
 
 ## 10. Bang Segmentation, Voxelization, and Connectors
 
@@ -377,6 +419,8 @@ The notebook port loads segmented OBJ geometry, normalizes scale and orientation
 Auto-recovery evaluates both block budget and segment budget. It tries a bounded set of voxel sizes and safe segment-merge policies, scores preservation and feasibility, and records every attempt. Moving and required regions are protected. Static fragments can merge based on adjacency, size, semantic compatibility, and contact topology.
 
 ![Automatic simplification](images/handoff/diagram-automatic-recovery.png)
+
+*Figure 7. Bounded recovery loop. Required and moving regions are preserved while safe static detail is merged or re-voxelized before escalation to the teacher.*
 
 The happy path should complete this loop internally. The teacher sees a candidate only after a valid or explicitly review-ready outcome. Manual regeneration is reserved for source geometry that cannot meet constraints without losing the approved concept.
 
@@ -407,7 +451,6 @@ The stage returns one of three practical outcomes:
 2. CSP review-ready candidate within configured safe caps when strict planning times out but artifacts are complete;
 3. regeneration recommendation containing concrete prompt and structured-constraint changes.
 
-\pagebreak
 
 ## 11. Validated BrickSmart Planner
 
@@ -416,6 +459,8 @@ The stage returns one of three practical outcomes:
 The validated planner maps physical regions to catalog parts, checks placement and interfaces, enforces inventory, and creates an ordered construction. It is stricter than visual approximation: a recognizable voxel shape is not sufficient if the required parts do not exist or exceed the kit.
 
 ![Rodin to validated build](images/handoff/diagram-rodin-validated-build.png)
+
+*Figure 8. 3D-to-physical-instructions pipeline. Semantic intent, geometric contacts, catalog rules, and finite inventory converge at the validated-planner gate.*
 
 ### 11.2 Inputs
 
@@ -456,7 +501,6 @@ The UI must not show only `INCOMPLETE`. It should expose the diagnostic and reco
 
 The primary build plan uses `notebook_outputs.instruction_steps` enriched with planner data. Each stage contains a title, teacher/student instruction, parts used, isometric image, multiview placement image, connector/movement note, and approval state. Final inventory and final built reference are included. Placeholder demo art is excluded.
 
-\pagebreak
 
 ## 12. Document Generation and Validation
 
@@ -465,6 +509,8 @@ The primary build plan uses `notebook_outputs.instruction_steps` enriched with p
 All three documents are generated from one approved session package: story analysis, teacher planning state, framework/RAG evidence, approved build object, movement/static mapping, inventory, validated build plan, and notebook images. Independent document refinement cannot change core build facts without invalidating related documents.
 
 ![Document generation](images/handoff/diagram-document-generation.png)
+
+*Figure 9. Publication pipeline. Three audience-specific documents share approved facts and actual build imagery, then pass independent validation and approval.*
 
 ### 12.2 Teacher lesson plan
 
@@ -497,7 +543,6 @@ The inspected validated lesson bundle contained one image in the lesson plan, on
 
 Markdown and JSON sources are retained next to PDFs for debugging and future editing. Download endpoints stream the PDF with a stable filename and appropriate media type. In production, generated artifacts should be persisted to GCS with lifecycle rules rather than relying solely on container storage.
 
-\pagebreak
 
 ## 13. GCP Deployment and Runtime Operations
 
@@ -545,35 +590,41 @@ Recommended alerts include elevated 5xx rate, Cloud Run instance start failures,
 
 Primary cost drivers are Rodin/Bang calls, Gemini tokens, embeddings, Cloud SQL uptime, and Cloud Run compute during long polling/processing. Use saved outputs for regression tests, bound external retries, cap document context, batch ingestion embeddings, and monitor Cloud SQL sizing. Minimum instances improve latency but increase baseline cost.
 
-\pagebreak
 
 ## 14. Security, Privacy, and Threat Considerations
 
-### 14.1 Data classification
+### 14.1 Cross-cutting security and operations view
+
+Security, observability, and recovery are cross-cutting concerns rather than one final API filter. Identity begins at the browser and Cloud Run ingress, continues through the runtime service account, and is narrowed again at each managed service. Sensitive configuration comes from Secret Manager; source content and generated artifacts follow separate retention paths; logs carry correlation metadata but exclude story bodies, credentials, signed URLs, and raw prompts.
+
+![Security and operations architecture](images/handoff/diagram-security-operations.png)
+
+*Figure 10. Defense, telemetry, and recovery view across the public edge, runtime, managed data, external processors, and operational controls.*
+
+### 14.2 Data classification
 
 Uploaded stories may contain copyrighted or classroom-specific content. Teacher prompts can contain class context. Generated artifacts may become instructional records. Before broad use, the institution should define whether these are internal, educational records, or otherwise regulated and set retention/access policies accordingly.
 
-### 14.2 Secret handling
+### 14.3 Secret handling
 
 No API key, password, private key, or credential JSON belongs in Git, screenshots, logs, or generated documents. Local `.env` files are ignored. GCP-native access should use application default credentials and service identities. If a key has ever appeared in a chat or repository history, rotate it.
 
-### 14.3 Prompt injection and untrusted documents
+### 14.4 Prompt injection and untrusted documents
 
 Source documents and retrieved nodes are untrusted data. Prompts delimit evidence and prohibit it from changing system instructions, calling tools, requesting secrets, or altering approval gates. The application validates structured output and uses deterministic transitions rather than executing retrieved instructions.
 
-### 14.4 External processors
+### 14.5 External processors
 
 Vertex AI and Hyper3D are external processing boundaries. Operators should review data-use terms, regional processing, retention, and acceptable-use controls. Do not send personally identifiable student information to 3D generation.
 
-### 14.5 File security
+### 14.6 File security
 
 Uploads need extension/MIME checks, size limits, safe filenames, isolated job directories, and parser timeouts. Downloads use application-generated paths keyed to known session artifacts. Never concatenate user strings into filesystem paths.
 
-### 14.6 Access control
+### 14.7 Access control
 
 The current research deployment may be broadly accessible for collaboration. A future production release should decide whether Cloud Run requires institutional authentication, add authorization around sessions and downloads, and segregate administrative ingestion endpoints.
 
-\pagebreak
 
 ## 15. Reliability, Backup, Restore, and Disaster Recovery
 
@@ -611,7 +662,6 @@ Formal RTO/RPO values have not been approved. For a research deployment, a reaso
 
 Cloud Run can reschedule a request to a new instance. Files under `work/build_jobs` and in-memory session data are therefore not reliable across instance changes or scale-out. Durable production design should store session metadata in a database/managed cache and generated artifacts in GCS, using signed or authorized download endpoints.
 
-\pagebreak
 
 ## 16. Deployment, Rollback, and Incident Diagnosis
 
@@ -647,7 +697,6 @@ Cloud Run keeps prior revisions. Route traffic back to the last known-good revis
 6. Confirm artifact generation/fingerprint and downstream invalidation.
 7. Reproduce with saved outputs before spending external credits.
 
-\pagebreak
 
 ## 17. Validation Evidence
 
@@ -671,7 +720,6 @@ The reference saved run used for final build/document screenshots produced 26 bl
 
 An operator must reauthenticate GCP, describe the live service and Cloud SQL resources, list approved secrets/buckets without values, verify Gemini quotas/location, and run the chosen release smoke test. These are deployment-time controls rather than undocumented assumptions.
 
-\pagebreak
 
 ## 18. Known Limitations and Technical Debt
 
@@ -695,7 +743,6 @@ An operator must reauthenticate GCP, describe the live service and Cloud SQL res
 
 **Long term:** evaluate editable slide export, LMS integration, larger catalog/inventory profiles, classroom usability studies, and systematic physical stability testing.
 
-\pagebreak
 
 ## 19. API Design Conventions
 
@@ -1370,7 +1417,6 @@ The generated OpenAPI snapshot at `docs/openapi/kidspark-api.openapi.json` is th
 5. Revoke the old external credential after validation.
 6. Search logs/repository/history if compromise is suspected.
 
-\pagebreak
 
 ## 26. Maintenance Guidance
 
@@ -1394,7 +1440,6 @@ Verify model availability/location/quota, structured-output behavior, token/cost
 
 Run migrations, ingest to a versioned processed prefix, verify counts/embeddings/grade bands, evaluate known-good queries, then switch the active corpus/version. Preserve prior artifacts until the new corpus passes regression.
 
-\pagebreak
 
 ## 27. Appendices
 

@@ -1,49 +1,193 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1482" viewBox="0 0 2000 1482">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">GCP Deployment</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="122" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Browser</text>
-<circle cx="148" cy="227" r="4" fill="#EF5B54"/>
-<text x="164" y="233" font-family="Arial" font-size="18" fill="#243142">Streamlit /kidspark</text>
-<circle cx="148" cy="257" r="4" fill="#EF5B54"/>
-<text x="164" y="263" font-family="Arial" font-size="18" fill="#243142">HTTPS</text>
-<rect x="827" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Cloud Run: kidspark</text>
-<circle cx="853" cy="227" r="4" fill="#EF5B54"/>
-<text x="869" y="233" font-family="Arial" font-size="18" fill="#243142">Port 8080 Streamlit</text>
-<circle cx="853" cy="257" r="4" fill="#EF5B54"/>
-<text x="869" y="263" font-family="Arial" font-size="18" fill="#243142">Port 8001 FastAPI (loopback)</text>
-<circle cx="853" cy="287" r="4" fill="#EF5B54"/>
-<text x="869" y="293" font-family="Arial" font-size="18" fill="#243142">Ephemeral work directory</text>
-<rect x="122" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Managed Data</text>
-<circle cx="148" cy="497" r="4" fill="#EF5B54"/>
-<text x="164" y="503" font-family="Arial" font-size="18" fill="#243142">Cloud SQL PostgreSQL</text>
-<circle cx="148" cy="527" r="4" fill="#EF5B54"/>
-<text x="164" y="533" font-family="Arial" font-size="18" fill="#243142">pgvector</text>
-<circle cx="148" cy="557" r="4" fill="#EF5B54"/>
-<text x="164" y="563" font-family="Arial" font-size="18" fill="#243142">GCS raw + processed buckets</text>
-<rect x="827" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Managed AI + Secrets</text>
-<circle cx="853" cy="497" r="4" fill="#EF5B54"/>
-<text x="869" y="503" font-family="Arial" font-size="18" fill="#243142">Vertex AI Gemini</text>
-<circle cx="853" cy="527" r="4" fill="#EF5B54"/>
-<text x="869" y="533" font-family="Arial" font-size="18" fill="#243142">Vertex embeddings</text>
-<circle cx="853" cy="557" r="4" fill="#EF5B54"/>
-<text x="869" y="563" font-family="Arial" font-size="18" fill="#243142">Secret Manager</text>
-<line x1="772" y1="242" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">HTTPS</text>
-<line x1="1152" y1="345" x2="447" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">SQL / objects</text>
-<line x1="1152" y1="345" x2="1152" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="1098" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="1152" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">ADC / secrets</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">GCP Deployment, Network, and Trust Boundaries</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">How the single Cloud Run service reaches managed GCP resources and the external Hyper3D boundary.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="461" height="1126" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Public client</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Internet-facing boundary</text>
+<rect x="527" y="180" width="461" height="1126" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="527" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="545" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Cloud Run service: kidspark</text>
+<text x="545" y="248" font-family="Arial" font-size="15" fill="#667085">Project kidspark-499901, us-central1</text>
+<rect x="1012" y="180" width="461" height="1126" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1012" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1030" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Managed GCP services</text>
+<text x="1030" y="248" font-family="Arial" font-size="15" fill="#667085">Private project resources and Google APIs</text>
+<rect x="1497" y="180" width="461" height="1126" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1497" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1515" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">External processor</text>
+<text x="1515" y="248" font-family="Arial" font-size="15" fill="#667085">Third-party trust boundary</text>
+<line x1="485" y1="384" x2="545" y2="546" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="456" y="445" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="467" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">HTTPS :443</text>
+<line x1="757" y1="437" x2="757" y2="459" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="698" y="428" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="450" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">starts</text>
+<line x1="757" y1="437" x2="757" y2="655" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="698" y="526" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="548" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">starts</text>
+<line x1="757" y1="633" x2="757" y2="655" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="669" y="624" width="176" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="646" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">HTTP 127.0.0.1:8001</text>
+<line x1="757" y1="883" x2="757" y2="905" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="669" y="874" width="176" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="757" y="896" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">state and artifacts</text>
+<line x1="970" y1="769" x2="1030" y2="370" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="916" y="540" width="168" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="562" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">Cloud SQL socket /</text>
+<text x="1000" y="579" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">psycopg</text>
+<line x1="970" y1="769" x2="1030" y2="580" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="916" y="654" width="168" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="676" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">Google Storage API</text>
+<line x1="970" y1="769" x2="1030" y2="776" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="916" y="752" width="168" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="774" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">Vertex API via ADC</text>
+<line x1="970" y1="1022" x2="1030" y2="972" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="924" y="977" width="152" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="999" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">secret injection</text>
+<line x1="970" y1="769" x2="1030" y2="1181" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="892" y="955" width="216" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="977" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">structured stdout/stderr</text>
+<line x1="970" y1="769" x2="1515" y2="387" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="558" width="184" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="580" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">HTTPS REST + polling</text>
+<rect x="60" y="270" width="425" height="228" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Teacher browser</text>
+<rect x="409" y="280" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="441" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="342" r="4" fill="#E8B84C"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">HTTPS to /kidspark</text>
+<circle cx="81" cy="376" r="4" fill="#E8B84C"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Receives Streamlit UI and</text>
+<text x="94" y="410" font-family="Arial" font-size="18" fill="#243142">downloads</text>
+<circle cx="81" cy="437" r="4" fill="#E8B84C"/>
+<text x="94" y="444" font-family="Arial" font-size="18" fill="#243142">No direct access to internal</text>
+<text x="94" y="471" font-family="Arial" font-size="18" fill="#243142">API port</text>
+<rect x="545" y="270" width="425" height="167" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">cloudrun_start.py</text>
+<rect x="877" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="342" r="4" fill="#7A9E9F"/>
+<text x="579" y="349" font-family="Arial" font-size="18" fill="#243142">Starts and supervises two</text>
+<text x="579" y="376" font-family="Arial" font-size="18" fill="#243142">processes</text>
+<circle cx="566" cy="403" r="4" fill="#7A9E9F"/>
+<text x="579" y="410" font-family="Arial" font-size="18" fill="#243142">Propagates child failures</text>
+<rect x="545" y="459" width="425" height="174" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="561" y="491" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Streamlit process</text>
+<rect x="886" y="469" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="922" y="488" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="566" cy="531" r="4" fill="#2F7F8D"/>
+<text x="579" y="538" font-family="Arial" font-size="18" fill="#243142">0.0.0.0:$PORT (normally 8080)</text>
+<circle cx="566" cy="565" r="4" fill="#2F7F8D"/>
+<text x="579" y="572" font-family="Arial" font-size="18" fill="#243142">Public /kidspark route</text>
+<circle cx="566" cy="599" r="4" fill="#2F7F8D"/>
+<text x="579" y="606" font-family="Arial" font-size="18" fill="#243142">Calls FastAPI over loopback</text>
+<rect x="545" y="655" width="425" height="228" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="561" y="687" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">FastAPI process</text>
+<rect x="886" y="665" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="922" y="684" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="566" cy="727" r="4" fill="#2F7F8D"/>
+<text x="579" y="734" font-family="Arial" font-size="18" fill="#243142">127.0.0.1:8001 only</text>
+<circle cx="566" cy="761" r="4" fill="#2F7F8D"/>
+<text x="579" y="768" font-family="Arial" font-size="18" fill="#243142">Session orchestration and</text>
+<text x="579" y="795" font-family="Arial" font-size="18" fill="#243142">downloads</text>
+<circle cx="566" cy="822" r="4" fill="#2F7F8D"/>
+<text x="579" y="829" font-family="Arial" font-size="18" fill="#243142">Health, readiness, runtime</text>
+<text x="579" y="856" font-family="Arial" font-size="18" fill="#243142">settings</text>
+<rect x="545" y="905" width="425" height="235" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="561" y="937" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Runtime identity and local disk</text>
+<rect x="859" y="915" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="909" y="934" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="566" cy="977" r="4" fill="#7C5AA6"/>
+<text x="579" y="984" font-family="Arial" font-size="18" fill="#243142">Cloud Run service account</text>
+<circle cx="566" cy="1011" r="4" fill="#7C5AA6"/>
+<text x="579" y="1018" font-family="Arial" font-size="18" fill="#243142">Application Default Credentials</text>
+<circle cx="566" cy="1045" r="4" fill="#7C5AA6"/>
+<text x="579" y="1052" font-family="Arial" font-size="18" fill="#243142">Ephemeral /work and generated</text>
+<text x="579" y="1079" font-family="Arial" font-size="18" fill="#243142">files</text>
+<circle cx="566" cy="1106" r="4" fill="#7C5AA6"/>
+<text x="579" y="1113" font-family="Arial" font-size="18" fill="#243142">2 CPU / 4 GiB / 3600s baseline</text>
+<rect x="1030" y="270" width="425" height="201" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1046" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Cloud SQL PostgreSQL</text>
+<rect x="1344" y="280" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1394" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1051" cy="342" r="4" fill="#7C5AA6"/>
+<text x="1064" y="349" font-family="Arial" font-size="18" fill="#243142">pgvector extension</text>
+<circle cx="1051" cy="376" r="4" fill="#7C5AA6"/>
+<text x="1064" y="383" font-family="Arial" font-size="18" fill="#243142">document_bundle, pdf_node</text>
+<circle cx="1051" cy="410" r="4" fill="#7C5AA6"/>
+<text x="1064" y="417" font-family="Arial" font-size="18" fill="#243142">standard_rules and vector</text>
+<text x="1064" y="444" font-family="Arial" font-size="18" fill="#243142">search</text>
+<rect x="1030" y="493" width="425" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="1046" y="525" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Cloud Storage</text>
+<rect x="1344" y="503" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1394" y="522" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="1051" cy="565" r="4" fill="#7C5AA6"/>
+<text x="1064" y="572" font-family="Arial" font-size="18" fill="#243142">kidspark-project-data</text>
+<circle cx="1051" cy="599" r="4" fill="#7C5AA6"/>
+<text x="1064" y="606" font-family="Arial" font-size="18" fill="#243142">kidspark-data-processed</text>
+<circle cx="1051" cy="633" r="4" fill="#7C5AA6"/>
+<text x="1064" y="640" font-family="Arial" font-size="18" fill="#243142">Corpus lineage and page assets</text>
+<rect x="1030" y="689" width="425" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="721" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Vertex AI</text>
+<rect x="1353" y="699" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="718" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="761" r="4" fill="#EF5B54"/>
+<text x="1064" y="768" font-family="Arial" font-size="18" fill="#243142">Gemini 3.6 Flash primary</text>
+<circle cx="1051" cy="795" r="4" fill="#EF5B54"/>
+<text x="1064" y="802" font-family="Arial" font-size="18" fill="#243142">Gemini 3.5 Flash fallback</text>
+<circle cx="1051" cy="829" r="4" fill="#EF5B54"/>
+<text x="1064" y="836" font-family="Arial" font-size="18" fill="#243142">gemini-embedding-001 (3072d)</text>
+<rect x="1030" y="885" width="425" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="917" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Secret Manager</text>
+<rect x="1353" y="895" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="914" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="957" r="4" fill="#EF5B54"/>
+<text x="1064" y="964" font-family="Arial" font-size="18" fill="#243142">Database URL</text>
+<circle cx="1051" cy="991" r="4" fill="#EF5B54"/>
+<text x="1064" y="998" font-family="Arial" font-size="18" fill="#243142">Hyper3D credential</text>
+<circle cx="1051" cy="1025" r="4" fill="#EF5B54"/>
+<text x="1064" y="1032" font-family="Arial" font-size="18" fill="#243142">Optional Gemini API key</text>
+<rect x="1030" y="1081" width="425" height="201" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1046" y="1113" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Cloud Logging and Monitoring</text>
+<rect x="1353" y="1091" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1398" y="1110" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1051" cy="1153" r="4" fill="#EF5B54"/>
+<text x="1064" y="1160" font-family="Arial" font-size="18" fill="#243142">Request/stage correlation</text>
+<circle cx="1051" cy="1187" r="4" fill="#EF5B54"/>
+<text x="1064" y="1194" font-family="Arial" font-size="18" fill="#243142">Provider duration and fallback</text>
+<circle cx="1051" cy="1221" r="4" fill="#EF5B54"/>
+<text x="1064" y="1228" font-family="Arial" font-size="18" fill="#243142">Failures without sensitive</text>
+<text x="1064" y="1255" font-family="Arial" font-size="18" fill="#243142">payloads</text>
+<rect x="1515" y="270" width="425" height="235" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1531" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Hyper3D API</text>
+<rect x="1838" y="280" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1883" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1536" cy="342" r="4" fill="#EF5B54"/>
+<text x="1549" y="349" font-family="Arial" font-size="18" fill="#243142">Rodin generation endpoint</text>
+<circle cx="1536" cy="376" r="4" fill="#EF5B54"/>
+<text x="1549" y="383" font-family="Arial" font-size="18" fill="#243142">Bang segmentation endpoint</text>
+<circle cx="1536" cy="410" r="4" fill="#EF5B54"/>
+<text x="1549" y="417" font-family="Arial" font-size="18" fill="#243142">Bearer credential</text>
+<circle cx="1536" cy="444" r="4" fill="#EF5B54"/>
+<text x="1549" y="451" font-family="Arial" font-size="18" fill="#243142">Asynchronous task IDs and</text>
+<text x="1549" y="478" font-family="Arial" font-size="18" fill="#243142">downloads</text>
+<rect x="150" y="1340" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1359" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1340" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1359" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1340" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1359" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1340" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1359" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1340" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1359" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1340" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1359" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1340" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1359" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1411" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>

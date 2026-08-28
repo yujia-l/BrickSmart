@@ -1,10 +1,43 @@
 flowchart LR
-  N0["Browser<br/>Streamlit /kidspark<br/>HTTPS"]
-  N1["Cloud Run: kidspark<br/>Port 8080 Streamlit<br/>Port 8001 FastAPI (loopback)<br/>Ephemeral work directory"]
-  N2["Managed Data<br/>Cloud SQL PostgreSQL<br/>pgvector<br/>GCS raw + processed buckets"]
-  N3["Managed AI + Secrets<br/>Vertex AI Gemini<br/>Vertex embeddings<br/>Secret Manager"]
-  N0 -->|HTTPS| N1
-  N1 -->|SQL / objects| N2
-  N1 -->|ADC / secrets| N3
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% How the single Cloud Run service reaches managed GCP resources and the external Hyper3D boundary.
+  subgraph S0["Public client - Internet-facing boundary"]
+    direction TB
+    browser["Teacher browser<br/>HTTPS to /kidspark<br/>Receives Streamlit UI and downloads<br/>No direct access to internal API port"]:::actor
+  end
+  subgraph S1["Cloud Run service: kidspark - Project kidspark-499901, us-central1"]
+    direction TB
+    launcher["cloudrun_start.py<br/>Starts and supervises two processes<br/>Propagates child failures"]:::service
+    streamlit["Streamlit process<br/>0.0.0.0:$PORT (normally 8080)<br/>Public /kidspark route<br/>Calls FastAPI over loopback"]:::system
+    fastapi["FastAPI process<br/>127.0.0.1:8001 only<br/>Session orchestration and downloads<br/>Health, readiness, runtime settings"]:::system
+    runtime["Runtime identity and local disk<br/>Cloud Run service account<br/>Application Default Credentials<br/>Ephemeral /work and generated files<br/>2 CPU / 4 GiB / 3600s baseline"]:::datastore
+  end
+  subgraph S2["Managed GCP services - Private project resources and Google APIs"]
+    direction TB
+    sql["Cloud SQL PostgreSQL<br/>pgvector extension<br/>document_bundle, pdf_node<br/>standard_rules and vector search"]:::datastore
+    gcs["Cloud Storage<br/>kidspark-project-data<br/>kidspark-data-processed<br/>Corpus lineage and page assets"]:::datastore
+    vertex["Vertex AI<br/>Gemini 3.6 Flash primary<br/>Gemini 3.5 Flash fallback<br/>gemini-embedding-001 (3072d)"]:::external
+    secrets["Secret Manager<br/>Database URL<br/>Hyper3D credential<br/>Optional Gemini API key"]:::external
+    ops["Cloud Logging and Monitoring<br/>Request/stage correlation<br/>Provider duration and fallback<br/>Failures without sensitive payloads"]:::external
+  end
+  subgraph S3["External processor - Third-party trust boundary"]
+    direction TB
+    hyper3d["Hyper3D API<br/>Rodin generation endpoint<br/>Bang segmentation endpoint<br/>Bearer credential<br/>Asynchronous task IDs and downloads"]:::external
+  end
+  browser -->|HTTPS :443| streamlit
+  launcher -->|starts| streamlit
+  launcher -->|starts| fastapi
+  streamlit -->|HTTP 127.0.0.1:8001| fastapi
+  fastapi -->|state and artifacts| runtime
+  fastapi -->|Cloud SQL socket / psycopg| sql
+  fastapi -->|Google Storage API| gcs
+  fastapi -->|Vertex API via ADC| vertex
+  runtime -->|secret injection| secrets
+  fastapi -->|structured stdout/stderr| ops
+  fastapi -->|HTTPS REST + polling| hyper3d
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

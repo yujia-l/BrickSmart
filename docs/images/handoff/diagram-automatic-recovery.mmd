@@ -1,11 +1,35 @@
 flowchart LR
-  N0["Candidate<br/>OBJ + segments<br/>Initial voxel plan"]
-  N1["Feasibility Check<br/>Block budget<br/>Segment budget<br/>Preservation<br/>Inventory"]
-  N2["Bounded Auto-Recovery<br/>Tune voxel size<br/>Merge fragments<br/>Re-run planner<br/>Record attempts"]
-  N3["Outcome<br/>Valid plan<br/>Review-ready CSP fallback<br/>Teacher regeneration guidance"]
-  N0 -->|measure| N1
-  N1 -->|if recoverable| N2
-  N2 -->|retry| N1
-  N1 -->|resolve| N3
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% How the happy path self-corrects block and segment excess before asking the teacher to regenerate the model.
+  subgraph S0["Measure candidate - Every Bang/notebook generation"]
+    direction TB
+    candidate["Current candidate<br/>Approved OBJ generation<br/>Bang source segments<br/>Voxelized physical regions<br/>Initial block approximation"]:::artifact
+    measure["Constraint evaluator<br/>Block count vs max_validated_blocks<br/>Source/physical segments vs max_semantic_parts<br/>Required/moving-part preservation<br/>Inventory and planner status"]:::decision
+  end
+  subgraph S1["Bounded internal recovery - No teacher action while safe options remain"]
+    direction TB
+    tune["Attempt policy<br/>Try configured voxel-size candidates<br/>Consolidate adjacent static fragments<br/>Protect moving and required regions<br/>Never invent unsupported catalog parts"]:::service
+    score["Attempt scoring<br/>Feasibility first<br/>Then semantic preservation<br/>Then block/segment margin<br/>Record diagnostics and selected attempt"]:::decision
+    retry["Bounded retry controller<br/>Small fixed attempt budget<br/>No repeated paid Rodin calls<br/>May rerun local physicalization/planner<br/>Stops on valid or no improvement"]:::service
+  end
+  subgraph S2["Outcome and user path - Only actionable states reach the teacher"]
+    direction TB
+    valid["Approachable result<br/>Validated or CSP review-ready<br/>Inventory feasible<br/>True steps and images available<br/>Teacher can inspect and approve"]:::artifact
+    recoverable["Local exception result<br/>Best candidate retained<br/>Clear blocking measurements<br/>Label/connector refinement if sufficient"]:::artifact
+    regen["Model regeneration required<br/>Specific Rodin prompt update<br/>Prefilled build constraints<br/>Old segment/build generations invalidated<br/>One prominent return action"]:::artifact
+  end
+  candidate -->|evaluate| measure
+  measure -->|all gates pass| valid
+  measure -->|safe recovery exists| tune
+  tune -->|candidate attempt| score
+  score -->|rank| retry
+  retry -.->|next local attempt| measure
+  score -->|best local result| recoverable
+  recoverable -->|still blocked| regen
+  regen -.->|new model generation| candidate
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

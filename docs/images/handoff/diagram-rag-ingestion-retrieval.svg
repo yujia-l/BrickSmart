@@ -1,69 +1,226 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1496" viewBox="0 0 2000 1496">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">RAG Ingestion and Retrieval</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="40" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="40" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="60" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Source Corpus</text>
-<circle cx="66" cy="227" r="4" fill="#EF5B54"/>
-<text x="82" y="233" font-family="Arial" font-size="18" fill="#243142">PDFs</text>
-<circle cx="66" cy="257" r="4" fill="#EF5B54"/>
-<text x="82" y="263" font-family="Arial" font-size="18" fill="#243142">Lesson bundles</text>
-<circle cx="66" cy="287" r="4" fill="#EF5B54"/>
-<text x="82" y="293" font-family="Arial" font-size="18" fill="#243142">Standards and policy</text>
-<rect x="565" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="565" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="585" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Ingestion</text>
-<circle cx="591" cy="227" r="4" fill="#EF5B54"/>
-<text x="607" y="233" font-family="Arial" font-size="18" fill="#243142">Extract nodes</text>
-<circle cx="591" cy="257" r="4" fill="#EF5B54"/>
-<text x="607" y="263" font-family="Arial" font-size="18" fill="#243142">Caption selective visuals</text>
-<circle cx="591" cy="287" r="4" fill="#EF5B54"/>
-<text x="607" y="293" font-family="Arial" font-size="18" fill="#243142">Normalize grade bands</text>
-<circle cx="591" cy="317" r="4" fill="#EF5B54"/>
-<text x="607" y="323" font-family="Arial" font-size="18" fill="#243142">Embed</text>
-<rect x="1090" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="1090" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="1110" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Storage</text>
-<circle cx="1116" cy="227" r="4" fill="#EF5B54"/>
-<text x="1132" y="233" font-family="Arial" font-size="18" fill="#243142">GCS artifacts</text>
-<circle cx="1116" cy="257" r="4" fill="#EF5B54"/>
-<text x="1132" y="263" font-family="Arial" font-size="18" fill="#243142">document_bundle</text>
-<circle cx="1116" cy="287" r="4" fill="#EF5B54"/>
-<text x="1132" y="293" font-family="Arial" font-size="18" fill="#243142">pdf_node + vectors</text>
-<circle cx="1116" cy="317" r="4" fill="#EF5B54"/>
-<text x="1132" y="323" font-family="Arial" font-size="18" fill="#243142">standard_rules</text>
-<rect x="40" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="40" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="60" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Teacher Query</text>
-<circle cx="66" cy="497" r="4" fill="#EF5B54"/>
-<text x="82" y="503" font-family="Arial" font-size="18" fill="#243142">Grade-band filter</text>
-<circle cx="66" cy="527" r="4" fill="#EF5B54"/>
-<text x="82" y="533" font-family="Arial" font-size="18" fill="#243142">Vector candidates</text>
-<circle cx="66" cy="557" r="4" fill="#EF5B54"/>
-<text x="82" y="563" font-family="Arial" font-size="18" fill="#243142">Policy lookup</text>
-<circle cx="66" cy="587" r="4" fill="#EF5B54"/>
-<text x="82" y="593" font-family="Arial" font-size="18" fill="#243142">Evidence trace</text>
-<rect x="565" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="565" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="585" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Planning Agent</text>
-<circle cx="591" cy="497" r="4" fill="#EF5B54"/>
-<text x="607" y="503" font-family="Arial" font-size="18" fill="#243142">Grounded suggestions</text>
-<circle cx="591" cy="527" r="4" fill="#EF5B54"/>
-<text x="607" y="533" font-family="Arial" font-size="18" fill="#243142">Static fallback</text>
-<circle cx="591" cy="557" r="4" fill="#EF5B54"/>
-<text x="607" y="563" font-family="Arial" font-size="18" fill="#243142">Citation lineage</text>
-<line x1="510" y1="242" x2="565" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="483" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="537" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">process</text>
-<line x1="1035" y1="242" x2="1090" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="1008" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="1062" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">load</text>
-<line x1="1325" y1="345" x2="275" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="746" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="800" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">retrieve</text>
-<line x1="510" y1="512" x2="565" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="483" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="537" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">ground</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">RAG Offline Ingestion and Online Retrieval</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">How curriculum evidence becomes traceable pgvector records and then grounds each teacher-planning turn.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="622" height="1140" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Offline corpus ingestion</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Administrative/research workflow</text>
+<rect x="688" y="180" width="622" height="1140" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="688" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="706" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Durable knowledge stores</text>
+<text x="706" y="248" font-family="Arial" font-size="15" fill="#667085">Shared production data</text>
+<rect x="1334" y="180" width="622" height="1140" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1334" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="1352" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Online teacher-turn retrieval</text>
+<text x="1352" y="248" font-family="Arial" font-size="15" fill="#667085">Read-only classroom path</text>
+<line x1="353" y1="478" x2="353" y2="500" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="294" y="469" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="353" y="491" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">parse</text>
+<line x1="353" y1="674" x2="353" y2="696" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="285" y="665" width="136" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="353" y="687" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">nodes + assets</text>
+<line x1="353" y1="904" x2="353" y2="926" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="261" y="895" width="184" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="353" y="917" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">text/caption batches</text>
+<line x1="646" y1="374" x2="706" y2="341" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="604" y="337" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="359" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">store originals</text>
+<line x1="646" y1="800" x2="706" y2="521" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="604" y="640" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="662" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">write artifacts</text>
+<line x1="646" y1="800" x2="706" y2="717" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="604" y="738" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="760" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">upsert metadata</text>
+<line x1="646" y1="1030" x2="706" y2="930" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="608" y="960" width="136" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="982" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">upsert vectors</text>
+<line x1="646" y1="800" x2="706" y2="1127" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="612" y="943" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="965" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">load policies</text>
+<line x1="1645" y1="444" x2="1645" y2="466" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1565" y="435" width="160" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1645" y="457" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">normalize + embed</text>
+<line x1="1645" y1="640" x2="1645" y2="662" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1585" y="631" width="120" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1645" y="653" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">query vector</text>
+<line x1="1292" y1="930" x2="1352" y2="766" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1250" y="819" width="144" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="841" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">filtered vector</text>
+<text x="1322" y="858" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">candidates</text>
+<line x1="1292" y1="1127" x2="1352" y2="766" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1254" y="926" width="136" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="948" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">policy anchors</text>
+<line x1="1645" y1="870" x2="1645" y2="892" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1573" y="861" width="144" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1645" y="883" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">ranked evidence</text>
+<line x1="1645" y1="1100" x2="1645" y2="1122" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1557" y="1082" width="176" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1645" y="1104" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">untrusted reference</text>
+<text x="1645" y="1121" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">context</text>
+<rect x="60" y="270" width="586" height="208" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Source documents</text>
+<rect x="544" y="280" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="589" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="81" cy="342" r="4" fill="#3A7D44"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">Framework and standards PDFs</text>
+<circle cx="81" cy="376" r="4" fill="#3A7D44"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Teacher lesson plans</text>
+<circle cx="81" cy="410" r="4" fill="#3A7D44"/>
+<text x="94" y="417" font-family="Arial" font-size="18" fill="#243142">Activity guides and slide companions</text>
+<circle cx="81" cy="444" r="4" fill="#3A7D44"/>
+<text x="94" y="451" font-family="Arial" font-size="18" fill="#243142">Catalog and policy data</text>
+<rect x="60" y="500" width="586" height="174" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="76" y="532" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Docling extraction</text>
+<rect x="553" y="510" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="594" y="529" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="81" cy="572" r="4" fill="#7A9E9F"/>
+<text x="94" y="579" font-family="Arial" font-size="18" fill="#243142">Page-aware text and tables</text>
+<circle cx="81" cy="606" r="4" fill="#7A9E9F"/>
+<text x="94" y="613" font-family="Arial" font-size="18" fill="#243142">Document/node identity</text>
+<circle cx="81" cy="640" r="4" fill="#7A9E9F"/>
+<text x="94" y="647" font-family="Arial" font-size="18" fill="#243142">Image and page-crop references</text>
+<rect x="60" y="696" width="586" height="208" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="76" y="728" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Normalize and enrich</text>
+<rect x="553" y="706" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="594" y="725" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="81" cy="768" r="4" fill="#7A9E9F"/>
+<text x="94" y="775" font-family="Arial" font-size="18" fill="#243142">Canonical grade_band</text>
+<circle cx="81" cy="802" r="4" fill="#7A9E9F"/>
+<text x="94" y="809" font-family="Arial" font-size="18" fill="#243142">Bundle and content roles</text>
+<circle cx="81" cy="836" r="4" fill="#7A9E9F"/>
+<text x="94" y="843" font-family="Arial" font-size="18" fill="#243142">Selective visual captions</text>
+<circle cx="81" cy="870" r="4" fill="#7A9E9F"/>
+<text x="94" y="877" font-family="Arial" font-size="18" fill="#243142">Provenance and checksums</text>
+<rect x="60" y="926" width="586" height="208" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="76" y="958" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Embedding pipeline</text>
+<rect x="544" y="936" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="589" y="955" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="81" cy="998" r="4" fill="#EF5B54"/>
+<text x="94" y="1005" font-family="Arial" font-size="18" fill="#243142">gemini-embedding-001</text>
+<circle cx="81" cy="1032" r="4" fill="#EF5B54"/>
+<text x="94" y="1039" font-family="Arial" font-size="18" fill="#243142">3072-dimensional text vectors</text>
+<circle cx="81" cy="1066" r="4" fill="#EF5B54"/>
+<text x="94" y="1073" font-family="Arial" font-size="18" fill="#243142">Batched, quota-aware writes</text>
+<circle cx="81" cy="1100" r="4" fill="#EF5B54"/>
+<text x="94" y="1107" font-family="Arial" font-size="18" fill="#243142">Selective visual embeddings only</text>
+<rect x="706" y="270" width="586" height="142" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="722" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">GCS source bucket</text>
+<rect x="1181" y="280" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1231" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="727" cy="342" r="4" fill="#7C5AA6"/>
+<text x="740" y="349" font-family="Arial" font-size="18" fill="#243142">Original PDFs</text>
+<circle cx="727" cy="376" r="4" fill="#7C5AA6"/>
+<text x="740" y="383" font-family="Arial" font-size="18" fill="#243142">Immutable source lineage</text>
+<rect x="706" y="434" width="586" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="722" y="466" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">GCS processed bucket</text>
+<rect x="1181" y="444" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1231" y="463" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="727" cy="506" r="4" fill="#7C5AA6"/>
+<text x="740" y="513" font-family="Arial" font-size="18" fill="#243142">Knowledge_chunks bundles</text>
+<circle cx="727" cy="540" r="4" fill="#7C5AA6"/>
+<text x="740" y="547" font-family="Arial" font-size="18" fill="#243142">Page crops and extracted artifacts</text>
+<circle cx="727" cy="574" r="4" fill="#7C5AA6"/>
+<text x="740" y="581" font-family="Arial" font-size="18" fill="#243142">Stable gs:// URIs</text>
+<rect x="706" y="630" width="586" height="174" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="722" y="662" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">document_bundle</text>
+<rect x="1181" y="640" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1231" y="659" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="727" cy="702" r="4" fill="#7C5AA6"/>
+<text x="740" y="709" font-family="Arial" font-size="18" fill="#243142">Document identity and metadata</text>
+<circle cx="727" cy="736" r="4" fill="#7C5AA6"/>
+<text x="740" y="743" font-family="Arial" font-size="18" fill="#243142">Processing/version status</text>
+<circle cx="727" cy="770" r="4" fill="#7C5AA6"/>
+<text x="740" y="777" font-family="Arial" font-size="18" fill="#243142">GCS lineage</text>
+<rect x="706" y="826" width="586" height="208" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="722" y="858" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">pdf_node</text>
+<rect x="1181" y="836" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1231" y="855" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="727" cy="898" r="4" fill="#7C5AA6"/>
+<text x="740" y="905" font-family="Arial" font-size="18" fill="#243142">Normalized content</text>
+<circle cx="727" cy="932" r="4" fill="#7C5AA6"/>
+<text x="740" y="939" font-family="Arial" font-size="18" fill="#243142">grade_band and role</text>
+<circle cx="727" cy="966" r="4" fill="#7C5AA6"/>
+<text x="740" y="973" font-family="Arial" font-size="18" fill="#243142">embedding vector(3072)</text>
+<circle cx="727" cy="1000" r="4" fill="#7C5AA6"/>
+<text x="740" y="1007" font-family="Arial" font-size="18" fill="#243142">Bundle/page provenance</text>
+<rect x="706" y="1056" width="586" height="142" rx="12" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="3"/>
+<text x="722" y="1088" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">standard_rules</text>
+<rect x="1181" y="1066" width="99" height="28" rx="9" fill="white" stroke="#7C5AA6"/>
+<text x="1231" y="1085" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7C5AA6">DATASTORE</text>
+<circle cx="727" cy="1128" r="4" fill="#7C5AA6"/>
+<text x="740" y="1135" font-family="Arial" font-size="18" fill="#243142">Framework and policy anchors</text>
+<circle cx="727" cy="1162" r="4" fill="#7C5AA6"/>
+<text x="740" y="1169" font-family="Arial" font-size="18" fill="#243142">Structured grade/applicability filters</text>
+<rect x="1352" y="270" width="586" height="174" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1368" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Retrieval request</text>
+<rect x="1845" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1886" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1373" cy="342" r="4" fill="#7A9E9F"/>
+<text x="1386" y="349" font-family="Arial" font-size="18" fill="#243142">Teacher turn + planning state</text>
+<circle cx="1373" cy="376" r="4" fill="#7A9E9F"/>
+<text x="1386" y="383" font-family="Arial" font-size="18" fill="#243142">Canonical grade band</text>
+<circle cx="1373" cy="410" r="4" fill="#7A9E9F"/>
+<text x="1386" y="417" font-family="Arial" font-size="18" fill="#243142">Seed k and timeout</text>
+<rect x="1352" y="466" width="586" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1368" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Query understanding</text>
+<rect x="1836" y="476" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1881" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1373" cy="538" r="4" fill="#EF5B54"/>
+<text x="1386" y="545" font-family="Arial" font-size="18" fill="#243142">Optional expansion</text>
+<circle cx="1373" cy="572" r="4" fill="#EF5B54"/>
+<text x="1386" y="579" font-family="Arial" font-size="18" fill="#243142">Gemini query embedding</text>
+<circle cx="1373" cy="606" r="4" fill="#EF5B54"/>
+<text x="1386" y="613" font-family="Arial" font-size="18" fill="#243142">No model instructions from corpus</text>
+<rect x="1352" y="662" width="586" height="208" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1368" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Hybrid evidence selection</text>
+<rect x="1845" y="672" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1886" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1373" cy="734" r="4" fill="#7A9E9F"/>
+<text x="1386" y="741" font-family="Arial" font-size="18" fill="#243142">Exact grade filter</text>
+<circle cx="1373" cy="768" r="4" fill="#7A9E9F"/>
+<text x="1386" y="775" font-family="Arial" font-size="18" fill="#243142">Vector nearest neighbors</text>
+<circle cx="1373" cy="802" r="4" fill="#7A9E9F"/>
+<text x="1386" y="809" font-family="Arial" font-size="18" fill="#243142">Policy lookup</text>
+<circle cx="1373" cy="836" r="4" fill="#7A9E9F"/>
+<text x="1386" y="843" font-family="Arial" font-size="18" fill="#243142">Deduplicate and rank</text>
+<rect x="1352" y="892" width="586" height="208" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="1368" y="924" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Evidence pack</text>
+<rect x="1836" y="902" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="1881" y="921" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="1373" cy="964" r="4" fill="#3A7D44"/>
+<text x="1386" y="971" font-family="Arial" font-size="18" fill="#243142">Source and node IDs</text>
+<circle cx="1373" cy="998" r="4" fill="#3A7D44"/>
+<text x="1386" y="1005" font-family="Arial" font-size="18" fill="#243142">Excerpt/summary and relevance</text>
+<circle cx="1373" cy="1032" r="4" fill="#3A7D44"/>
+<text x="1386" y="1039" font-family="Arial" font-size="18" fill="#243142">Retrieval mode and lineage</text>
+<circle cx="1373" cy="1066" r="4" fill="#3A7D44"/>
+<text x="1386" y="1073" font-family="Arial" font-size="18" fill="#243142">Bounded prompt context</text>
+<rect x="1352" y="1122" width="586" height="174" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="1368" y="1154" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Planning coach</text>
+<rect x="1854" y="1132" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="1890" y="1151" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="1373" cy="1194" r="4" fill="#2F7F8D"/>
+<text x="1386" y="1201" font-family="Arial" font-size="18" fill="#243142">Grounded recommendations</text>
+<circle cx="1373" cy="1228" r="4" fill="#2F7F8D"/>
+<text x="1386" y="1235" font-family="Arial" font-size="18" fill="#243142">Deterministic readiness guard</text>
+<circle cx="1373" cy="1262" r="4" fill="#2F7F8D"/>
+<text x="1386" y="1269" font-family="Arial" font-size="18" fill="#243142">Static evidence fallback if degraded</text>
+<rect x="150" y="1354" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1373" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1354" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1373" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1354" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1373" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1354" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1373" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1354" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1373" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1354" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1373" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1354" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1373" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1425" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>
