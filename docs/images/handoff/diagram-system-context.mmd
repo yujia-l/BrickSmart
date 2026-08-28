@@ -1,11 +1,32 @@
 flowchart LR
-  N0["Teacher<br/>Story/PDF<br/>Planning decisions<br/>Approvals"]
-  N1["KidSpark AI<br/>Guided workflow<br/>Evidence-grounded coaching<br/>Validated outputs"]
-  N2["External Services<br/>Vertex AI<br/>Cloud SQL + pgvector<br/>Hyper3D Rodin / Bang"]
-  N3["Classroom<br/>BrickSmart build<br/>Lesson plan<br/>Activity guide<br/>Slide companion"]
-  N0 -->|plans| N1
-  N1 -->|calls| N2
-  N2 -->|returns| N1
-  N1 -->|publishes| N3
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% Who uses KidSpark AI, what value crosses the system boundary, and which external platforms it depends on.
+  subgraph S0["People and classroom - Primary users and beneficiaries"]
+    direction TB
+    teacher["Teacher<br/>Uploads or types a story<br/>Plans and approves each checkpoint<br/>Downloads the lesson bundle"]:::actor
+    students["Students and classroom<br/>Read, discuss, build, test<br/>Use the activity guide and slides<br/>Assemble validated BrickSmart model"]:::actor
+    team["Jacobs research and operations team<br/>Maintains curriculum corpus<br/>Operates deployment and ingestion<br/>Reviews outcomes and limitations"]:::actor
+  end
+  subgraph S1["System of interest - KidSpark AI / BrickSmart"]
+    direction TB
+    kidspark["KidSpark AI<br/>Teacher-guided six-step workflow<br/>Evidence-grounded lesson coaching<br/>3D-to-physical build planning<br/>Three coordinated classroom PDFs<br/>Human approval before consequential stages"]:::system
+  end
+  subgraph S2["External systems - Managed platforms and specialist services"]
+    direction TB
+    vertex["Google Vertex AI<br/>Gemini generation<br/>Text embeddings<br/>Primary and fallback model routing"]:::external
+    data["GCP data platform<br/>Cloud SQL PostgreSQL + pgvector<br/>GCS raw and processed corpus<br/>Secret Manager and Cloud Logging"]:::datastore
+    hyper3d["Hyper3D platform<br/>Rodin text-to-3D generation<br/>Bang semantic segmentation<br/>Asynchronous task polling"]:::external
+  end
+  teacher -->|story, decisions, approvals| kidspark
+  kidspark -.->|previews, evidence, documents| teacher
+  kidspark -->|classroom lesson and build| students
+  team -->|corpus and operations| kidspark
+  kidspark -->|generation and embeddings| vertex
+  kidspark -->|SQL, objects, secrets, logs| data
+  kidspark -->|3D jobs and artifacts| hyper3d
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

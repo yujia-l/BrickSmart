@@ -1,77 +1,241 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1592" viewBox="0 0 2000 1592">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">Teacher Session Sequence</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="40" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="40" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="60" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">1 Upload</text>
-<circle cx="66" cy="227" r="4" fill="#EF5B54"/>
-<text x="82" y="233" font-family="Arial" font-size="18" fill="#243142">Extract story</text>
-<circle cx="66" cy="257" r="4" fill="#EF5B54"/>
-<text x="82" y="263" font-family="Arial" font-size="18" fill="#243142">Analyze</text>
-<circle cx="66" cy="287" r="4" fill="#EF5B54"/>
-<text x="82" y="293" font-family="Arial" font-size="18" fill="#243142">Retrieve evidence</text>
-<rect x="565" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="565" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="585" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">2 Plan</text>
-<circle cx="591" cy="227" r="4" fill="#EF5B54"/>
-<text x="607" y="233" font-family="Arial" font-size="18" fill="#243142">Coach dialogue</text>
-<circle cx="591" cy="257" r="4" fill="#EF5B54"/>
-<text x="607" y="263" font-family="Arial" font-size="18" fill="#243142">Fill readiness state</text>
-<circle cx="591" cy="287" r="4" fill="#EF5B54"/>
-<text x="607" y="293" font-family="Arial" font-size="18" fill="#243142">Teacher confirms</text>
-<rect x="1090" y="140" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="1090" y="140" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="1110" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">3 Preview</text>
-<circle cx="1116" cy="227" r="4" fill="#EF5B54"/>
-<text x="1132" y="233" font-family="Arial" font-size="18" fill="#243142">Generate Rodin prompt</text>
-<circle cx="1116" cy="257" r="4" fill="#EF5B54"/>
-<text x="1132" y="263" font-family="Arial" font-size="18" fill="#243142">Poll</text>
-<circle cx="1116" cy="287" r="4" fill="#EF5B54"/>
-<text x="1132" y="293" font-family="Arial" font-size="18" fill="#243142">Teacher approves</text>
-<rect x="40" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="40" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="60" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">4 Physicalize</text>
-<circle cx="66" cy="497" r="4" fill="#EF5B54"/>
-<text x="82" y="503" font-family="Arial" font-size="18" fill="#243142">Bang</text>
-<circle cx="66" cy="527" r="4" fill="#EF5B54"/>
-<text x="82" y="533" font-family="Arial" font-size="18" fill="#243142">Voxelize</text>
-<circle cx="66" cy="557" r="4" fill="#EF5B54"/>
-<text x="82" y="563" font-family="Arial" font-size="18" fill="#243142">Auto-simplify</text>
-<circle cx="66" cy="587" r="4" fill="#EF5B54"/>
-<text x="82" y="593" font-family="Arial" font-size="18" fill="#243142">Teacher reviews</text>
-<rect x="565" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="565" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="585" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">5 Build</text>
-<circle cx="591" cy="497" r="4" fill="#EF5B54"/>
-<text x="607" y="503" font-family="Arial" font-size="18" fill="#243142">Inventory validation</text>
-<circle cx="591" cy="527" r="4" fill="#EF5B54"/>
-<text x="607" y="533" font-family="Arial" font-size="18" fill="#243142">Step images</text>
-<circle cx="591" cy="557" r="4" fill="#EF5B54"/>
-<text x="607" y="563" font-family="Arial" font-size="18" fill="#243142">Approve plan</text>
-<rect x="1090" y="410" width="470" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="1090" y="410" width="470" height="52" rx="12" fill="#E8F4F7"/>
-<text x="1110" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">6 Bundle</text>
-<circle cx="1116" cy="497" r="4" fill="#EF5B54"/>
-<text x="1132" y="503" font-family="Arial" font-size="18" fill="#243142">Generate 3 PDFs</text>
-<circle cx="1116" cy="527" r="4" fill="#EF5B54"/>
-<text x="1132" y="533" font-family="Arial" font-size="18" fill="#243142">Validate</text>
-<circle cx="1116" cy="557" r="4" fill="#EF5B54"/>
-<text x="1132" y="563" font-family="Arial" font-size="18" fill="#243142">Download</text>
-<line x1="510" y1="242" x2="565" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="483" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="537" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">gate</text>
-<line x1="1035" y1="242" x2="1090" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="1008" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="1062" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">gate</text>
-<line x1="1325" y1="345" x2="275" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="746" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="800" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">gate</text>
-<line x1="510" y1="512" x2="565" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="483" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="537" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">gate</text>
-<line x1="1035" y1="512" x2="1090" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="1008" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="1062" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">gate</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">Teacher Session Orchestration and Confirmation Gates</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">The six teacher-visible stages, authoritative gates, long-running jobs, and invalidation paths.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="622" height="1236" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Teacher and UI</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Explicit human decisions</text>
+<rect x="688" y="180" width="622" height="1236" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="688" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="706" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">FastAPI state machine</text>
+<text x="706" y="248" font-family="Arial" font-size="15" fill="#667085">Backend authority</text>
+<rect x="1334" y="180" width="622" height="1236" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1334" y="180" width="622" height="48" fill="#E9EEF3"/>
+<text x="1352" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Asynchronous work</text>
+<text x="1352" y="248" font-family="Arial" font-size="15" fill="#667085">Polled jobs and generated evidence</text>
+<line x1="646" y1="357" x2="706" y2="341" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="617" y="329" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="351" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">confirm</text>
+<line x1="1292" y1="341" x2="1352" y2="341" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1263" y="321" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="343" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">analyze</text>
+<line x1="646" y1="553" x2="706" y2="521" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="596" y="517" width="160" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="539" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">message / confirm</text>
+<line x1="706" y1="521" x2="646" y2="749" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="617" y="615" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="637" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">ready</text>
+<line x1="646" y1="749" x2="706" y2="717" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="617" y="713" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="735" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approve</text>
+<line x1="1292" y1="717" x2="1352" y2="521" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1258" y="599" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="621" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">submit / poll</text>
+<line x1="646" y1="945" x2="706" y2="913" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="617" y="909" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="931" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approve</text>
+<line x1="1292" y1="913" x2="1352" y2="717" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1258" y="795" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="817" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">submit / poll</text>
+<line x1="646" y1="1125" x2="706" y2="1109" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="612" y="1097" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="1119" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approve steps</text>
+<line x1="1292" y1="1109" x2="1352" y2="913" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1263" y="991" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="1013" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">validate</text>
+<line x1="646" y1="1305" x2="706" y2="1305" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="596" y="1285" width="160" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="1307" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approve documents</text>
+<line x1="1292" y1="1305" x2="1352" y2="1109" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1242" y="1187" width="160" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1322" y="1209" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">generate / refine</text>
+<line x1="706" y1="913" x2="646" y2="749" stroke="#667085" stroke-width="3" stroke-dasharray="12 8" marker-end="url(#arrow)"/>
+<rect x="592" y="802" width="168" height="58" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="824" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">model regeneration</text>
+<text x="676" y="841" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">required</text>
+<line x1="706" y1="717" x2="646" y2="945" stroke="#667085" stroke-width="3" stroke-dasharray="12 8" marker-end="url(#arrow)"/>
+<rect x="572" y="811" width="208" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="676" y="833" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">invalidate old segments</text>
+<rect x="60" y="270" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">1. Upload story</text>
+<rect x="570" y="280" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="342" r="4" fill="#E8B84C"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">PDF or typed story</text>
+<circle cx="81" cy="376" r="4" fill="#E8B84C"/>
+<text x="94" y="383" font-family="Arial" font-size="18" fill="#243142">Review extraction and framework anchors</text>
+<circle cx="81" cy="410" r="4" fill="#E8B84C"/>
+<text x="94" y="417" font-family="Arial" font-size="18" fill="#243142">Confirm source</text>
+<rect x="60" y="466" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">2. Plan with coach</text>
+<rect x="570" y="476" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="538" r="4" fill="#E8B84C"/>
+<text x="94" y="545" font-family="Arial" font-size="18" fill="#243142">Iterative guided conversation</text>
+<circle cx="81" cy="572" r="4" fill="#E8B84C"/>
+<text x="94" y="579" font-family="Arial" font-size="18" fill="#243142">Watch lesson-component checklist</text>
+<circle cx="81" cy="606" r="4" fill="#E8B84C"/>
+<text x="94" y="613" font-family="Arial" font-size="18" fill="#243142">Confirm only when all required fields exist</text>
+<rect x="60" y="662" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">3. Approve model preview</text>
+<rect x="570" y="672" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="734" r="4" fill="#E8B84C"/>
+<text x="94" y="741" font-family="Arial" font-size="18" fill="#243142">Edit visual/build constraints</text>
+<circle cx="81" cy="768" r="4" fill="#E8B84C"/>
+<text x="94" y="775" font-family="Arial" font-size="18" fill="#243142">Wait for Rodin job</text>
+<circle cx="81" cy="802" r="4" fill="#E8B84C"/>
+<text x="94" y="809" font-family="Arial" font-size="18" fill="#243142">Approve model or regenerate</text>
+<rect x="60" y="858" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="890" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">4. Review segments/connectors</text>
+<rect x="570" y="868" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="887" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="930" r="4" fill="#E8B84C"/>
+<text x="94" y="937" font-family="Arial" font-size="18" fill="#243142">Inspect Bang and voxel views</text>
+<circle cx="81" cy="964" r="4" fill="#E8B84C"/>
+<text x="94" y="971" font-family="Arial" font-size="18" fill="#243142">Edit labels and connector intent</text>
+<circle cx="81" cy="998" r="4" fill="#E8B84C"/>
+<text x="94" y="1005" font-family="Arial" font-size="18" fill="#243142">Approve or accept recovery guidance</text>
+<rect x="60" y="1054" width="586" height="142" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="1086" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">5. Approve build plan</text>
+<rect x="570" y="1064" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="1083" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="1126" r="4" fill="#E8B84C"/>
+<text x="94" y="1133" font-family="Arial" font-size="18" fill="#243142">Review inventory and every true step</text>
+<circle cx="81" cy="1160" r="4" fill="#E8B84C"/>
+<text x="94" y="1167" font-family="Arial" font-size="18" fill="#243142">Approve all or individual steps</text>
+<rect x="60" y="1218" width="586" height="174" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="76" y="1250" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">6. Validate lesson bundle</text>
+<rect x="570" y="1228" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="602" y="1247" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="81" cy="1290" r="4" fill="#E8B84C"/>
+<text x="94" y="1297" font-family="Arial" font-size="18" fill="#243142">Preview three documents</text>
+<circle cx="81" cy="1324" r="4" fill="#E8B84C"/>
+<text x="94" y="1331" font-family="Arial" font-size="18" fill="#243142">Refine independently</text>
+<circle cx="81" cy="1358" r="4" fill="#E8B84C"/>
+<text x="94" y="1365" font-family="Arial" font-size="18" fill="#243142">Approve and download</text>
+<rect x="706" y="270" width="586" height="142" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Story gate</text>
+<rect x="1190" y="280" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="342" r="4" fill="#B88413"/>
+<text x="740" y="349" font-family="Arial" font-size="18" fill="#243142">Extraction non-empty</text>
+<circle cx="727" cy="376" r="4" fill="#B88413"/>
+<text x="740" y="383" font-family="Arial" font-size="18" fill="#243142">Analysis and evidence available</text>
+<rect x="706" y="434" width="586" height="174" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="466" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Planning readiness gate</text>
+<rect x="1190" y="444" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="463" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="506" r="4" fill="#B88413"/>
+<text x="740" y="513" font-family="Arial" font-size="18" fill="#243142">Grade, duration, concept, goals</text>
+<circle cx="727" cy="540" r="4" fill="#B88413"/>
+<text x="740" y="547" font-family="Arial" font-size="18" fill="#243142">Build object, movement, literacy/SEL</text>
+<circle cx="727" cy="574" r="4" fill="#B88413"/>
+<text x="740" y="581" font-family="Arial" font-size="18" fill="#243142">Constraints and framework matches</text>
+<rect x="706" y="630" width="586" height="174" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="662" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Model gate</text>
+<rect x="1190" y="640" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="659" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="702" r="4" fill="#B88413"/>
+<text x="740" y="709" font-family="Arial" font-size="18" fill="#243142">Current model generation ID</text>
+<circle cx="727" cy="736" r="4" fill="#B88413"/>
+<text x="740" y="743" font-family="Arial" font-size="18" fill="#243142">Rodin artifact complete</text>
+<circle cx="727" cy="770" r="4" fill="#B88413"/>
+<text x="740" y="777" font-family="Arial" font-size="18" fill="#243142">Teacher confirmation</text>
+<rect x="706" y="826" width="586" height="174" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="858" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Physicalization gate</text>
+<rect x="1190" y="836" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="855" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="898" r="4" fill="#B88413"/>
+<text x="740" y="905" font-family="Arial" font-size="18" fill="#243142">Current segment generation ID</text>
+<circle cx="727" cy="932" r="4" fill="#B88413"/>
+<text x="740" y="939" font-family="Arial" font-size="18" fill="#243142">Block and segment budgets</text>
+<circle cx="727" cy="966" r="4" fill="#B88413"/>
+<text x="740" y="973" font-family="Arial" font-size="18" fill="#243142">Review-ready validated status</text>
+<rect x="706" y="1022" width="586" height="174" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="1054" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Build gate</text>
+<rect x="1190" y="1032" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="1051" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="1094" r="4" fill="#B88413"/>
+<text x="740" y="1101" font-family="Arial" font-size="18" fill="#243142">Inventory feasible</text>
+<circle cx="727" cy="1128" r="4" fill="#B88413"/>
+<text x="740" y="1135" font-family="Arial" font-size="18" fill="#243142">True steps and images available</text>
+<circle cx="727" cy="1162" r="4" fill="#B88413"/>
+<text x="740" y="1169" font-family="Arial" font-size="18" fill="#243142">Teacher step approvals</text>
+<rect x="706" y="1218" width="586" height="174" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="722" y="1250" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Document gate</text>
+<rect x="1190" y="1228" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1235" y="1247" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="727" cy="1290" r="4" fill="#B88413"/>
+<text x="740" y="1297" font-family="Arial" font-size="18" fill="#243142">All three documents valid</text>
+<circle cx="727" cy="1324" r="4" fill="#B88413"/>
+<text x="740" y="1331" font-family="Arial" font-size="18" fill="#243142">Required images and sections</text>
+<circle cx="727" cy="1358" r="4" fill="#B88413"/>
+<text x="740" y="1365" font-family="Arial" font-size="18" fill="#243142">Teacher document approvals</text>
+<rect x="1352" y="270" width="586" height="142" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1368" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Story analysis + RAG</text>
+<rect x="1845" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1886" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1373" cy="342" r="4" fill="#7A9E9F"/>
+<text x="1386" y="349" font-family="Arial" font-size="18" fill="#243142">Extract, analyze, retrieve</text>
+<circle cx="1373" cy="376" r="4" fill="#7A9E9F"/>
+<text x="1386" y="383" font-family="Arial" font-size="18" fill="#243142">Return evidence trace</text>
+<rect x="1352" y="434" width="586" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1368" y="466" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Rodin job</text>
+<rect x="1836" y="444" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1881" y="463" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1373" cy="506" r="4" fill="#EF5B54"/>
+<text x="1386" y="513" font-family="Arial" font-size="18" fill="#243142">Submit once</text>
+<circle cx="1373" cy="540" r="4" fill="#EF5B54"/>
+<text x="1386" y="547" font-family="Arial" font-size="18" fill="#243142">Poll provider status</text>
+<circle cx="1373" cy="574" r="4" fill="#EF5B54"/>
+<text x="1386" y="581" font-family="Arial" font-size="18" fill="#243142">Download preview and OBJ</text>
+<rect x="1352" y="630" width="586" height="174" rx="12" fill="#FFF0ED" stroke="#EF5B54" stroke-width="3"/>
+<text x="1368" y="662" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Bang + notebook job</text>
+<rect x="1836" y="640" width="90" height="28" rx="9" fill="white" stroke="#EF5B54"/>
+<text x="1881" y="659" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#EF5B54">EXTERNAL</text>
+<circle cx="1373" cy="702" r="4" fill="#EF5B54"/>
+<text x="1386" y="709" font-family="Arial" font-size="18" fill="#243142">Segment approved OBJ</text>
+<circle cx="1373" cy="736" r="4" fill="#EF5B54"/>
+<text x="1386" y="743" font-family="Arial" font-size="18" fill="#243142">Voxelize and auto-simplify</text>
+<circle cx="1373" cy="770" r="4" fill="#EF5B54"/>
+<text x="1386" y="777" font-family="Arial" font-size="18" fill="#243142">Render multiview and connector tables</text>
+<rect x="1352" y="826" width="586" height="174" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1368" y="858" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Validated planner job</text>
+<rect x="1845" y="836" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1886" y="855" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1373" cy="898" r="4" fill="#7A9E9F"/>
+<text x="1386" y="905" font-family="Arial" font-size="18" fill="#243142">Map catalog and inventory</text>
+<circle cx="1373" cy="932" r="4" fill="#7A9E9F"/>
+<text x="1386" y="939" font-family="Arial" font-size="18" fill="#243142">Validate placement and sequence</text>
+<circle cx="1373" cy="966" r="4" fill="#7A9E9F"/>
+<text x="1386" y="973" font-family="Arial" font-size="18" fill="#243142">Render true build steps</text>
+<rect x="1352" y="1022" width="586" height="174" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="1368" y="1054" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Document bundle job</text>
+<rect x="1845" y="1032" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="1886" y="1051" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="1373" cy="1094" r="4" fill="#7A9E9F"/>
+<text x="1386" y="1101" font-family="Arial" font-size="18" fill="#243142">Compose three audiences</text>
+<circle cx="1373" cy="1128" r="4" fill="#7A9E9F"/>
+<text x="1386" y="1135" font-family="Arial" font-size="18" fill="#243142">Validate content and images</text>
+<circle cx="1373" cy="1162" r="4" fill="#7A9E9F"/>
+<text x="1386" y="1169" font-family="Arial" font-size="18" fill="#243142">Publish PDFs and sources</text>
+<rect x="150" y="1450" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1469" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1450" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1469" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1450" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1469" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1450" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1469" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1450" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1469" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1450" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1469" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1450" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1469" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1521" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>

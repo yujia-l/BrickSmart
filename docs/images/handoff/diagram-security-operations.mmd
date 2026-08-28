@@ -1,0 +1,43 @@
+flowchart LR
+  %% Cross-cutting controls for identity, secrets, untrusted content, monitoring, ephemeral state, and operator recovery.
+  subgraph S0["Identity and trust - Who may call what"]
+    direction TB
+    human["Human access<br/>Research-team GCP IAM<br/>Optional future institutional sign-in<br/>Separate admin ingestion from classroom use"]:::actor
+    sa["Cloud Run service account<br/>Vertex AI User<br/>Cloud SQL Client<br/>GCS object access<br/>Secret accessor and log writer"]:::system
+    third["Third-party boundary<br/>Hyper3D credential only<br/>No student PII in 3D prompts<br/>Review processing and retention terms"]:::external
+  end
+  subgraph S1["Application controls - Prevent unsafe state or content transitions"]
+    direction TB
+    filesec["File and path controls<br/>MIME/extension and size checks<br/>Safe filenames and isolated job dirs<br/>Known-artifact download mapping"]:::service
+    promptsec["Prompt and evidence controls<br/>Retrieved text treated as untrusted<br/>Structured output validation<br/>Deterministic readiness and stage gates"]:::service
+    secretsec["Secret handling<br/>Secret Manager references<br/>No secrets in Git, logs, screenshots<br/>ADC preferred over key files"]:::service
+  end
+  subgraph S2["Telemetry and operations - Diagnose without leaking content"]
+    direction TB
+    logs["Structured logs<br/>request/session correlation<br/>stage, provider, duration, fallback<br/>auto-recovery and planner status<br/>exception class; no story/prompt bodies"]:::external
+    alerts["Operational signals<br/>5xx and startup failures<br/>DB/retrieval degradation<br/>Long model/segment jobs<br/>Planner incomplete and download errors"]:::external
+    health["Health and readiness<br/>Process liveness<br/>Model and database configuration<br/>Retrieval fallback mode<br/>Catalog/runtime availability"]:::service
+  end
+  subgraph S3["Backup and recovery - Current posture and hardening path"]
+    direction TB
+    durable["Durable data<br/>Cloud SQL backups and PITR policy<br/>GCS versioning/lifecycle as configured<br/>Corpus re-ingestion is reproducible"]:::datastore
+    ephemeral["Ephemeral state risk<br/>In-memory sessions<br/>Container-local 3D and PDFs<br/>Lost when Cloud Run instance is replaced"]:::datastore
+    runbook["Operator recovery<br/>Check readiness and logs<br/>Rollback Cloud Run revision<br/>Restore/reload corpus<br/>Future: durable session/artifact store"]:::artifact
+  end
+  human -->|deploys/configures| sa
+  sa -->|authorized API calls| third
+  sa -->|runtime identity| secretsec
+  filesec -->|safe events| logs
+  promptsec -->|validation outcomes| logs
+  secretsec -->|access metadata only| logs
+  logs -->|metrics and patterns| alerts
+  health -->|readiness failures| alerts
+  durable -->|restore| runbook
+  ephemeral -->|recreate / warn| runbook
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

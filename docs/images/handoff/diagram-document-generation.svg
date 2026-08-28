@@ -1,53 +1,218 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1239" viewBox="0 0 2000 1239">
 <rect width="100%" height="100%" fill="white"/>
-<rect width="1600" height="92" fill="#17324D"/>
-<text x="54" y="60" font-family="Arial" font-size="34" font-weight="700" fill="white">Document Generation</text>
-<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
-<rect x="122" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Approved Session</text>
-<circle cx="148" cy="227" r="4" fill="#EF5B54"/>
-<text x="164" y="233" font-family="Arial" font-size="18" fill="#243142">Story + framework</text>
-<circle cx="148" cy="257" r="4" fill="#EF5B54"/>
-<text x="164" y="263" font-family="Arial" font-size="18" fill="#243142">Planning state</text>
-<circle cx="148" cy="287" r="4" fill="#EF5B54"/>
-<text x="164" y="293" font-family="Arial" font-size="18" fill="#243142">Build plan</text>
-<rect x="827" y="140" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="140" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="175" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Document Agents</text>
-<circle cx="853" cy="227" r="4" fill="#EF5B54"/>
-<text x="869" y="233" font-family="Arial" font-size="18" fill="#243142">Teacher lesson plan</text>
-<circle cx="853" cy="257" r="4" fill="#EF5B54"/>
-<text x="869" y="263" font-family="Arial" font-size="18" fill="#243142">Student activity guide</text>
-<circle cx="853" cy="287" r="4" fill="#EF5B54"/>
-<text x="869" y="293" font-family="Arial" font-size="18" fill="#243142">Class slide companion</text>
-<rect x="122" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="122" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="142" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Validation</text>
-<circle cx="148" cy="497" r="4" fill="#EF5B54"/>
-<text x="164" y="503" font-family="Arial" font-size="18" fill="#243142">Required sections</text>
-<circle cx="148" cy="527" r="4" fill="#EF5B54"/>
-<text x="164" y="533" font-family="Arial" font-size="18" fill="#243142">Audience tone</text>
-<circle cx="148" cy="557" r="4" fill="#EF5B54"/>
-<text x="164" y="563" font-family="Arial" font-size="18" fill="#243142">No placeholders</text>
-<circle cx="148" cy="587" r="4" fill="#EF5B54"/>
-<text x="164" y="593" font-family="Arial" font-size="18" fill="#243142">Notebook images</text>
-<rect x="827" y="410" width="650" height="205" rx="12" fill="#F6F8FA" stroke="#2F7F8D" stroke-width="3"/>
-<rect x="827" y="410" width="650" height="52" rx="12" fill="#E8F4F7"/>
-<text x="847" y="445" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Publication</text>
-<circle cx="853" cy="497" r="4" fill="#EF5B54"/>
-<text x="869" y="503" font-family="Arial" font-size="18" fill="#243142">Markdown + JSON</text>
-<circle cx="853" cy="527" r="4" fill="#EF5B54"/>
-<text x="869" y="533" font-family="Arial" font-size="18" fill="#243142">Three PDFs</text>
-<circle cx="853" cy="557" r="4" fill="#EF5B54"/>
-<text x="869" y="563" font-family="Arial" font-size="18" fill="#243142">Teacher downloads</text>
-<line x1="772" y1="242" x2="827" y2="242" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="225" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="247" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">compose</text>
-<line x1="1152" y1="345" x2="447" y2="410" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="360" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="382" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">check</text>
-<line x1="772" y1="512" x2="827" y2="512" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="745" y="495" width="108" height="34" rx="8" fill="white" stroke="#D0D5DD"/>
-<text x="799" y="517" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">publish</text>
+<rect width="2000" height="104" fill="#17324D"/>
+<text x="54" y="65" font-family="Arial" font-size="38" font-weight="700" fill="white">Lesson Bundle Composition, Validation, and Publication</text>
+<text x="54" y="148" font-family="Arial" font-size="22" fill="#243142">How one approved source of truth becomes three audience-specific documents without changing build facts.</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker></defs>
+<rect x="42" y="180" width="461" height="883" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="42" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="60" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Approved source package</text>
+<text x="60" y="248" font-family="Arial" font-size="15" fill="#667085">Immutable facts for this generation</text>
+<rect x="527" y="180" width="461" height="883" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="527" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="545" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Audience-specific composition</text>
+<text x="545" y="248" font-family="Arial" font-size="15" fill="#667085">Shared facts, different instructional purpose</text>
+<rect x="1012" y="180" width="461" height="883" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1012" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1030" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Deterministic quality gates</text>
+<text x="1030" y="248" font-family="Arial" font-size="15" fill="#667085">Per-document validation before publication</text>
+<rect x="1497" y="180" width="461" height="883" rx="16" fill="#FBFCFD" stroke="#B8C2CC" stroke-width="2"/>
+<rect x="1497" y="180" width="461" height="48" fill="#E9EEF3"/>
+<text x="1515" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#17324D">Publication outputs</text>
+<text x="1515" y="248" font-family="Arial" font-size="15" fill="#667085">Download and maintenance artifacts</text>
+<line x1="485" y1="414" x2="545" y2="384" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="456" y="379" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="401" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">compose</text>
+<line x1="485" y1="414" x2="545" y2="634" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="456" y="504" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="526" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">compose</text>
+<line x1="485" y1="414" x2="545" y2="884" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="456" y="629" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="651" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">compose</text>
+<line x1="485" y1="698" x2="545" y2="384" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="439" y="521" width="152" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="543" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">selected visuals</text>
+<line x1="485" y1="698" x2="545" y2="634" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="447" y="646" width="136" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="668" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">final overview</text>
+<line x1="485" y1="698" x2="545" y2="884" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="435" y="771" width="160" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="515" y="793" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">all build visuals</text>
+<line x1="970" y1="384" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="379" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="401" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">draft</text>
+<line x1="970" y1="634" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="504" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="526" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">draft</text>
+<line x1="970" y1="884" x2="1030" y2="414" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="941" y="629" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1000" y="651" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">draft</text>
+<line x1="1242" y1="559" x2="1242" y2="581" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1178" y="550" width="128" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="572" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">content valid</text>
+<line x1="1242" y1="816" x2="1242" y2="838" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1183" y="807" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1242" y="829" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">preview</text>
+<line x1="1242" y1="838" x2="1727" y2="444" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1425" y="621" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1484" y="643" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">approve</text>
+<line x1="1455" y1="938" x2="1515" y2="553" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1426" y="725" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1485" y="747" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">publish</text>
+<line x1="1727" y1="444" x2="1727" y2="662" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1668" y="533" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1727" y="555" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">serve</text>
+<line x1="1727" y1="640" x2="1727" y2="662" stroke="#667085" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1668" y="631" width="118" height="41" rx="7" fill="white" stroke="#D0D5DD"/>
+<text x="1727" y="653" text-anchor="middle" font-family="Arial" font-size="13" fill="#667085">serve</text>
+<rect x="60" y="270" width="425" height="289" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="76" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Document context</text>
+<rect x="383" y="280" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="428" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="81" cy="342" r="4" fill="#3A7D44"/>
+<text x="94" y="349" font-family="Arial" font-size="18" fill="#243142">Story analysis and teacher</text>
+<text x="94" y="376" font-family="Arial" font-size="18" fill="#243142">planning</text>
+<circle cx="81" cy="403" r="4" fill="#3A7D44"/>
+<text x="94" y="410" font-family="Arial" font-size="18" fill="#243142">Framework/RAG evidence</text>
+<circle cx="81" cy="437" r="4" fill="#3A7D44"/>
+<text x="94" y="444" font-family="Arial" font-size="18" fill="#243142">Approved object and movement</text>
+<text x="94" y="471" font-family="Arial" font-size="18" fill="#243142">map</text>
+<circle cx="81" cy="498" r="4" fill="#3A7D44"/>
+<text x="94" y="505" font-family="Arial" font-size="18" fill="#243142">Validated inventory and true</text>
+<text x="94" y="532" font-family="Arial" font-size="18" fill="#243142">build plan</text>
+<rect x="60" y="581" width="425" height="235" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="76" y="613" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Validated visual assets</text>
+<rect x="383" y="591" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="428" y="610" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="81" cy="653" r="4" fill="#3A7D44"/>
+<text x="94" y="660" font-family="Arial" font-size="18" fill="#243142">Final build reference</text>
+<circle cx="81" cy="687" r="4" fill="#3A7D44"/>
+<text x="94" y="694" font-family="Arial" font-size="18" fill="#243142">Segment and multiview images</text>
+<circle cx="81" cy="721" r="4" fill="#3A7D44"/>
+<text x="94" y="728" font-family="Arial" font-size="18" fill="#243142">True step isometric and</text>
+<text x="94" y="755" font-family="Arial" font-size="18" fill="#243142">placement sheets</text>
+<circle cx="81" cy="782" r="4" fill="#3A7D44"/>
+<text x="94" y="789" font-family="Arial" font-size="18" fill="#243142">No placeholder/demo art</text>
+<rect x="545" y="270" width="425" height="228" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Teacher lesson-plan agent</text>
+<rect x="877" y="280" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="342" r="4" fill="#7A9E9F"/>
+<text x="579" y="349" font-family="Arial" font-size="18" fill="#243142">Read / Learn &amp; Explore / Invent</text>
+<circle cx="566" cy="376" r="4" fill="#7A9E9F"/>
+<text x="579" y="383" font-family="Arial" font-size="18" fill="#243142">Objectives, timing, prompts,</text>
+<text x="579" y="410" font-family="Arial" font-size="18" fill="#243142">standards</text>
+<circle cx="566" cy="437" r="4" fill="#7A9E9F"/>
+<text x="579" y="444" font-family="Arial" font-size="18" fill="#243142">Final-build and multiview</text>
+<text x="579" y="471" font-family="Arial" font-size="18" fill="#243142">overview</text>
+<rect x="545" y="520" width="425" height="228" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="552" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Student activity-guide agent</text>
+<rect x="877" y="530" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="549" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="592" r="4" fill="#7A9E9F"/>
+<text x="579" y="599" font-family="Arial" font-size="18" fill="#243142">Concise classroom directions</text>
+<circle cx="566" cy="626" r="4" fill="#7A9E9F"/>
+<text x="579" y="633" font-family="Arial" font-size="18" fill="#243142">Vocabulary, phonics, real-world</text>
+<text x="579" y="660" font-family="Arial" font-size="18" fill="#243142">links</text>
+<circle cx="566" cy="687" r="4" fill="#7A9E9F"/>
+<text x="579" y="694" font-family="Arial" font-size="18" fill="#243142">Reflection and final-build</text>
+<text x="579" y="721" font-family="Arial" font-size="18" fill="#243142">overview</text>
+<rect x="545" y="770" width="425" height="228" rx="12" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="3"/>
+<text x="561" y="802" font-family="Arial" font-size="22" font-weight="700" fill="#243142">Slide-companion agent</text>
+<rect x="877" y="780" width="81" height="28" rx="9" fill="white" stroke="#7A9E9F"/>
+<text x="918" y="799" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#7A9E9F">SERVICE</text>
+<circle cx="566" cy="842" r="4" fill="#7A9E9F"/>
+<text x="579" y="849" font-family="Arial" font-size="18" fill="#243142">Classroom-facing sequence</text>
+<circle cx="566" cy="876" r="4" fill="#7A9E9F"/>
+<text x="579" y="883" font-family="Arial" font-size="18" fill="#243142">Kid-friendly prompts and</text>
+<text x="579" y="910" font-family="Arial" font-size="18" fill="#243142">vocabulary</text>
+<circle cx="566" cy="937" r="4" fill="#7A9E9F"/>
+<text x="579" y="944" font-family="Arial" font-size="18" fill="#243142">All validated build steps and</text>
+<text x="579" y="971" font-family="Arial" font-size="18" fill="#243142">images</text>
+<rect x="1030" y="270" width="425" height="289" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="1046" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Structure and content checks</text>
+<rect x="1353" y="280" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1398" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="1051" cy="342" r="4" fill="#B88413"/>
+<text x="1064" y="349" font-family="Arial" font-size="18" fill="#243142">Required sections and minimum</text>
+<text x="1064" y="376" font-family="Arial" font-size="18" fill="#243142">depth</text>
+<circle cx="1051" cy="403" r="4" fill="#B88413"/>
+<text x="1064" y="410" font-family="Arial" font-size="18" fill="#243142">Audience-appropriate tone</text>
+<circle cx="1051" cy="437" r="4" fill="#B88413"/>
+<text x="1064" y="444" font-family="Arial" font-size="18" fill="#243142">Framework anchors where</text>
+<text x="1064" y="471" font-family="Arial" font-size="18" fill="#243142">expected</text>
+<circle cx="1051" cy="498" r="4" fill="#B88413"/>
+<text x="1064" y="505" font-family="Arial" font-size="18" fill="#243142">No placeholders or missing</text>
+<text x="1064" y="532" font-family="Arial" font-size="18" fill="#243142">values</text>
+<rect x="1030" y="581" width="425" height="235" rx="12" fill="#FFF8D8" stroke="#B88413" stroke-width="3"/>
+<text x="1046" y="613" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Image and build checks</text>
+<rect x="1353" y="591" width="90" height="28" rx="9" fill="white" stroke="#B88413"/>
+<text x="1398" y="610" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#B88413">DECISION</text>
+<circle cx="1051" cy="653" r="4" fill="#B88413"/>
+<text x="1064" y="660" font-family="Arial" font-size="18" fill="#243142">Files exist and decode</text>
+<circle cx="1051" cy="687" r="4" fill="#B88413"/>
+<text x="1064" y="694" font-family="Arial" font-size="18" fill="#243142">Notebook/build images included</text>
+<circle cx="1051" cy="721" r="4" fill="#B88413"/>
+<text x="1064" y="728" font-family="Arial" font-size="18" fill="#243142">Step count agrees with build</text>
+<text x="1064" y="755" font-family="Arial" font-size="18" fill="#243142">plan</text>
+<circle cx="1051" cy="782" r="4" fill="#B88413"/>
+<text x="1064" y="789" font-family="Arial" font-size="18" fill="#243142">No stale generation references</text>
+<rect x="1030" y="838" width="425" height="201" rx="12" fill="#FFF7E3" stroke="#E8B84C" stroke-width="3"/>
+<text x="1046" y="870" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Teacher document review</text>
+<rect x="1379" y="848" width="64" height="28" rx="9" fill="white" stroke="#E8B84C"/>
+<text x="1411" y="867" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#E8B84C">ACTOR</text>
+<circle cx="1051" cy="910" r="4" fill="#E8B84C"/>
+<text x="1064" y="917" font-family="Arial" font-size="18" fill="#243142">Preview each document</text>
+<circle cx="1051" cy="944" r="4" fill="#E8B84C"/>
+<text x="1064" y="951" font-family="Arial" font-size="18" fill="#243142">Refine independently</text>
+<circle cx="1051" cy="978" r="4" fill="#E8B84C"/>
+<text x="1064" y="985" font-family="Arial" font-size="18" fill="#243142">All three must be valid and</text>
+<text x="1064" y="1012" font-family="Arial" font-size="18" fill="#243142">approved</text>
+<rect x="1515" y="270" width="425" height="174" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="1531" y="302" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Editable/debug sources</text>
+<rect x="1838" y="280" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="1883" y="299" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="1536" cy="342" r="4" fill="#3A7D44"/>
+<text x="1549" y="349" font-family="Arial" font-size="18" fill="#243142">Markdown content</text>
+<circle cx="1536" cy="376" r="4" fill="#3A7D44"/>
+<text x="1549" y="383" font-family="Arial" font-size="18" fill="#243142">Structured JSON context</text>
+<circle cx="1536" cy="410" r="4" fill="#3A7D44"/>
+<text x="1549" y="417" font-family="Arial" font-size="18" fill="#243142">Validation report</text>
+<rect x="1515" y="466" width="425" height="174" rx="12" fill="#ECF7EE" stroke="#3A7D44" stroke-width="3"/>
+<text x="1531" y="498" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">Classroom PDFs</text>
+<rect x="1838" y="476" width="90" height="28" rx="9" fill="white" stroke="#3A7D44"/>
+<text x="1883" y="495" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#3A7D44">ARTIFACT</text>
+<circle cx="1536" cy="538" r="4" fill="#3A7D44"/>
+<text x="1549" y="545" font-family="Arial" font-size="18" fill="#243142">lesson_plan.pdf</text>
+<circle cx="1536" cy="572" r="4" fill="#3A7D44"/>
+<text x="1549" y="579" font-family="Arial" font-size="18" fill="#243142">activity_guide.pdf</text>
+<circle cx="1536" cy="606" r="4" fill="#3A7D44"/>
+<text x="1549" y="613" font-family="Arial" font-size="18" fill="#243142">slide_companion.pdf</text>
+<rect x="1515" y="662" width="425" height="228" rx="12" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="3"/>
+<text x="1531" y="694" font-family="Arial" font-size="22" font-weight="700" fill="#17324D">FastAPI download responses</text>
+<rect x="1856" y="672" width="72" height="28" rx="9" fill="white" stroke="#2F7F8D"/>
+<text x="1892" y="691" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#2F7F8D">SYSTEM</text>
+<circle cx="1536" cy="734" r="4" fill="#2F7F8D"/>
+<text x="1549" y="741" font-family="Arial" font-size="18" fill="#243142">Stable filenames and media type</text>
+<circle cx="1536" cy="768" r="4" fill="#2F7F8D"/>
+<text x="1549" y="775" font-family="Arial" font-size="18" fill="#243142">Streams bytes, never local</text>
+<text x="1549" y="802" font-family="Arial" font-size="18" fill="#243142">paths</text>
+<circle cx="1536" cy="829" r="4" fill="#2F7F8D"/>
+<text x="1549" y="836" font-family="Arial" font-size="18" fill="#243142">Future: persist to GCS with</text>
+<text x="1549" y="863" font-family="Arial" font-size="18" fill="#243142">lifecycle</text>
+<rect x="150" y="1097" width="24" height="24" rx="5" fill="#FFF7E3" stroke="#E8B84C" stroke-width="2"/>
+<text x="182" y="1116" font-family="Arial" font-size="14" fill="#667085">Actor</text>
+<rect x="360" y="1097" width="24" height="24" rx="5" fill="#E8F4F7" stroke="#2F7F8D" stroke-width="2"/>
+<text x="392" y="1116" font-family="Arial" font-size="14" fill="#667085">System</text>
+<rect x="570" y="1097" width="24" height="24" rx="5" fill="#F6F8FA" stroke="#7A9E9F" stroke-width="2"/>
+<text x="602" y="1116" font-family="Arial" font-size="14" fill="#667085">Service</text>
+<rect x="780" y="1097" width="24" height="24" rx="5" fill="#F1ECFA" stroke="#7C5AA6" stroke-width="2"/>
+<text x="812" y="1116" font-family="Arial" font-size="14" fill="#667085">Datastore</text>
+<rect x="990" y="1097" width="24" height="24" rx="5" fill="#FFF0ED" stroke="#EF5B54" stroke-width="2"/>
+<text x="1022" y="1116" font-family="Arial" font-size="14" fill="#667085">External</text>
+<rect x="1200" y="1097" width="24" height="24" rx="5" fill="#FFF8D8" stroke="#B88413" stroke-width="2"/>
+<text x="1232" y="1116" font-family="Arial" font-size="14" fill="#667085">Decision</text>
+<rect x="1410" y="1097" width="24" height="24" rx="5" fill="#ECF7EE" stroke="#3A7D44" stroke-width="2"/>
+<text x="1442" y="1116" font-family="Arial" font-size="14" fill="#667085">Artifact</text>
+<text x="54" y="1168" font-family="Arial" font-size="15" fill="#667085">Solid arrow: primary runtime/data flow | Dashed arrow: feedback, invalidation, fallback, or recovery path</text>
 </svg>

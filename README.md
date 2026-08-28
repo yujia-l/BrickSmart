@@ -354,6 +354,7 @@ Generated files live on ephemeral container storage and can disappear when an in
 
 ## Further Documentation
 
+- [Local Environment Setup](docs/LOCAL_ENV_SETUP.md)
 - [Technical Design](docs/KIDSPARK_TECHNICAL_DESIGN.md)
 - [Project Overview](docs/KIDSPARK_PROJECT_OVERVIEW.md)
 - [GCP Deployment Guide](DEPLOYMENT_GCP.md)

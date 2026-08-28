@@ -1,10 +1,47 @@
 flowchart LR
-  N0["Streamlit UI<br/>Step rail<br/>Teacher coach<br/>Review checkpoints<br/>Downloads"]
-  N1["FastAPI Orchestration<br/>Session API<br/>Readiness gates<br/>Background jobs<br/>File responses"]
-  N2["Domain Services<br/>Agents + prompts<br/>RAG adapter<br/>3D pipeline<br/>Document generator"]
-  N3["Validated Runtime<br/>Notebook port<br/>Inventory planner<br/>Model registry<br/>Instruction renderer"]
-  N0 -->|HTTP| N1
-  N1 -->|orchestrates| N2
-  N2 -->|physicalizes| N3
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% The deployable application boundary and the responsibility of each major runtime component.
+  subgraph S0["Presentation container - Streamlit web application"]
+    direction TB
+    ui["Teacher workflow UI<br/>Six-step rail and checkpoints<br/>Planning conversation<br/>Visual model and segment review<br/>Document preview and download"]:::system
+    client["API client and poller<br/>Session-scoped HTTP calls<br/>Long-job progress polling<br/>Renders API state; does not own gates"]:::service
+  end
+  subgraph S1["Application container - FastAPI orchestration and authority"]
+    direction TB
+    api["Session API routers<br/>Upload, message, confirm<br/>Model, segments, build, documents<br/>Download and runtime endpoints"]:::system
+    state["Session and readiness service<br/>Planning contract<br/>Confirmation gates<br/>Artifact generation IDs<br/>Stale-output invalidation"]:::service
+    jobs["Background job manager<br/>Threaded long-running jobs<br/>Progress events and status<br/>Normalized provider errors"]:::service
+    agents["Agent orchestration<br/>Story analysis<br/>Planning coach and readiness guard<br/>Prompt and document agents"]:::service
+  end
+  subgraph S2["Domain and adapter layer - Focused services behind stable interfaces"]
+    direction TB
+    retrieval["Retrieval adapter<br/>Grade-band normalization<br/>Cloud SQL or service retrieval<br/>Evidence trace and static fallback"]:::service
+    llm["Vertex Gemini adapter<br/>Structured text/JSON generation<br/>Primary/fallback models<br/>ADC or approved key auth"]:::external
+    build3d["3D orchestration<br/>Rodin and Bang clients<br/>Notebook physicalization<br/>Bounded automatic simplification"]:::service
+    planner["Validated BrickSmart runtime<br/>Catalog and geometry mapping<br/>Inventory-aware planning<br/>True step renderer and validation"]:::service
+    documents["Publication service<br/>Three audience-specific documents<br/>Content/image validation<br/>PDF and source artifacts"]:::service
+  end
+  subgraph S3["State and artifacts - Runtime persistence boundaries"]
+    direction TB
+    memory["In-memory session store<br/>Teacher workflow state<br/>Job status and approvals<br/>Lost on instance replacement"]:::datastore
+    work["Ephemeral work directory<br/>OBJ and segmented assets<br/>Notebook images and CSVs<br/>Generated PDFs"]:::datastore
+    corpus["Durable corpus stores<br/>Cloud SQL pgvector<br/>GCS source and processed assets<br/>Not the session system of record"]:::datastore
+  end
+  ui -->|user actions| client
+  client -->|loopback HTTP/JSON| api
+  api -->|read/write workflow| state
+  api -->|submit and poll| jobs
+  state -->|session state| memory
+  jobs -->|artifacts and progress| work
+  agents -->|grounding query| retrieval
+  agents -->|generation| llm
+  jobs -->|3D stages| build3d
+  build3d -->|physical plan| planner
+  jobs -->|approved bundle context| documents
+  retrieval -->|vector and policy lookup| corpus
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

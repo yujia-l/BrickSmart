@@ -1,12 +1,46 @@
 flowchart LR
-  N0["Source Corpus<br/>PDFs<br/>Lesson bundles<br/>Standards and policy"]
-  N1["Ingestion<br/>Extract nodes<br/>Caption selective visuals<br/>Normalize grade bands<br/>Embed"]
-  N2["Storage<br/>GCS artifacts<br/>document_bundle<br/>pdf_node + vectors<br/>standard_rules"]
-  N3["Teacher Query<br/>Grade-band filter<br/>Vector candidates<br/>Policy lookup<br/>Evidence trace"]
-  N4["Planning Agent<br/>Grounded suggestions<br/>Static fallback<br/>Citation lineage"]
-  N0 -->|process| N1
-  N1 -->|load| N2
-  N2 -->|retrieve| N3
-  N3 -->|ground| N4
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% How curriculum evidence becomes traceable pgvector records and then grounds each teacher-planning turn.
+  subgraph S0["Offline corpus ingestion - Administrative/research workflow"]
+    direction TB
+    sources["Source documents<br/>Framework and standards PDFs<br/>Teacher lesson plans<br/>Activity guides and slide companions<br/>Catalog and policy data"]:::artifact
+    extract["Docling extraction<br/>Page-aware text and tables<br/>Document/node identity<br/>Image and page-crop references"]:::service
+    enrich["Normalize and enrich<br/>Canonical grade_band<br/>Bundle and content roles<br/>Selective visual captions<br/>Provenance and checksums"]:::service
+    embed["Embedding pipeline<br/>gemini-embedding-001<br/>3072-dimensional text vectors<br/>Batched, quota-aware writes<br/>Selective visual embeddings only"]:::external
+  end
+  subgraph S1["Durable knowledge stores - Shared production data"]
+    direction TB
+    rawgcs["GCS source bucket<br/>Original PDFs<br/>Immutable source lineage"]:::datastore
+    processed["GCS processed bucket<br/>Knowledge_chunks bundles<br/>Page crops and extracted artifacts<br/>Stable gs:// URIs"]:::datastore
+    bundle["document_bundle<br/>Document identity and metadata<br/>Processing/version status<br/>GCS lineage"]:::datastore
+    nodes["pdf_node<br/>Normalized content<br/>grade_band and role<br/>embedding vector(3072)<br/>Bundle/page provenance"]:::datastore
+    rules["standard_rules<br/>Framework and policy anchors<br/>Structured grade/applicability filters"]:::datastore
+  end
+  subgraph S2["Online teacher-turn retrieval - Read-only classroom path"]
+    direction TB
+    query["Retrieval request<br/>Teacher turn + planning state<br/>Canonical grade band<br/>Seed k and timeout"]:::service
+    qembed["Query understanding<br/>Optional expansion<br/>Gemini query embedding<br/>No model instructions from corpus"]:::external
+    search["Hybrid evidence selection<br/>Exact grade filter<br/>Vector nearest neighbors<br/>Policy lookup<br/>Deduplicate and rank"]:::service
+    trace["Evidence pack<br/>Source and node IDs<br/>Excerpt/summary and relevance<br/>Retrieval mode and lineage<br/>Bounded prompt context"]:::artifact
+    coach["Planning coach<br/>Grounded recommendations<br/>Deterministic readiness guard<br/>Static evidence fallback if degraded"]:::system
+  end
+  sources -->|parse| extract
+  extract -->|nodes + assets| enrich
+  enrich -->|text/caption batches| embed
+  sources -->|store originals| rawgcs
+  enrich -->|write artifacts| processed
+  enrich -->|upsert metadata| bundle
+  embed -->|upsert vectors| nodes
+  enrich -->|load policies| rules
+  query -->|normalize + embed| qembed
+  qembed -->|query vector| search
+  nodes -->|filtered vector candidates| search
+  rules -->|policy anchors| search
+  search -->|ranked evidence| trace
+  trace -->|untrusted reference context| coach
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;

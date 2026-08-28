@@ -1,14 +1,49 @@
 flowchart LR
-  N0["1 Upload<br/>Extract story<br/>Analyze<br/>Retrieve evidence"]
-  N1["2 Plan<br/>Coach dialogue<br/>Fill readiness state<br/>Teacher confirms"]
-  N2["3 Preview<br/>Generate Rodin prompt<br/>Poll<br/>Teacher approves"]
-  N3["4 Physicalize<br/>Bang<br/>Voxelize<br/>Auto-simplify<br/>Teacher reviews"]
-  N4["5 Build<br/>Inventory validation<br/>Step images<br/>Approve plan"]
-  N5["6 Bundle<br/>Generate 3 PDFs<br/>Validate<br/>Download"]
-  N0 -->|gate| N1
-  N1 -->|gate| N2
-  N2 -->|gate| N3
-  N3 -->|gate| N4
-  N4 -->|gate| N5
-  classDef primary fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
-  class N0,N1,N2,N3,N4,N5 primary;
+  %% The six teacher-visible stages, authoritative gates, long-running jobs, and invalidation paths.
+  subgraph S0["Teacher and UI - Explicit human decisions"]
+    direction TB
+    s1["1. Upload story<br/>PDF or typed story<br/>Review extraction and framework anchors<br/>Confirm source"]:::actor
+    s2["2. Plan with coach<br/>Iterative guided conversation<br/>Watch lesson-component checklist<br/>Confirm only when all required fields exist"]:::actor
+    s3["3. Approve model preview<br/>Edit visual/build constraints<br/>Wait for Rodin job<br/>Approve model or regenerate"]:::actor
+    s4["4. Review segments/connectors<br/>Inspect Bang and voxel views<br/>Edit labels and connector intent<br/>Approve or accept recovery guidance"]:::actor
+    s5["5. Approve build plan<br/>Review inventory and every true step<br/>Approve all or individual steps"]:::actor
+    s6["6. Validate lesson bundle<br/>Preview three documents<br/>Refine independently<br/>Approve and download"]:::actor
+  end
+  subgraph S1["FastAPI state machine - Backend authority"]
+    direction TB
+    g1["Story gate<br/>Extraction non-empty<br/>Analysis and evidence available"]:::decision
+    g2["Planning readiness gate<br/>Grade, duration, concept, goals<br/>Build object, movement, literacy/SEL<br/>Constraints and framework matches"]:::decision
+    g3["Model gate<br/>Current model generation ID<br/>Rodin artifact complete<br/>Teacher confirmation"]:::decision
+    g4["Physicalization gate<br/>Current segment generation ID<br/>Block and segment budgets<br/>Review-ready validated status"]:::decision
+    g5["Build gate<br/>Inventory feasible<br/>True steps and images available<br/>Teacher step approvals"]:::decision
+    g6["Document gate<br/>All three documents valid<br/>Required images and sections<br/>Teacher document approvals"]:::decision
+  end
+  subgraph S2["Asynchronous work - Polled jobs and generated evidence"]
+    direction TB
+    storyjob["Story analysis + RAG<br/>Extract, analyze, retrieve<br/>Return evidence trace"]:::service
+    rodinjob["Rodin job<br/>Submit once<br/>Poll provider status<br/>Download preview and OBJ"]:::external
+    segmentjob["Bang + notebook job<br/>Segment approved OBJ<br/>Voxelize and auto-simplify<br/>Render multiview and connector tables"]:::external
+    planjob["Validated planner job<br/>Map catalog and inventory<br/>Validate placement and sequence<br/>Render true build steps"]:::service
+    docjob["Document bundle job<br/>Compose three audiences<br/>Validate content and images<br/>Publish PDFs and sources"]:::service
+  end
+  s1 -->|confirm| g1
+  g1 -->|analyze| storyjob
+  s2 -->|message / confirm| g2
+  g2 -->|ready| s3
+  s3 -->|approve| g3
+  g3 -->|submit / poll| rodinjob
+  s4 -->|approve| g4
+  g4 -->|submit / poll| segmentjob
+  s5 -->|approve steps| g5
+  g5 -->|validate| planjob
+  s6 -->|approve documents| g6
+  g6 -->|generate / refine| docjob
+  g4 -.->|model regeneration required| s3
+  g3 -.->|invalidate old segments| s4
+  classDef actor fill:#FFF7E3,stroke:#E8B84C,color:#17324D,stroke-width:2px;
+  classDef system fill:#E8F4F7,stroke:#2F7F8D,color:#17324D,stroke-width:2px;
+  classDef service fill:#F6F8FA,stroke:#7A9E9F,color:#243142,stroke-width:2px;
+  classDef datastore fill:#F1ECFA,stroke:#7C5AA6,color:#17324D,stroke-width:2px;
+  classDef external fill:#FFF0ED,stroke:#EF5B54,color:#17324D,stroke-width:2px;
+  classDef decision fill:#FFF8D8,stroke:#B88413,color:#17324D,stroke-width:2px;
+  classDef artifact fill:#ECF7EE,stroke:#3A7D44,color:#17324D,stroke-width:2px;
